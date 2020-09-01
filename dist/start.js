@@ -10,7 +10,7 @@ var state = {
             id: "1",
             players: [
                 {
-                    id: "P1",
+                    id: "1",
                     name: "P1",
                     movements: 0,
                     participatingLastRound: true,
@@ -18,7 +18,7 @@ var state = {
                     seat: 5,
                 },
                 {
-                    id: "P2",
+                    id: "2",
                     name: "P2",
                     movements: 0,
                     participatingLastRound: true,
@@ -26,7 +26,7 @@ var state = {
                     seat: 6,
                 },
                 {
-                    id: "P3",
+                    id: "3",
                     name: "P3",
                     movements: 0,
                     participatingLastRound: false,
@@ -35,13 +35,12 @@ var state = {
                 }
             ],
             dealerButtonLastRound: 6,
-            extraPlayers: 0,
         },
         {
             id: "2",
             players: [
                 {
-                    id: "P4",
+                    id: "4",
                     name: "P4",
                     movements: 0,
                     participatingLastRound: true,
@@ -49,8 +48,8 @@ var state = {
                     seat: 5,
                 },
                 {
-                    id: "P45",
-                    name: "P45",
+                    id: "5",
+                    name: "P5",
                     movements: 0,
                     participatingLastRound: true,
                     participatingNextRound: true,
@@ -58,30 +57,29 @@ var state = {
                 }
             ],
             dealerButtonLastRound: 6,
-            extraPlayers: 0,
         },
         {
             id: "3",
             players: [
                 {
-                    id: "P5",
-                    name: "P5",
+                    id: "6",
+                    name: "P6",
                     movements: 0,
                     participatingLastRound: true,
                     participatingNextRound: true,
                     seat: 5,
                 },
                 {
-                    id: "P6",
-                    name: "P6",
+                    id: "7",
+                    name: "P7",
                     movements: 0,
                     participatingLastRound: true,
                     participatingNextRound: true,
                     seat: 7,
                 },
                 {
-                    id: "P7",
-                    name: "P7",
+                    id: "8",
+                    name: "P8",
                     movements: 0,
                     participatingLastRound: true,
                     participatingNextRound: true,
@@ -89,7 +87,6 @@ var state = {
                 }
             ],
             dealerButtonLastRound: 5,
-            extraPlayers: 0,
         },
     ]
 };

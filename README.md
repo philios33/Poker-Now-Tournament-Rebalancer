@@ -42,7 +42,7 @@ npm i poker-now-tournament-rebalancer
 ```
 
 ```js
-import { getRebalancingPlayerMovements } from 'poker-now-tournament-rebalancer';
+const { getRebalancingPlayerMovements } = require('poker-now-tournament-rebalancer');
 
 const state = {
     config: {
