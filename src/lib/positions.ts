@@ -34,23 +34,6 @@ export const sortBySeatDealerFirst = (players: Array<Player>, dealer: number) =>
     });
 }
 
-/*
-export const applyPositionsToPlayers = (positions: Array<string>, players: Array<Player>, dealer: number) => {
-
-    // How many players are behind the dealer
-    let behindDealer = 0;
-    for(const player of players) {
-        if (player.seat <= dealer) {
-            behindDealer ++;
-        }
-    }
-    behindDealer--; // Do it this way to cater for dead button.  We assume player before had the button.
-
-    sortBySeatDealerFirst(players, dealer);
-
-}
-*/
-
 export const rotatePlayers = (players: Array<any>, count: number) => {
     var len = players.length >>> 0; // convert to uint
     count = count >> 0; // convert to int
