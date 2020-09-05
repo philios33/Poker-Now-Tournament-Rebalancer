@@ -4,7 +4,7 @@
   "description": "A JS algorithm to decide what player movements to make when re-balancing a multi-table tournament.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'tests/**/*.ts'",
+    "test": "jest",
     "build": "rm -Rf ./dist && tsc",
     "dev": "ts-node ./src/start.ts"
   },
@@ -20,10 +20,9 @@
   "homepage": "https://github.com/philios33/Poker-Now-Tournament-Rebalancer#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/chai": "^4.2.12",
-    "@types/mocha": "^8.0.3",
-    "chai": "^4.2.0",
-    "mocha": "^8.1.3",
+    "@types/jest": "^26.0.13",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   }
