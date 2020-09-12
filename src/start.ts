@@ -92,16 +92,12 @@ const state: TournamentState = {
     ]
 };
 
-//expandTablePositionsAsLastRound(state.tables[0]);
-
-//console.log(JSON.stringify(state.tables[0], null, 4));
-
-
-
 const result = getRebalancingPlayerMovements(state);
 for(const movement of result.movements) {
     console.log("MOVE Player " + JSON.stringify(movement.fromPlayer) + " at table " + movement.fromTable.id + " -> to Table " + movement.to.tableId + " Seat " + movement.to.seat + " New Position " + movement.to.position);
 }
 console.log("Total movements: " + result.movements.length);
 console.log("Total score: " + result.totalScore);
+console.log("Stats", result.stats),
+console.log("Took", result.msTaken + " ms");
 

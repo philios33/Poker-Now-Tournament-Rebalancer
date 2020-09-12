@@ -68,7 +68,8 @@ exports.convertSeatMovementToPlayerMovement = function (state, sm) {
         movementScore: sm.movementScore,
     };
 };
-exports.multiplyArrays = function (array1, array2) {
+exports.multiplyArrays = function (array1, array2, considerAsArrays) {
+    if (considerAsArrays === void 0) { considerAsArrays = true; }
     if (array1.length === 0) {
         return array2;
     }
@@ -82,7 +83,12 @@ exports.multiplyArrays = function (array1, array2) {
             var array1Item = array1_1[_i];
             for (var _a = 0, array2_1 = array2; _a < array2_1.length; _a++) {
                 var array2Item = array2_1[_a];
-                result.push(__spreadArrays(array1Item, array2Item));
+                if (considerAsArrays) {
+                    result.push(__spreadArrays(array1Item, array2Item));
+                }
+                else {
+                    result.push([array1Item, array2Item]);
+                }
             }
         }
         return result;

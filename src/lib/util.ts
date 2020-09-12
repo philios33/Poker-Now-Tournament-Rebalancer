@@ -68,7 +68,7 @@ export const convertSeatMovementToPlayerMovement = (state: TournamentState, sm: 
     }
 }
 
-export const multiplyArrays = (array1, array2) => {
+export const multiplyArrays = (array1, array2, considerAsArrays = true) => {
     if (array1.length === 0) {
         return array2;
     } else {
@@ -80,8 +80,11 @@ export const multiplyArrays = (array1, array2) => {
         let result = [];
         for (let array1Item of array1) {
             for (let array2Item of array2) {
-                
-                result.push([...array1Item, ...array2Item]);
+                if (considerAsArrays) {
+                    result.push([...array1Item, ...array2Item]);
+                } else {
+                    result.push([array1Item, array2Item]);
+                }
             }
         }
         return result;

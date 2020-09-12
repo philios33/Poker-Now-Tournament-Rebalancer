@@ -90,8 +90,6 @@ var state = {
         },
     ]
 };
-//expandTablePositionsAsLastRound(state.tables[0]);
-//console.log(JSON.stringify(state.tables[0], null, 4));
 var result = balancer_1.getRebalancingPlayerMovements(state);
 for (var _i = 0, _a = result.movements; _i < _a.length; _i++) {
     var movement = _a[_i];
@@ -99,4 +97,6 @@ for (var _i = 0, _a = result.movements; _i < _a.length; _i++) {
 }
 console.log("Total movements: " + result.movements.length);
 console.log("Total score: " + result.totalScore);
+console.log("Stats", result.stats),
+    console.log("Took", result.msTaken + " ms");
 //# sourceMappingURL=start.js.map

@@ -2,6 +2,8 @@ import { getRebalancingPlayerMovements } from "../balancer";
 import { Player } from "../../types/player";
 import { Table } from "../../types/table";
 
+jest.retryTimes(0);
+
 const createTableOf = (tableId: string, startingIdent: string, numPlayers: number): Table => {
     let nextIdent = parseInt(startingIdent, 10);
     let players = [];
@@ -243,6 +245,7 @@ test('Table Creator', () => {
     });
 })
 
+
 test('Case where Table A has 10, and Table B has 8', () => {
     // Should move the best person from table A to B
     const result = getRebalancingPlayerMovements({
@@ -261,7 +264,7 @@ test('Case where Table A has 10, and Table B has 8', () => {
     expect(result.movements[0].fromPlayer.position).toBe("CO");
     expect(result.movements[0].fromPlayer.seat).toBe(10);
     expect(result.movements[0].to.tableId).toBe("B");
-    expect(result.movements[0].to.seat).toBe(9);
+    expect([9,10].indexOf(result.movements[0].to.seat)).toBeGreaterThan(-1);
     expect(result.movements[0].to.position).toBe("HJ");
     expect(result.movements[0].to.numOfPlayers).toBe(9);
     
@@ -314,16 +317,18 @@ test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', ()
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["A"]);
     expect(result.movements.length).toBe(8);
+    // console.log(result.processedCombinations + " of " + result.totalCombinations);
 });
 
-// Major Speed Issue with this one
+// Major Speed Issue with this one (takes 5 minutes of processing)
 // Issue is before getOptimalPlayerMovements
-/*
+
 test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => {
     // 83 Players in total
     // But there are 8 choices of table to break
     // For each one, try moving every combination of those players in the many available seats left.
     // Since there are also 7 empty seats left with 9 tables, there are a lot of combinations. (56M)
+    // We expect this to breach the 5 second mark
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
@@ -341,9 +346,11 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => 
             createTableOf("J", "91", 10),
         ]
     });
-    console.log("Stats", result.stats);
-    console.log("Checked", result.totalMovementsChecked);
-    console.log("Skipped", result.totalMovementsSkipped);
-    console.log("Score", result.totalScore);
+    expect(result.stats.currentNumberOfTables).toBe(10);
+    expect(result.stats.numberOfPlayersNextRound).toBe(83);
+    expect(result.stats.optimalNumberOfTables).toBe(9);
+    expect(result.stats.tableIdsBeingBrokenUp.length).toBe(1);
+    expect(result.totalScore).toBeGreaterThan(50);
+    expect(result.totalCombinations).toBe(576);
+    expect(result.msTaken).toBeGreaterThan(1000);
 });
-*/

@@ -426,6 +426,7 @@ test("workOutTargetSeatPositions", () => {
 });
 
 // This is the primary function
+
 test("getRebalancingPlayerMovements", () => {
     const tableA: Table = {
         id: "A",
@@ -542,9 +543,9 @@ test("getRebalancingPlayerMovements", () => {
     expect(result.stats.numberOfPlayersNextRound).toBe(11);
     expect(result.stats.maxNumberOfPlayersOnTables).toBe(6);
     
-    /*
-    console.log(JSON.stringify(result.movements, null, 4));
-    console.log("Checked", result.totalMovementsChecked);
-    console.log("Skipped", result.totalMovementsSkipped);
-    */
+    
+    // console.log(JSON.stringify(result.movements, null, 4));
+    // console.log("Checked", result.totalMovementsChecked);
+    // console.log("Skipped", result.totalMovementsSkipped);
+    
 });

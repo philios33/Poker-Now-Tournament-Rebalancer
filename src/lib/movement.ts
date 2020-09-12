@@ -2,6 +2,7 @@ import { TargetSeat } from "../types/targetSeat";
 import { SeatPosition } from "../types/seatPosition";
 import { BalancingPlayersSeatResult } from "../types/balancingPlayersSeatResult";
 import { SeatMovement } from "../types/seatMovement";
+import { multiplyArrays } from "./util";
 
 // As long as we return the target seats that are empty in an order where they will not make a difference to other positions (empty seats to the right of the dealer)
 // If dealer will be seat 2 with [1,2,3] available, then this should be rotated to [2,3,1]
@@ -245,7 +246,7 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
     return {bestResult, totalMovementsChecked, totalMovementsSkipped};
 }
 
-export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
+export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): {bestResult: BalancingPlayersSeatResult, totalCombinations: number, processedCombinations: number, totalMovementsChecked: number, totalMovementsSkipped: number} => {
     // Try every possible ordering of every fromSeats selection, with every possible selection of targetSeats.
     // The selections have already been expanded, we just need to try every combination of ordering of the fromSeats.
     // This is where we can be more efficient.  If the score has already gone above some threshold, we can rule out every combination below using recursion.
@@ -256,21 +257,48 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
     let totalMovementsSkipped = 0;
     // console.log("From Combo Count", globalFromSeats.length);
     // console.log("Target Combo Count", globalTargetSeats.length);
-    for (const froms of globalFromSeats) {
-        for (const targets of globalTargetSeats) {
-            // console.log("Getting best result of ", froms, targets);
-            const result = getBestPlayerMovementsFor(froms, targets, bestScore);
-            totalMovementsChecked += result.totalMovementsChecked;
-            totalMovementsSkipped += result.totalMovementsSkipped;
-            // console.log("Result was: " + result.totalScore);
-            if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
-                bestResult = result.bestResult;
+
+    // If there are too many combinations, we could try doing only 5 seconds of processing the combinations and just go with the best result.
+    const stopAfterMs = 5000;
+
+    // If we do this, it is important to shuffle the 2 arrays
+    // It is better to multiply these arrays first, then randomise the result
+    // This would give more of a range of from seat combos
+    const joinedGlobals = multiplyArrays(globalFromSeats, globalTargetSeats, false);
+    const totalCombinations = joinedGlobals.length;
+    joinedGlobals.sort(() => Math.random() - 0.5);
+
+    const startTime = (new Date()).getTime();
+    let processedCombinations = 0;
+
+    for (const joinedItem of joinedGlobals) {
+        const froms = joinedItem[0];
+        const targets = joinedItem[1];
+
+        // console.log("Getting best result of ", froms, targets);
+        const result = getBestPlayerMovementsFor(froms, targets, bestScore);
+        processedCombinations++;
+        totalMovementsChecked += result.totalMovementsChecked;
+        totalMovementsSkipped += result.totalMovementsSkipped;
+        // console.log("Result was: " + result.totalScore);
+        if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
+            bestResult = result.bestResult;
+            if (result.bestResult !== null) {
                 bestScore = result.bestResult.totalScore;
             }
-            // console.log("Best score is", bestScore);
+        }
+        // console.log("Best score is", bestScore);
+
+        // Check if the time is up
+        const timeNow = (new Date()).getTime();
+        if (timeNow - startTime > stopAfterMs) {
+            // console.log("Stopping after: " + stopAfterMs + " ms");
+            break;
         }
     }
+
+    // console.log("Processed " + processedCombinations + " of " + totalCombinations);
     
     // console.log("BEST RESULT", bestResult);
-    return {bestResult, totalMovementsChecked, totalMovementsSkipped};
+    return {bestResult, totalCombinations, processedCombinations, totalMovementsChecked, totalMovementsSkipped};
 }

@@ -10,6 +10,9 @@ import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
 import { invertSeatList, getTableCombinations, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement } from "./util";
+import { Logger } from "../classes/logger";
+
+
 
 export const getNumberOfPlayersNextRound = (state: TournamentState): number => {
     let numberOfPlayers = 0;
@@ -350,15 +353,17 @@ export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Arr
 
 
 export const getRebalancingPlayerMovements = (state: TournamentState): BalancingPlayersResult => {
+    const startTime = (new Date()).getTime();
+    const logger = new Logger(false, "Start");
     const result = getRebalancingMovements(state);
-
+    logger.log("Got Rebalancing Movements");
     // console.log("RESULT", JSON.stringify(result, null, 4));
 
     // PROCESS FROM SEAT POSITIONS
     for(const table of state.tables) {
         expandTablePositionsAsLastRound(table);
     }
-
+    logger.log("Expanded Table Positions At Last Round");
     // console.log("TABLES", JSON.stringify(state, null, 4));
 
     // 1. Convert the fromSeats.selections seatIdList from Array<number> to Array<SeatPosition>
@@ -399,6 +404,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         });
 
     }
+    logger.log("All From Seat Positions Worked Out");
     // console.log("SP", JSON.stringify(allSeatPositions, null, 4));
 
     let globalFromSeats = [];
@@ -408,6 +414,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         globalFromSeats = multiplyArrays(globalFromSeats, choices);
     }
 
+    logger.log("Expanded Global From Seats");
     // console.log("globalFromSeats", JSON.stringify(globalFromSeats, null, 4));
 
 
@@ -439,6 +446,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         // Append these combos
         globalTargetSeats.push(...groupTargetSeats);
     }
+    logger.log("Expanded Global Target Seats");
 
     // console.log("globalTargetSeats", globalTargetSeats);
 
@@ -446,7 +454,23 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
     // This is where we can be more efficient.  If the score has already gone above some threshold, we can rule out every combination below using recursion.
     // Keep track of the lowest score from and target selections.
 
+    // We want to count the combos in all of the ArrayArrays.
+    let fromCombos = 0;
+    for(const fsArray of globalFromSeats) {
+        fromCombos += fsArray.length;
+    }
+
+    let targetCombos = 0;
+    for(const tsArray of globalTargetSeats) {
+        targetCombos += tsArray.length;
+    }
+
+    // console.log("Gloabl From Seats", globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
+    // console.log("Gloabl Target Seats", globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
+
     const optimalResult = getOptimalPlayerMovements(globalFromSeats, globalTargetSeats);
+    logger.log("Obtained Optimal Player Movements");
+    
     // console.log("Final result", JSON.stringify(optimalResult, null, 4));
     if (optimalResult.bestResult === null) {
         throw new Error("Could not find the optimal player movements for this scenario");
@@ -460,12 +484,19 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         totalScore = optimalResult.bestResult.totalScore;
     }
 
+    logger.log("Finished");
+    const endTime = (new Date()).getTime();
+    
     return {
         stats: result.stats,
         movements: playerMovements,
         totalScore,
+        totalCombinations: optimalResult.totalCombinations,
+        processedCombinations: optimalResult.processedCombinations,
         totalMovementsChecked: optimalResult.totalMovementsChecked,
         totalMovementsSkipped: optimalResult.totalMovementsSkipped,
+        msTaken: endTime - startTime,
+        
     }
 }
 

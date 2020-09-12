@@ -138,12 +138,14 @@ test('findTableById and findPlayerBySeat', function () {
             seatId: 3,
             movements: 0,
             position: "SB",
+            numOfPlayers: 4,
         },
         movementScore: 5,
         targetSeat: {
             tableId: "A",
             seat: 3,
-            position: "BB"
+            position: "BB",
+            numOfPlayers: 3,
         }
     };
     expect(util_1.convertSeatMovementToPlayerMovement(state, sm1)).toStrictEqual({
@@ -152,7 +154,8 @@ test('findTableById and findPlayerBySeat', function () {
         to: {
             tableId: "A",
             seat: 3,
-            position: "BB"
+            position: "BB",
+            numOfPlayers: 3,
         },
         movementScore: 5,
     });
@@ -229,6 +232,22 @@ test('multiplyArrays', function () {
         [1, 2],
         [2, 3],
         [1, 3]
+    ]);
+    expect(util_1.multiplyArrays([[1], [2], [3]], [[4], [5]], false)).toStrictEqual([
+        [[1], [4]],
+        [[1], [5]],
+        [[2], [4]],
+        [[2], [5]],
+        [[3], [4]],
+        [[3], [5]],
+    ]);
+    expect(util_1.multiplyArrays([[1, 2], [2], [3]], [[4], [5]], true)).toStrictEqual([
+        [1, 2, 4],
+        [1, 2, 5],
+        [2, 4],
+        [2, 5],
+        [3, 4],
+        [3, 5],
     ]);
 });
 //# sourceMappingURL=util.js.map
