@@ -1,18 +1,15 @@
 
 import { TournamentState } from "../types/tournamentState"
 import { Table } from "../types/table";
-import { Player } from "../types/player";
 import SeatSelections from "../classes/seatSelections";
 import { BalancingMovementsResult } from "../types/balancingMovementsResult";
-import { SeatSelection } from "../types/seatSelection";
-import { getPositionsForTableSize, rotatePlayers, expandTablePositionsAsLastRound } from "./positions";
+import { getPositionsForTableSize, rotateArray, expandTablePositionsAsLastRound } from "./positions";
 import { TargetSeat } from "../types/targetSeat";
 import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { SeatMovement } from "../types/seatMovement";
-import { PlayerMovement } from "../types/playerMovement";
+import { invertSeatList, getTableCombinations, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement } from "./util";
 
 export const getNumberOfPlayersNextRound = (state: TournamentState): number => {
     let numberOfPlayers = 0;
@@ -30,7 +27,8 @@ const playerMovementsWeighting = 10;
 export const getTableSizeAndMovementsScore = (table: Table): number => {
     let score = 0;
     table.players.filter(p => p.participatingNextRound).map(player => {
-        score += playerMovementsWeighting + player.movements
+        score += playerMovementsWeighting + player.movements // Note, this should not be multiplication
+        // The fact that a player exists (number of players) has more weighting than how often they have moved.
     });
     return score;
 }
@@ -46,69 +44,33 @@ export const getTablesWithLeastSizeAndMovements = (state: TournamentState, num: 
     return orderedTables.slice(0, num);
 }
 
-/*
-const getAllPlayersInNextRound = (tables: Array<Table>): Array<Player> => {
-    const all = [];
-    for(const table of tables) {
-        all.push(...table.players.filter(p => p.participatingNextRound));
-    }
-    return all;
-}
-*/
-
 export const getTablesWithLowestSize = (tables: Array<Table>): Array<Table> => {
     let lowestSize = 100;
     for(const table of tables) {
-        let tableSize = table.players.filter(p => p.participatingNextRound).length + table.extraPlayers; // Consider extra players assigned here
+        let tableSize = table.players.filter(p => p.participatingNextRound).length;
+        if (typeof table.extraPlayers !== "undefined") {
+            // Consider extra players assigned here
+            tableSize += table.extraPlayers;
+        }
+        // console.log(table.id + " has size of " + tableSize);
         if (tableSize < lowestSize) {
             lowestSize = tableSize;
         }
     }
+    // console.log("Lowest size is: " + lowestSize);
     // Then return all tables with this size
     const toReturn: Array<Table> = [];
     for(const table of tables) {
-        let tableSize = table.players.filter(p => p.participatingNextRound).length + table.extraPlayers; // Consider extra players assigned here
+        let tableSize = table.players.filter(p => p.participatingNextRound).length;
+        if (typeof table.extraPlayers !== "undefined") {
+            // Consider extra players assigned here
+            tableSize += table.extraPlayers;
+        }
         if (tableSize === lowestSize) {
             toReturn.push(table);
         }
     }
     return toReturn;
-}
-
-export const getTableCombinations = (tables: Array<Table>, choose: number) => {
-    return combine(tables, choose).filter(p => p.length === choose);
-}
-
-export const combine = function(a, min) {
-    var fn = function(n, src, got, all) {
-        if (n == 0) {
-            if (got.length > 0) {
-                all[all.length] = got;
-            }
-            return;
-        }
-        for (var j = 0; j < src.length; j++) {
-            fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
-        }
-        return;
-    }
-    var all = [];
-    for (var i = min; i < a.length; i++) {
-        fn(i, a, [], all);
-    }
-    all.push(a);
-    return all;
-}
-
-
-export const seatsWithout = (seatIdList: Array<number>) => {
-    const negatedList = [];
-    for(let i=1; i<pokerNowMaxSeatId; i++) {
-        if (seatIdList.indexOf(i) === -1) {
-            negatedList.push(i);
-        }
-    }
-    return negatedList;
 }
 
 export const getRebalancingMovements = (state: TournamentState): BalancingMovementsResult => {
@@ -119,11 +81,12 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
     let maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / optimalNumberOfTables);
 
+    /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
     console.log("optimalNumberOfTables = " + optimalNumberOfTables);
     console.log("currentNumberOfTables = " + currentNumberOfTables);
     console.log("maxNumberOfPlayersOnTables = " + maxNumberOfPlayersOnTables);
-
+    */
 
     let fromSeats = new SeatSelections();
     let totalNumberOfMovements = 0;
@@ -136,7 +99,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         // Break up the tables with the lowest number of people
         let tables = getTablesWithLeastSizeAndMovements(state, numberOfTablesToBreakUp);
         for(let table of tables) {
-            console.log("Breaking up table", table.id);
+            // console.log("Breaking up table", table.id);
             let activeSeats = table.players.filter(p => p.participatingNextRound).map(p => p.seat);
             fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
             totalNumberOfMovements += activeSeats.length;
@@ -159,7 +122,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length;
         if (playersParticipatingNextRound > maxNumberOfPlayersOnTables) {
             const movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
-            console.log("Moving " + movementsFromTable + " players from table " + table.id);
+            // console.log("Moving " + movementsFromTable + " players from table " + table.id);
             fromSeats.add(table.id, table.players.filter(p => p.participatingNextRound).map(p => p.seat), movementsFromTable);
             totalNumberOfMovements += movementsFromTable;
         }
@@ -197,7 +160,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         } else {
             // So there are remainingMovements still to assign but lowestTables.length to choose from.
             // We need to fork the SeatSelections object for each combination
-            console.log("There are " + remainingMovements + " still to assign but " + lowestTables.length + " to choose from");
+            // console.log("There are " + remainingMovements + " still to assign but " + lowestTables.length + " to choose from");
             break;
         }
     }
@@ -207,7 +170,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     let toSeats: SeatSelections = new SeatSelections();
     for(const table of tablesAfter) {
         if (table.extraPlayers > 0) {
-            toSeats.add(table.id, seatsWithout(table.players.filter(p => p.participatingNextRound).map(p => p.seat)), table.extraPlayers);
+            toSeats.add(table.id, invertSeatList(table.players.filter(p => p.participatingNextRound).map(p => p.seat), pokerNowMaxSeatId), table.extraPlayers);
         }
     }
     
@@ -226,7 +189,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
             // Branch the primary toSeats
             let anotherSeatSelections = new SeatSelections(toSeats);
             for(const table of tableCombo) {
-                anotherSeatSelections.add(table.id, seatsWithout(table.players.filter(p => p.participatingNextRound).map(p => p.seat)), 1);
+                anotherSeatSelections.add(table.id, invertSeatList(table.players.filter(p => p.participatingNextRound).map(p => p.seat), pokerNowMaxSeatId), 1);
             }
             // console.log("anotherSeatSelections", anotherSeatSelections);
             targetSeats.push(anotherSeatSelections);
@@ -242,6 +205,13 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         movements: totalNumberOfMovements,
         fromSeats,
         targetSeats,
+        stats: {
+            currentNumberOfTables,
+            maxNumberOfPlayersOnTables,
+            numberOfPlayersNextRound,
+            optimalNumberOfTables,
+            tableIdsBeingBrokenUp,
+        }
     }
 
     // These players should be moved to the other tables seats without breaching the maximum number at a table
@@ -323,23 +293,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
 }
 
-export const findTableById = (state: TournamentState, tableId: string): Table => {
-    for(const table of state.tables) {
-        if (table.id === tableId) {
-            return table;
-        }
-    }
-    throw new Error("Table not found with id:" + tableId);
-}
 
-export const findPlayerBySeat = (table: Table, seatId: number) => {
-    for(const player of table.players) {
-        if (player.seat === seatId) {
-            return player;
-        }
-    }
-    throw new Error("Player not found at seat:" + seatId + " of table " + table.id);
-}
 
 export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Array<TargetSeat> => {
     // Given that the following seats would be filled next round, work out the seating positions next round
@@ -373,7 +327,7 @@ export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Arr
             rotateBy++;
         }
     }
-    rotatePlayers(players, rotateBy);
+    rotateArray(players, rotateBy);
 
     // Get all positions from dealer
     let positions = getPositionsForTableSize(players.length);
@@ -386,23 +340,14 @@ export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Arr
                 tableId: table.id,
                 seat: player.seat,
                 position: positions[i],
+                numOfPlayers: players.length,
             });
         }
     }
     return targetSeats;
 }
 
-export const convertSeatMovementToPlayerMovement = (state: TournamentState, sm: SeatMovement): PlayerMovement => {
-    const table = findTableById(state, sm.fromSeatPosition.tableId);
-    const player = findPlayerBySeat(table, sm.fromSeatPosition.seatId);
 
-    return {
-        fromTable: table,
-        fromPlayer: player,
-        to: sm.targetSeat,
-        movementScore: sm.movementScore,
-    }
-}
 
 export const getRebalancingPlayerMovements = (state: TournamentState): BalancingPlayersResult => {
     const result = getRebalancingMovements(state);
@@ -421,7 +366,10 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
     for(const tableId in result.fromSeats.selections) {
         const table = findTableById(state, tableId);
 
-        let seatsObj = {};
+        // Find number of players last round
+        const numOfPlayers = table.players.filter(p => p.participatingLastRound).length
+
+        let seatsObj: { [key: string]: SeatPosition } = {};
         for(const player of table.players) {
             if (player.participatingLastRound) {
                 if (player.position) {
@@ -430,6 +378,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
                         seatId: player.seat,
                         position: player.position,
                         movements: player.movements,
+                        numOfPlayers: numOfPlayers,
                     }
                 } else {
                     throw new Error("No position found for player that participated in last round table: " + tableId + " seat: " + player.seat);
@@ -499,38 +448,26 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
 
     const optimalResult = getOptimalPlayerMovements(globalFromSeats, globalTargetSeats);
     // console.log("Final result", JSON.stringify(optimalResult, null, 4));
+    if (optimalResult.bestResult === null) {
+        throw new Error("Could not find the optimal player movements for this scenario");
+    }
 
     // Convert the seatMovements in to playerMovements
     let playerMovements = [];
     let totalScore = 0;
     if (optimalResult !== null) {
-        playerMovements = optimalResult.movements.map(sm => convertSeatMovementToPlayerMovement(state, sm));
-        totalScore = optimalResult.totalScore;
+        playerMovements = optimalResult.bestResult.movements.map(sm => convertSeatMovementToPlayerMovement(state, sm));
+        totalScore = optimalResult.bestResult.totalScore;
     }
 
     return {
+        stats: result.stats,
         movements: playerMovements,
         totalScore,
+        totalMovementsChecked: optimalResult.totalMovementsChecked,
+        totalMovementsSkipped: optimalResult.totalMovementsSkipped,
     }
 }
 
-export const multiplyArrays = (array1, array2) => {
-    if (array1.length === 0) {
-        return array2;
-    } else {
-        if (array2.length === 0) {
-            return array1;
-        }
 
-        // For every item of array2, push it against every item of array 1
-        let result = [];
-        for (let array1Item of array1) {
-            for (let array2Item of array2) {
-                
-                result.push([...array1Item, ...array2Item]);
-            }
-        }
-        return result;
-    }
-}
 

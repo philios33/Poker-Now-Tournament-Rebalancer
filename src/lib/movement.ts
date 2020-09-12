@@ -1,6 +1,4 @@
-import { TournamentState } from "../types/tournamentState"
 import { TargetSeat } from "../types/targetSeat";
-import { Player } from "../types/player";
 import { SeatPosition } from "../types/seatPosition";
 import { BalancingPlayersSeatResult } from "../types/balancingPlayersSeatResult";
 import { SeatMovement } from "../types/seatMovement";
@@ -25,17 +23,14 @@ export const getMovementScore = (state: TournamentState, movingPlayers: Array<Pl
 }
 */
 
-export const getMovingPlayerPositionScore = (fromPos: string, toPos: string): number => {
-    /*
+export const getMovingPlayerPositionScore = (fromPos: string, toPos: string, toNum: number): number => {
+    
+    if (toNum < 2) {
+        throw new Error("To number is too low, must be between 2 and 10: " + toNum);
+    } else if (toNum > 10) {
+        throw new Error("To number is too high, must be between 2 and 10: " + toNum);
+    }
 
-    D -> CO, HJ, UTG+4, UTG+2
-    SB -> D, CO, HJ, UTG+4, SB
-    BB -> SB, D, CO, HJ
-    UTG -> BB, UTG, UTG+1, UTG+2 - Should not skip BB, more preferable to move player back
-    HJ -> UTG+4, HJ, UTG+3, UTG+2, UTG+1, UTG
-    CO -> HJ, CO, UTG+4, UTG+3, UTG+2 - Should not replay dealer or skip to blinds
-
-    */
     /*
 
     0 = Perfect movement
@@ -44,18 +39,89 @@ export const getMovingPlayerPositionScore = (fromPos: string, toPos: string): nu
 
     */
 
-    let weights = {
-        "D": { "CO": 0, "HJ": 2, "D": 3, "UTG+4": 4, "UTG+3": 4, "UTG+2": 4, "UTG+1": 4, "UTG": 5, "BB": 10, "SB": 10 },
-        "SB": { "D": 0, "CO": 2, "HJ": 3, "UTG+4": 4, "UTG+3": 4, "UTG+2": 4, "UTG+1": 4, "UTG": 5, "BB": 15, "SB": 10 },
-        "BB": { "SB": 0, "D": 1, "CO": 2, "HJ": 3, "UTG+4": 4, "UTG+3": 4, "UTG+2": 4, "UTG+1": 4, "UTG": 5, "BB": 15 },
-        "UTG": { "BB": 0, "UTG": 1, "UTG+1": 2, "UTG+2": 3, "UTG+3": 4, "UTG+4": 5, "HJ": 8, "CO": 10, "D": 15, "SB": 15 },
-        "UTG+1": { "BB": 2, "UTG": 0, "UTG+1": 2, "UTG+2": 3, "UTG+3": 4, "UTG+4": 5, "HJ": 6, "CO": 7, "D": 15, "SB": 15 },
-        "UTG+2": { "BB": 5, "UTG": 2, "UTG+1": 0, "UTG+2": 2, "UTG+3": 3, "UTG+4": 4, "HJ": 5, "CO": 6, "D": 15, "SB": 15 },
-        "UTG+3": { "BB": 8, "UTG": 3, "UTG+1": 2, "UTG+2": 0, "UTG+3": 2, "UTG+4": 3, "HJ": 4, "CO": 5, "D": 15, "SB": 15 },
-        "UTG+4": { "BB": 10, "UTG": 4, "UTG+1": 3, "UTG+2": 2, "UTG+3": 0, "UTG+4": 2, "HJ": 3, "CO": 4, "D": 15, "SB": 15 },
-        "HJ": { "BB": 15, "UTG": 10, "UTG+1": 4, "UTG+2": 3, "UTG+3": 2, "UTG+4": 0, "HJ": 2, "CO": 3, "D": 15, "SB": 15 },
-        "CO": { "BB": 15, "UTG": 10, "UTG+1": 5, "UTG+2": 4, "UTG+3": 3, "UTG+4": 2, "HJ": 0, "CO": 2, "D": 15, "SB": 15 },
+    let weights2 = {
+        "D": { "D": 10, "SB": 0},
+        "SB": { "D": 0, "SB": 10},
     }
+
+    let weights3 = {
+        "D": { "D": 5, "SB": 10, "BB": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15},
+        "BB": { "D": 5, "SB": 0, "BB": 15},
+    }
+
+    let weights4 = {
+        "D": { "D": 2, "SB": 10, "BB": 6, "UTG": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 7},
+        "BB": { "D": 8, "SB": 0, "BB": 15, "UTG": 15},
+        "UTG": { "D": 12, "SB": 12, "BB": 0, "UTG": 5},
+    }
+
+    let weights5 = {
+        "D": { "D": 2, "SB": 10, "BB": 6, "UTG": 4, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 10, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "CO": 8},
+        "UTG": { "D": 12, "SB": 12, "BB": 0, "UTG": 5, "CO": 9},
+        "CO": { "D": 8, "SB": 15, "BB": 10, "UTG": 0, "CO": 5},
+    }
+
+    let weights6 = {
+        "D": { "D": 3, "SB": 10, "BB": 15, "UTG": 10, "HJ":5, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 10, "HJ":10, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "HJ":15, "CO": 10},
+        "UTG": { "D": 12, "SB": 12, "BB": 0, "UTG": 3, "HJ":7, "CO": 10},
+        "HJ": { "D": 10, "SB": 15, "BB": 10, "UTG": 0, "HJ":5, "CO": 8},
+        "CO": { "D": 8, "SB": 15, "BB": 10, "UTG": 5, "HJ":0, "CO": 5},
+    }
+
+    let weights7 = {
+        "D": { "D": 3, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 10, "HJ":5, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 10, "UTG+1": 9, "HJ":8, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "UTG+1": 12, "HJ":10, "CO": 8},
+        "UTG": { "D": 12, "SB": 12, "BB": 0, "UTG": 3, "UTG+1": 5, "HJ":7, "CO": 10},
+        "UTG+1": { "D": 15, "SB": 15, "BB": 5, "UTG": 0, "UTG+1": 5, "HJ":10, "CO": 15},
+        "HJ": { "D": 10, "SB": 15, "BB": 10, "UTG": 5, "UTG+1": 0, "HJ":5, "CO": 8},
+        "CO": { "D": 8, "SB": 15, "BB": 15, "UTG": 10, "UTG+1": 5, "HJ":0, "CO": 5},
+    }
+
+    let weights8 = {
+        "D": { "D": 3, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 10, "UTG+2": 8, "HJ":5, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 10, "UTG+2": 9, "HJ":8, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 12, "HJ":10, "CO": 8},
+        "UTG": { "D": 12, "SB": 15, "BB": 0, "UTG": 3, "UTG+1": 5, "UTG+2": 8, "HJ":10, "CO": 10},
+        "UTG+1": { "D": 15, "SB": 15, "BB": 5, "UTG": 0, "UTG+1": 5, "UTG+2": 10, "HJ":10, "CO": 15},
+        "UTG+2": { "D": 15, "SB": 15, "BB": 10, "UTG": 5, "UTG+1": 0, "UTG+2": 5, "HJ":10, "CO": 15},
+        "HJ": { "D": 10, "SB": 15, "BB": 15, "UTG": 10, "UTG+1": 5, "UTG+2": 0, "HJ":5, "CO": 8},
+        "CO": { "D": 8, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 10, "UTG+2": 5, "HJ":0, "CO": 5},
+    }
+
+    let weights9 = {
+        "D": { "D": 3, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 15, "UTG+3": 10, "HJ":5, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 10, "UTG+3": 9, "HJ":8, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 15, "UTG+3": 10, "HJ":9, "CO": 8},
+        "UTG": { "D": 15, "SB": 15, "BB": 0, "UTG": 3, "UTG+1": 5, "UTG+2": 8, "UTG+3": 10, "HJ":15, "CO": 15},
+        "UTG+1": { "D": 15, "SB": 15, "BB": 5, "UTG": 0, "UTG+1": 5, "UTG+2": 10, "UTG+3": 15, "HJ":15, "CO": 15},
+        "UTG+2": { "D": 15, "SB": 15, "BB": 10, "UTG": 5, "UTG+1": 0, "UTG+2": 5, "UTG+3": 10, "HJ":15, "CO": 15},
+        "UTG+3": { "D": 15, "SB": 15, "BB": 15, "UTG": 10, "UTG+1": 5, "UTG+2": 0, "UTG+3": 5, "HJ":10, "CO": 15},
+        "HJ": { "D": 10, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 10, "UTG+2": 5, "UTG+3": 0, "HJ":5, "CO": 8},
+        "CO": { "D": 8, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 10, "UTG+3": 5, "HJ":0, "CO": 5},
+    }
+
+    let weights10 = {
+        "D": { "D": 3, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 10, "UTG+3": 9, "UTG+4": 8, "HJ": 5, "CO": 0},
+        "SB": { "D": 0, "SB": 10, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 15, "UTG+3": 10, "UTG+4": 9, "HJ": 8, "CO": 5},
+        "BB": { "D": 5, "SB": 0, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 15, "UTG+3": 15, "UTG+4": 10, "HJ":9, "CO": 8},
+        "UTG": { "D": 15, "SB": 12, "BB": 0, "UTG": 3, "UTG+1": 5, "UTG+2": 8, "UTG+3": 10, "UTG+4": 15, "HJ":15, "CO": 15},
+        "UTG+1": { "D": 15, "SB": 15, "BB": 5, "UTG": 0, "UTG+1": 5, "UTG+2": 10, "UTG+3": 15, "UTG+4": 15, "HJ":15, "CO": 15},
+        "UTG+2": { "D": 15, "SB": 15, "BB": 10, "UTG": 5, "UTG+1": 0, "UTG+2": 5, "UTG+3": 10, "UTG+4": 12, "HJ":15, "CO": 15},
+        "UTG+3": { "D": 15, "SB": 15, "BB": 15, "UTG": 10, "UTG+1": 5, "UTG+2": 0, "UTG+3": 5, "UTG+4": 10, "HJ":12, "CO": 15},
+        "UTG+4": { "D": 15, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 10, "UTG+2": 5, "UTG+3": 0, "UTG+4": 5, "HJ":10, "CO": 15},
+        "HJ": { "D": 10, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 10, "UTG+3": 5, "UTG+4": 0, "HJ":5, "CO": 8},
+        "CO": { "D": 8, "SB": 15, "BB": 15, "UTG": 15, "UTG+1": 15, "UTG+2": 15, "UTG+3": 10, "UTG+4": 5, "HJ":0, "CO": 5},
+    }
+
+    const allWeights = [weights2, weights3, weights4, weights5, weights6, weights7, weights8, weights9, weights10];
+    const weights = allWeights[toNum - 2]; // Offset by 2
 
     if (fromPos in weights && toPos in weights[fromPos]) {
         return weights[fromPos][toPos];
@@ -64,13 +130,43 @@ export const getMovingPlayerPositionScore = (fromPos: string, toPos: string): nu
 }
 
 export const getMovementScoreFor = (fromSeat: SeatPosition, targetSeat: TargetSeat) => {
-    return (fromSeat.movements * playerMovementScoreWeighting) + getMovingPlayerPositionScore(fromSeat.position, targetSeat.position);
+    return (fromSeat.movements * playerMovementScoreWeighting) + getMovingPlayerPositionScore(fromSeat.position, targetSeat.position, Math.max(fromSeat.numOfPlayers, targetSeat.numOfPlayers));
 }
 
-export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, giveUpIfScoreBreaches: number = null): BalancingPlayersSeatResult => {
+export const numberOfMovementsRequiredForSeats = (seats: number) => {
+    if (seats === 0) {
+        return 0;
+    } else if (seats === 1) {
+        return 1;
+    } else if (seats === 2) {
+        return 4;
+    } else if (seats === 3) {
+        return 15;
+    } else if (seats === 4) {
+        return 64;
+    } else if (seats === 5) {
+        return 325;
+    } else if (seats === 6) {
+        return 1956;
+    } else if (seats === 7) {
+        return 13699;
+    } else if (seats === 8) {
+        return 109600;
+    } else if (seats === 9) {
+        return 986409;
+    } else if (seats === 10) {
+        return 9864100;
+    } else {
+        throw new Error("Unknown number of movements required for seats: " + seats);
+    }
+}
+
+export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, giveUpIfScoreBreaches: number = null, consoleText: string = ""): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
+    let totalMovementsChecked = 0;
+    let totalMovementsSkipped = 0;
     // Given this combination, work out the best movements to choose
     // Do this by applying the first fromSeat to the first targetSeat and trying out all other combinations
-    let bestResult: BalancingPlayersSeatResult = null;
+    let bestResult = null;
     for(let i=0; i<fromSeats.length; i++) {
         // Apply this startingSeat to the first targetSeat
         const otherFromSeats = fromSeats.slice(0);
@@ -79,36 +175,54 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
         let otherTargetSeats = targetSeats.slice(1);
 
         let score = getMovementScoreFor(fromSeat, targetSeat);
+        let thisConsoleText = ",(" + fromSeats.length + ";" + targetSeats.length + ") [" + fromSeat.tableId + ":" + fromSeat.seatId + " to " + targetSeat.tableId + ":" + targetSeat.seat + " = " + score + "/" + giveUpIfScoreBreaches + "]";
+        // console.log(consoleText + thisConsoleText);
+        totalMovementsChecked++;
 
-        let newBreachLimit = null;
+        let newBreachLimit = giveUpIfScoreBreaches;
         if (giveUpIfScoreBreaches !== null) {
-            // For now, test without this optimisation
-            /*
-            if (score > giveUpIfScoreBreaches) {
+            // For now, test without this optimisation            
+            if (score >= giveUpIfScoreBreaches) {
                 // Give up with this combo
+                // console.log(consoleText + " The total score has breached: " + giveUpIfScoreBreaches + " so we are giving up");
+                // Calculate how many checks we skipped here.
+                totalMovementsSkipped += numberOfMovementsRequiredForSeats(otherFromSeats.length);
                 continue;
             } else {
                 newBreachLimit = giveUpIfScoreBreaches - score;
             }
-            */
         }
 
         // Then recurse with the rest of the otherFromSeats & otherTargetSeats if there are more remaining
         if (otherFromSeats.length > 0) {
-            let result = getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, newBreachLimit);
+            // console.log("Recursing...");
+            let result = getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, newBreachLimit, consoleText + thisConsoleText);
 
-            let totalScore = result.totalScore + score;
+            // This is always returned even when no best player movements are found
+            totalMovementsChecked += result.totalMovementsChecked;
+            totalMovementsSkipped += result.totalMovementsSkipped;
 
-            if (bestResult === null || bestResult.totalScore > totalScore) {
-                let movement: SeatMovement = {
-                    fromSeatPosition: fromSeat,
-                    targetSeat: targetSeat,
-                    movementScore: score,
+            if (result.bestResult !== null) {
+                let totalScore = result.bestResult.totalScore + score;
+                
+        //       console.log("Recursed deeper, adding result", result.totalMovementsChecked);
+                // console.log("The best result for the other " + otherFromSeats.length + " seats was " + result.bestResult.totalScore + " so total so far for these " + (otherFromSeats.length + 1) + " seats is " + totalScore);
+                
+
+                if (bestResult === null || bestResult.totalScore > totalScore) {
+                    let movement: SeatMovement = {
+                        fromSeatPosition: fromSeat,
+                        targetSeat: targetSeat,
+                        movementScore: score,
+                    }
+                    bestResult = {
+                        movements: [movement, ...result.bestResult.movements],
+                        totalScore: totalScore,
+                    }
+                    giveUpIfScoreBreaches = totalScore;
                 }
-                bestResult = {
-                    movements: [movement, ...result.movements],
-                    totalScore: totalScore,
-                }
+
+                // console.log("Score for: " + [{fromSeat, targetSeat}, ...result.movements]);
             }
         } else {
 
@@ -123,26 +237,40 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
                     totalScore: score,
                 }
             }
+            // console.log("Score for: " + [{fromSeat, targetSeat}]);
         }
     }
-    return bestResult;
+    
+    // console.log("Returning best player movements after checks: " + totalMovementsChecked);
+    return {bestResult, totalMovementsChecked, totalMovementsSkipped};
 }
 
-export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): BalancingPlayersSeatResult => {
+export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
     // Try every possible ordering of every fromSeats selection, with every possible selection of targetSeats.
     // The selections have already been expanded, we just need to try every combination of ordering of the fromSeats.
     // This is where we can be more efficient.  If the score has already gone above some threshold, we can rule out every combination below using recursion.
     // Keep track of the lowest score from and target selections.
     let bestResult = null;
+    let bestScore = null;
+    let totalMovementsChecked = 0;
+    let totalMovementsSkipped = 0;
+    // console.log("From Combo Count", globalFromSeats.length);
+    // console.log("Target Combo Count", globalTargetSeats.length);
     for (const froms of globalFromSeats) {
         for (const targets of globalTargetSeats) {
             // console.log("Getting best result of ", froms, targets);
-            const result = getBestPlayerMovementsFor(froms, targets);
+            const result = getBestPlayerMovementsFor(froms, targets, bestScore);
+            totalMovementsChecked += result.totalMovementsChecked;
+            totalMovementsSkipped += result.totalMovementsSkipped;
             // console.log("Result was: " + result.totalScore);
-            if (bestResult === null || result.totalScore < bestResult.totalScore) {
-                bestResult = result;
+            if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
+                bestResult = result.bestResult;
+                bestScore = result.bestResult.totalScore;
             }
+            // console.log("Best score is", bestScore);
         }
     }
-    return bestResult;
+    
+    // console.log("BEST RESULT", bestResult);
+    return {bestResult, totalMovementsChecked, totalMovementsSkipped};
 }

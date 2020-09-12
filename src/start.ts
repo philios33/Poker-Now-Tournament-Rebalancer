@@ -1,7 +1,6 @@
 
-import { getRebalancingMovements, multiplyArrays, getRebalancingPlayerMovements } from './lib/balancer';
+import { getRebalancingMovements, getRebalancingPlayerMovements } from './lib/balancer';
 import { TournamentState } from './types/tournamentState';
-import { rotatePlayers, expandTablePositionsAsLastRound } from './lib/positions';
 
 const state: TournamentState = {
     config: {

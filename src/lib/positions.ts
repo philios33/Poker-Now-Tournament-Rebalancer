@@ -1,5 +1,4 @@
 import { Table } from "../types/table";
-import { Player } from "../types/player";
 
 export const getPositionsForTableSize = (size: number) => {
     if (size === 2) {
@@ -25,16 +24,7 @@ export const getPositionsForTableSize = (size: number) => {
     return ["D"];
 }
 
-export const sortBySeatDealerFirst = (players: Array<Player>, dealer: number) => {
-    players.sort((a,b) => {
-        // Score should be position from dealer
-        let aPosFromDealer = a.seat - dealer;
-        let bPosFromDealer = b.seat - dealer;
-        return aPosFromDealer - bPosFromDealer;
-    });
-}
-
-export const rotatePlayers = (players: Array<any>, count: number) => {
+export const rotateArray = (players: Array<any>, count: number) => {
     var len = players.length >>> 0; // convert to uint
     count = count >> 0; // convert to int
 
@@ -71,7 +61,7 @@ export const expandTablePositionsAsLastRound = (table: Table) => {
     }
 
     // Now simply rotate so the players line up with their positions
-    rotatePlayers(playersLastRound, seatsBeforeDealer);
+    rotateArray(playersLastRound, seatsBeforeDealer);
 
     // Then apply these positions around the table from the dealer position
     for (let i=0; i<playersLastRound.length; i++) {

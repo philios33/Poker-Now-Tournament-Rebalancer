@@ -1,19 +1,13 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.multiplyArrays = exports.getRebalancingPlayerMovements = exports.convertSeatMovementToPlayerMovement = exports.workOutTargetSeatPositions = exports.findPlayerBySeat = exports.findTableById = exports.getRebalancingMovements = exports.seatsWithout = exports.combine = exports.getTableCombinations = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getNumberOfPlayersNextRound = void 0;
+exports.getRebalancingPlayerMovements = exports.workOutTargetSeatPositions = exports.getRebalancingMovements = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getNumberOfPlayersNextRound = void 0;
 var seatSelections_1 = __importDefault(require("../classes/seatSelections"));
 var positions_1 = require("./positions");
 var movement_1 = require("./movement");
+var util_1 = require("./util");
 exports.getNumberOfPlayersNextRound = function (state) {
     var numberOfPlayers = 0;
     for (var _i = 0, _a = state.tables; _i < _a.length; _i++) {
@@ -71,38 +65,6 @@ exports.getTablesWithLowestSize = function (tables) {
         }
     }
     return toReturn;
-};
-exports.getTableCombinations = function (tables, choose) {
-    return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
-};
-exports.combine = function (a, min) {
-    var fn = function (n, src, got, all) {
-        if (n == 0) {
-            if (got.length > 0) {
-                all[all.length] = got;
-            }
-            return;
-        }
-        for (var j = 0; j < src.length; j++) {
-            fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
-        }
-        return;
-    };
-    var all = [];
-    for (var i = min; i < a.length; i++) {
-        fn(i, a, [], all);
-    }
-    all.push(a);
-    return all;
-};
-exports.seatsWithout = function (seatIdList) {
-    var negatedList = [];
-    for (var i = 1; i < pokerNowMaxSeatId; i++) {
-        if (seatIdList.indexOf(i) === -1) {
-            negatedList.push(i);
-        }
-    }
-    return negatedList;
 };
 exports.getRebalancingMovements = function (state) {
     var numberOfPlayersNextRound = exports.getNumberOfPlayersNextRound(state);
@@ -192,14 +154,14 @@ exports.getRebalancingMovements = function (state) {
     for (var _f = 0, tablesAfter_1 = tablesAfter; _f < tablesAfter_1.length; _f++) {
         var table = tablesAfter_1[_f];
         if (table.extraPlayers > 0) {
-            toSeats.add(table.id, exports.seatsWithout(table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; })), table.extraPlayers);
+            toSeats.add(table.id, util_1.invertSeatList(table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; }), pokerNowMaxSeatId), table.extraPlayers);
         }
     }
     var targetSeats = [];
     // console.log("Initial target seats", targetSeats);
     if (remainingMovements > 0) {
         var lowestTables = exports.getTablesWithLowestSize(tablesAfter);
-        var tableCombinations = exports.getTableCombinations(lowestTables, remainingMovements);
+        var tableCombinations = util_1.getTableCombinations(lowestTables, remainingMovements);
         // console.log("Remaining movements", remainingMovements);
         // console.log("Table Combos", JSON.stringify(tableCombinations, null, 4));
         for (var _g = 0, tableCombinations_1 = tableCombinations; _g < tableCombinations_1.length; _g++) {
@@ -208,7 +170,7 @@ exports.getRebalancingMovements = function (state) {
             var anotherSeatSelections = new seatSelections_1.default(toSeats);
             for (var _h = 0, tableCombo_1 = tableCombo; _h < tableCombo_1.length; _h++) {
                 var table = tableCombo_1[_h];
-                anotherSeatSelections.add(table.id, exports.seatsWithout(table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; })), 1);
+                anotherSeatSelections.add(table.id, util_1.invertSeatList(table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; }), pokerNowMaxSeatId), 1);
             }
             // console.log("anotherSeatSelections", anotherSeatSelections);
             targetSeats.push(anotherSeatSelections);
@@ -301,24 +263,6 @@ exports.getRebalancingMovements = function (state) {
 
     */
 };
-exports.findTableById = function (state, tableId) {
-    for (var _i = 0, _a = state.tables; _i < _a.length; _i++) {
-        var table = _a[_i];
-        if (table.id === tableId) {
-            return table;
-        }
-    }
-    throw new Error("Table not found with id:" + tableId);
-};
-exports.findPlayerBySeat = function (table, seatId) {
-    for (var _i = 0, _a = table.players; _i < _a.length; _i++) {
-        var player = _a[_i];
-        if (player.seat === seatId) {
-            return player;
-        }
-    }
-    throw new Error("Player not found at seat:" + seatId + " of table " + table.id);
-};
 exports.workOutTargetSeatPositions = function (table, sc) {
     // Given that the following seats would be filled next round, work out the seating positions next round
     // Apply all existing players to seats
@@ -349,7 +293,7 @@ exports.workOutTargetSeatPositions = function (table, sc) {
             rotateBy++;
         }
     }
-    positions_1.rotatePlayers(players, rotateBy);
+    positions_1.rotateArray(players, rotateBy);
     // Get all positions from dealer
     var positions = positions_1.getPositionsForTableSize(players.length);
     var targetSeats = [];
@@ -365,16 +309,6 @@ exports.workOutTargetSeatPositions = function (table, sc) {
     }
     return targetSeats;
 };
-exports.convertSeatMovementToPlayerMovement = function (state, sm) {
-    var table = exports.findTableById(state, sm.fromSeatPosition.tableId);
-    var player = exports.findPlayerBySeat(table, sm.fromSeatPosition.seatId);
-    return {
-        fromTable: table,
-        fromPlayer: player,
-        to: sm.targetSeat,
-        movementScore: sm.movementScore,
-    };
-};
 exports.getRebalancingPlayerMovements = function (state) {
     var result = exports.getRebalancingMovements(state);
     // console.log("RESULT", JSON.stringify(result, null, 4));
@@ -387,7 +321,7 @@ exports.getRebalancingPlayerMovements = function (state) {
     // 1. Convert the fromSeats.selections seatIdList from Array<number> to Array<SeatPosition>
     var allSeatPositions = [];
     var _loop_1 = function (tableId) {
-        var table = exports.findTableById(state, tableId);
+        var table = util_1.findTableById(state, tableId);
         var seatsObj = {};
         for (var _i = 0, _a = table.players; _i < _a.length; _i++) {
             var player = _a[_i];
@@ -423,8 +357,8 @@ exports.getRebalancingPlayerMovements = function (state) {
     // console.log("SP", JSON.stringify(allSeatPositions, null, 4));
     var globalFromSeats = [];
     var _loop_2 = function (sp) {
-        var choices = exports.combine(sp.sps, sp.chooseNumber).filter(function (p) { return p.length === sp.chooseNumber; });
-        globalFromSeats = exports.multiplyArrays(globalFromSeats, choices);
+        var choices = util_1.combine(sp.sps, sp.chooseNumber).filter(function (p) { return p.length === sp.chooseNumber; });
+        globalFromSeats = util_1.multiplyArrays(globalFromSeats, choices);
     };
     // 2. Choose each seatPositions and multiply them out with every selection (This will give every possible player selection choice)
     for (var _b = 0, allSeatPositions_1 = allSeatPositions; _b < allSeatPositions_1.length; _b++) {
@@ -439,11 +373,11 @@ exports.getRebalancingPlayerMovements = function (state) {
         var sss = _d[_c];
         var groupTargetSeats = [];
         var _loop_3 = function (tableId) {
-            var table = exports.findTableById(state, tableId);
+            var table = util_1.findTableById(state, tableId);
             var ss = sss.selections[tableId];
             var currentTargetSeats = [];
             // Expand the combos of seats
-            var seatCombos = exports.combine(ss.seatIdList, ss.chooseNumber).filter(function (p) { return p.length === ss.chooseNumber; });
+            var seatCombos = util_1.combine(ss.seatIdList, ss.chooseNumber).filter(function (p) { return p.length === ss.chooseNumber; });
             for (var _i = 0, seatCombos_1 = seatCombos; _i < seatCombos_1.length; _i++) {
                 var sc = seatCombos_1[_i];
                 // Where would the dealer be if these seats were taken next round?
@@ -451,7 +385,7 @@ exports.getRebalancingPlayerMovements = function (state) {
                 currentTargetSeats.push(targetSeats);
             }
             // At this point, multiply every currentTargetSeats in to globalTargetSeats???
-            groupTargetSeats = exports.multiplyArrays(groupTargetSeats, currentTargetSeats);
+            groupTargetSeats = util_1.multiplyArrays(groupTargetSeats, currentTargetSeats);
         };
         for (var tableId in sss.selections) {
             _loop_3(tableId);
@@ -469,32 +403,12 @@ exports.getRebalancingPlayerMovements = function (state) {
     var playerMovements = [];
     var totalScore = 0;
     if (optimalResult !== null) {
-        playerMovements = optimalResult.movements.map(function (sm) { return exports.convertSeatMovementToPlayerMovement(state, sm); });
+        playerMovements = optimalResult.movements.map(function (sm) { return util_1.convertSeatMovementToPlayerMovement(state, sm); });
         totalScore = optimalResult.totalScore;
     }
     return {
         movements: playerMovements,
         totalScore: totalScore,
     };
-};
-exports.multiplyArrays = function (array1, array2) {
-    if (array1.length === 0) {
-        return array2;
-    }
-    else {
-        if (array2.length === 0) {
-            return array1;
-        }
-        // For every item of array2, push it against every item of array 1
-        var result = [];
-        for (var _i = 0, array1_1 = array1; _i < array1_1.length; _i++) {
-            var array1Item = array1_1[_i];
-            for (var _a = 0, array2_1 = array2; _a < array2_1.length; _a++) {
-                var array2Item = array2_1[_a];
-                result.push(__spreadArrays(array1Item, array2Item));
-            }
-        }
-        return result;
-    }
 };
 //# sourceMappingURL=balancer.js.map

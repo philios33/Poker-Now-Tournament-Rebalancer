@@ -156,3 +156,8 @@ Total score: 10
 ```
 
 
+## Other thoughts
+
+1. We need a tournament page where players can see all tables and click on them to open them up in new tabs.
+This is similar to the game page.  You connect a socket, grab the current tournament state and listen for tournament update events.
+The page simply renders the tournament state with react components.  We can reuse the same actions queue, state & brains idea that worked so well for you in the past.  Anyone with the tournament id can view the tournament page.  Admins can control the tournament in real time by sending actions that alter the state via the tournament brains.

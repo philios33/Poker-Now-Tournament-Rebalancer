@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.expandTablePositionsAsLastRound = exports.rotatePlayers = exports.sortBySeatDealerFirst = exports.getPositionsForTableSize = void 0;
+exports.expandTablePositionsAsLastRound = exports.rotateArray = exports.getPositionsForTableSize = void 0;
 exports.getPositionsForTableSize = function (size) {
     if (size === 2) {
         return ["D", "SB"];
@@ -28,31 +28,7 @@ exports.getPositionsForTableSize = function (size) {
     }
     return ["D"];
 };
-exports.sortBySeatDealerFirst = function (players, dealer) {
-    players.sort(function (a, b) {
-        // Score should be position from dealer
-        var aPosFromDealer = a.seat - dealer;
-        var bPosFromDealer = b.seat - dealer;
-        return aPosFromDealer - bPosFromDealer;
-    });
-};
-/*
-export const applyPositionsToPlayers = (positions: Array<string>, players: Array<Player>, dealer: number) => {
-
-    // How many players are behind the dealer
-    let behindDealer = 0;
-    for(const player of players) {
-        if (player.seat <= dealer) {
-            behindDealer ++;
-        }
-    }
-    behindDealer--; // Do it this way to cater for dead button.  We assume player before had the button.
-
-    sortBySeatDealerFirst(players, dealer);
-
-}
-*/
-exports.rotatePlayers = function (players, count) {
+exports.rotateArray = function (players, count) {
     var len = players.length >>> 0; // convert to uint
     count = count >> 0; // convert to int
     // convert count to value in range [0, len)
@@ -85,7 +61,7 @@ exports.expandTablePositionsAsLastRound = function (table) {
         positions.shift();
     }
     // Now simply rotate so the players line up with their positions
-    exports.rotatePlayers(playersLastRound, seatsBeforeDealer);
+    exports.rotateArray(playersLastRound, seatsBeforeDealer);
     // Then apply these positions around the table from the dealer position
     for (var i = 0; i < playersLastRound.length; i++) {
         playersLastRound[i].position = positions[i];
