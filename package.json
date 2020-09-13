@@ -1,6 +1,6 @@
 {
-  "name": "poker-now-tournament-rebalancer",
-  "version": "1.0.1",
+  "name": "@poker-now/tournament-rebalancer",
+  "version": "1.0.3",
   "description": "A JS algorithm to decide what player movements to make when re-balancing a multi-table tournament.",
   "main": "dist/index.js",
   "scripts": {
