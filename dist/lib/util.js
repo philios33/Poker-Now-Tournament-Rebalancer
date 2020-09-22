@@ -7,9 +7,12 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableCombinations = void 0;
+exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 exports.getTableCombinations = function (tables, choose) {
     return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
+};
+exports.getTableIdCombinations = function (tableIds, choose) {
+    return exports.combine(tableIds, choose).filter(function (p) { return p.length === choose; });
 };
 exports.combine = function (a, min) {
     var fn = function (n, src, got, all) {
@@ -93,5 +96,16 @@ exports.multiplyArrays = function (array1, array2, considerAsArrays) {
         }
         return result;
     }
+};
+exports.randomlyChooseTables = function (tableListId, choose) {
+    if (choose > tableListId.length) {
+        throw new Error("ERROR: The number of tables is " + tableListId.length + " but we are choosing " + choose + " random");
+    }
+    tableListId.sort(function () { return Math.random() - 0.5; });
+    return tableListId.slice(0, choose);
+};
+exports.getSeatListOfActivePlayers = function (tableId, state) {
+    var table = exports.findTableById(state, tableId);
+    return table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; });
 };
 //# sourceMappingURL=util.js.map

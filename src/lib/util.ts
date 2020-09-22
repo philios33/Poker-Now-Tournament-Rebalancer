@@ -6,6 +6,9 @@ import { PlayerMovement } from "../types/playerMovement";
 export const getTableCombinations = (tables: Array<Table>, choose: number) => {
     return combine(tables, choose).filter(p => p.length === choose);
 }
+export const getTableIdCombinations = (tableIds: Array<string>, choose: number) => {
+    return combine(tableIds, choose).filter(p => p.length === choose);
+}
 
 export const combine = function(a, min) {
     var fn = function(n, src, got, all) {
@@ -91,3 +94,15 @@ export const multiplyArrays = (array1, array2, considerAsArrays = true) => {
     }
 }
 
+export const randomlyChooseTables = (tableListId: Array<string>, choose: number) => {
+    if (choose > tableListId.length) {
+        throw new Error("ERROR: The number of tables is " + tableListId.length + " but we are choosing " + choose + " random");
+    }
+    tableListId.sort(() => Math.random() - 0.5);
+    return tableListId.slice(0, choose);
+}
+
+export const getSeatListOfActivePlayers = (tableId: string, state: TournamentState) => {
+    let table = findTableById(state, tableId);
+    return table.players.filter(p => p.participatingNextRound).map(p => p.seat);
+}

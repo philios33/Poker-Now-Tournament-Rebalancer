@@ -38,16 +38,19 @@ test('Get Table Combinations', function () {
     var tableA = {
         id: 'A',
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: []
     };
     var tableB = {
         id: 'B',
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: []
     };
     var tableC = {
         id: 'C',
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: []
     };
     var choose1 = util_1.getTableCombinations([tableA, tableB, tableC], 1);
@@ -110,16 +113,20 @@ test('findTableById and findPlayerBySeat', function () {
     var tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [P1, P2]
     };
     var tableB = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [P3, P4]
     };
     var state = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB]
     };

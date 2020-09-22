@@ -43,16 +43,19 @@ test('Get Table Combinations', () => {
     const tableA: Table = {
         id: 'A',
         dealerButtonLastRound:1,
+        hasStartedNextRound: false,
         players: []
     };
     const tableB: Table = {
         id: 'B',
         dealerButtonLastRound:1,
+        hasStartedNextRound: false,
         players: []
     };
     const tableC: Table = {
         id: 'C',
         dealerButtonLastRound:1,
+        hasStartedNextRound: false,
         players: []
     };
     const choose1 = getTableCombinations([tableA, tableB, tableC], 1);
@@ -121,17 +124,21 @@ test('findTableById and findPlayerBySeat', () => {
     const tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [P1,P2]
     }
     const tableB = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [P3,P4]
     }
 
     const state: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB]
     }

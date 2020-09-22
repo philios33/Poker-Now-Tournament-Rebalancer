@@ -1,7 +1,6 @@
 import { getMovingPlayerPositionScore, getMovementScoreFor, getBestPlayerMovementsFor, getOptimalPlayerMovements, numberOfMovementsRequiredForSeats } from "../movement";
 import { TargetSeat } from "../../types/targetSeat";
 import { SeatPosition } from "../../types/seatPosition";
-import { combine } from "../util";
 
 test('getMovingPlayerPositionScore', () => {
     expect(getMovingPlayerPositionScore("D", "CO", 10)).toBe(0);

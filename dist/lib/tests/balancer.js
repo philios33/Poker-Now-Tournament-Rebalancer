@@ -5,6 +5,8 @@ test("getNumberOfPlayersNextRound", function () {
     var emptyTournament = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: []
     };
@@ -12,10 +14,13 @@ test("getNumberOfPlayersNextRound", function () {
     var headsUpTournament = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
                 id: "A",
                 dealerButtonLastRound: 1,
+                hasStartedNextRound: false,
                 players: [
                     {
                         id: "1",
@@ -48,10 +53,13 @@ test("getNumberOfPlayersNextRound", function () {
     var multiTableTournament = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
                 id: "A",
                 dealerButtonLastRound: 1,
+                hasStartedNextRound: false,
                 players: [
                     {
                         id: "1",
@@ -81,6 +89,7 @@ test("getNumberOfPlayersNextRound", function () {
             }, {
                 id: "B",
                 dealerButtonLastRound: 1,
+                hasStartedNextRound: false,
                 players: [
                     {
                         id: "4",
@@ -116,6 +125,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "1",
                 name: "1",
@@ -136,6 +146,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableB = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "3",
                 name: "3",
@@ -151,6 +162,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableC = {
         id: "C",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "4",
                 name: "4",
@@ -178,6 +190,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableD = {
         id: "D",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "7",
                 name: "7",
@@ -207,6 +220,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableE = {
         id: "E",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "10",
                 name: "10",
@@ -229,6 +243,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC, tableD, tableE],
     }, 1);
@@ -236,6 +252,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result2 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableD, tableE, tableB, tableA, tableC],
     }, 1);
@@ -243,6 +261,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result3 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC, tableD, tableE],
     }, 3);
@@ -256,10 +276,13 @@ test("getRebalancingMovements", function () {
     var result = balancer_1.getRebalancingMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
                 id: "A",
                 dealerButtonLastRound: 1,
+                hasStartedNextRound: false,
                 players: [
                     {
                         id: "1",
@@ -289,6 +312,7 @@ test("getRebalancingMovements", function () {
             }, {
                 id: "B",
                 dealerButtonLastRound: 1,
+                hasStartedNextRound: false,
                 players: [
                     {
                         id: "4",
@@ -334,6 +358,7 @@ test("workOutTargetSeatPositions", function () {
     var tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [
             {
                 id: "1",
@@ -369,6 +394,7 @@ test("workOutTargetSeatPositions", function () {
     var tableB = {
         id: "B",
         dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
         players: [
             {
                 id: "1",
@@ -408,6 +434,7 @@ test("getRebalancingPlayerMovements", function () {
     var tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "1",
                 name: "1",
@@ -441,6 +468,7 @@ test("getRebalancingPlayerMovements", function () {
     var tableB = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "5",
                 name: "5",
@@ -474,6 +502,7 @@ test("getRebalancingPlayerMovements", function () {
     var tableC = {
         id: "C",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "9",
                 name: "9",
@@ -507,6 +536,8 @@ test("getRebalancingPlayerMovements", function () {
     var state = {
         config: {
             maxPlayersPerTable: 6,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC]
     };

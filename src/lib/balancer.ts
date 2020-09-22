@@ -9,8 +9,9 @@ import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { invertSeatList, getTableCombinations, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement } from "./util";
+import { invertSeatList, getTableCombinations, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers } from "./util";
 import { Logger } from "../classes/logger";
+import { TableChoices } from "../types/tableChoices";
 
 
 
@@ -76,6 +77,37 @@ export const getTablesWithLowestSize = (tables: Array<Table>): Array<Table> => {
     return toReturn;
 }
 
+export const getTablesWithHighestSize = (tables: Array<Table>): Array<Table> => {
+    //console.log("GETTING HIGHEST TABLE", JSON.stringify(tables, null, 4));
+    let highestSize = 0;
+    for(const table of tables) {
+        let tableSize = table.players.filter(p => p.participatingNextRound).length;
+        if (typeof table.extraPlayers !== "undefined") {
+            // Consider extra players assigned here
+            tableSize += table.extraPlayers;
+        }
+        // console.log(table.id + " has size of " + tableSize);
+        if (tableSize > highestSize) {
+            highestSize = tableSize;
+        }
+    }
+    // console.log("Highest size is: " + highestSize);
+    // Then return all tables with this size
+    const toReturn: Array<Table> = [];
+    for(const table of tables) {
+        let tableSize = table.players.filter(p => p.participatingNextRound).length;
+        if (typeof table.extraPlayers !== "undefined") {
+            // Consider extra players assigned here
+            tableSize += table.extraPlayers;
+        }
+        if (tableSize === highestSize) {
+            toReturn.push(table);
+        }
+    }
+    // console.log("RETURNING", toReturn);
+    return toReturn;
+}
+
 export const getRebalancingMovements = (state: TournamentState): BalancingMovementsResult => {
 
     let numberOfPlayersNextRound = getNumberOfPlayersNextRound(state);
@@ -83,6 +115,14 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     let currentNumberOfTables = state.tables.length;
 
     let maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / optimalNumberOfTables);
+    let minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables - 1;
+    // Unless tables can be exactly balanced
+    if ((maxNumberOfPlayersOnTables * optimalNumberOfTables) === numberOfPlayersNextRound) {
+        minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
+    }
+    
+    maxNumberOfPlayersOnTables += state.config.balanceMaxFlexibility;
+    minNumberOfPlayersOnTables -= state.config.balanceMinFlexibility;
 
     /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
@@ -91,7 +131,19 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     console.log("maxNumberOfPlayersOnTables = " + maxNumberOfPlayersOnTables);
     */
 
-    let fromSeats = new SeatSelections();
+    // First just work out the FROM tableChoices and TO tableChoices.
+    // These determine which tables have moving players.  Nothing to do with seats.
+
+    // I want to phase out SeatSelections class.  It seems to be irrelevant now.
+    // let fromSeats = new SeatSelections();
+    // And replace it with this.
+    let fromTableChoices: TableChoices = {
+        choices: []
+    };
+    let toTableChoices: TableChoices = {
+        choices: []
+    };
+
     let totalNumberOfMovements = 0;
 
     let tableIdsBeingBrokenUp = [];
@@ -101,12 +153,20 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
         // Break up the tables with the lowest number of people
         let tables = getTablesWithLeastSizeAndMovements(state, numberOfTablesToBreakUp);
-        for(let table of tables) {
+        for (let table of tables) {
             // console.log("Breaking up table", table.id);
-            let activeSeats = table.players.filter(p => p.participatingNextRound).map(p => p.seat);
-            fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
-            totalNumberOfMovements += activeSeats.length;
-
+            let numActiveSeats = table.players.filter(p => p.participatingNextRound).length;
+            // Move everyone
+            for(let i=0; i<numActiveSeats; i++) {
+                fromTableChoices.choices.push({
+                    tableIdList: [table.id],
+                    choose: 1,
+                });
+                totalNumberOfMovements++;
+            }
+            
+            // fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
+            
             // Remove from tableSizes counter object
             tableIdsBeingBrokenUp.push(table.id);
         }
@@ -120,16 +180,30 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         }
     }
 
-    // We also need to move those players on tables which now have too many players
+    // We also need to move those players on tables which now have too many or too few players
+    
+    // TODO Fix the problem where a tournament structure such as 5,10,10,10,10,10,10 would not get rebalanced because tables of 10 are allowed still.
+    // We must consider tables with less than the minimum number of players
+    // E.g. In this case in strict mode, 4 extra players should move so that 9,10,10,9,9,9,9 is made.
+    // Check this later on.
+
     for(let table of state.tables) {
         const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length;
         if (playersParticipatingNextRound > maxNumberOfPlayersOnTables) {
             const movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
             // console.log("Moving " + movementsFromTable + " players from table " + table.id);
-            fromSeats.add(table.id, table.players.filter(p => p.participatingNextRound).map(p => p.seat), movementsFromTable);
-            totalNumberOfMovements += movementsFromTable;
+            // fromSeats.add(table.id, table.players.filter(p => p.participatingNextRound).map(p => p.seat), movementsFromTable);
+            for(let i=0; i<movementsFromTable; i++) {
+                fromTableChoices.choices.push({
+                    tableIdList: [table.id],
+                    choose: 1,
+                });
+                totalNumberOfMovements++;
+            }
         }
     }
+
+    
 
     // At this point, we know how many movements "from" there will be.
     // Assign each player to the table with the smallest number of players until we have run out of extra players
@@ -150,18 +224,25 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     // We CAN define this as an array of target SeatSelections
     // This is useful because we can expand each one and try every set of combinations as the target.
 
+    // Here we decide where the players should go.
     let remainingMovements = totalNumberOfMovements;
     while (remainingMovements > 0) {
+        // For each remaining movement, choose the active table with the least number of players.
         let lowestTables = getTablesWithLowestSize(tablesAfter);
         // console.log(remainingMovements + " remaining.  Number of lowest tables is " + lowestTables.length);
         if (lowestTables.length <= remainingMovements) {
             // If there is a tie when assigning the next player to a table, just assign a player to each table.
             for(const table of lowestTables) {
-                table.extraPlayers++;
+                table.extraPlayers++; // Signifys that this table will receive a new player
+                
+                toTableChoices.choices.push({
+                    tableIdList: [table.id],
+                    choose: 1,
+                });
                 remainingMovements--;
             }
         } else {
-            // So there are remainingMovements still to assign but lowestTables.length to choose from.
+            // So there are some remainingMovements still, but there is a tie and not enough lowestTables to choose from.
             // We need to fork the SeatSelections object for each combination
             // console.log("There are " + remainingMovements + " still to assign but " + lowestTables.length + " to choose from");
             break;
@@ -170,13 +251,87 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
     // console.log("tablesAfter is", tablesAfter);
     // Make the primary SeatSelections
+    // This has been replaced by toTableChoices
+    /*
     let toSeats: SeatSelections = new SeatSelections();
     for(const table of tablesAfter) {
         if (table.extraPlayers > 0) {
             toSeats.add(table.id, invertSeatList(table.players.filter(p => p.participatingNextRound).map(p => p.seat), pokerNowMaxSeatId), table.extraPlayers);
         }
     }
-    
+    */
+
+    // At this point, we need to look at which tables are too low on numbers.
+    // We first work out how many extra movements are needed.
+    // let totalNumberOfExtraMovements = 0;
+    for(let table of state.tables) {
+        if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
+            const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length + (table.extraPlayers ? table.extraPlayers : 0);
+            if (playersParticipatingNextRound < minNumberOfPlayersOnTables) {
+                const numberOfMovementsTo = (minNumberOfPlayersOnTables - playersParticipatingNextRound);
+                for(let i=0; i<numberOfMovementsTo; i++) {
+                    table.extraPlayers++;
+                    toTableChoices.choices.push({
+                        tableIdList: [table.id],
+                        choose: 1,
+                    });
+                    remainingMovements--;
+                }
+            }
+        }
+    }
+    // If the remainingMovements is now negative, it means we have assigned too many target seats and need to pull extra players from the highest tables
+
+    if (remainingMovements < 0) {
+        // console.log("Extra players to grab", -remainingMovements);
+        
+        while (remainingMovements < 0) {
+            // Find highest table
+            let highestTables = getTablesWithHighestSize(tablesAfter);  // This honours the extraPlayers count on the table
+            if (highestTables.length <= remainingMovements) {
+                for(let i=0; i<highestTables.length; i++) {
+                    fromTableChoices.choices.push({
+                        tableIdList: [highestTables[i].id],
+                        choose: 1,
+                    });
+                    highestTables[i].extraPlayers--; // Signifys that this table will have a player removed
+                    remainingMovements++;
+                }
+            } else {
+                // There are too many tables to choose from, this is the final one
+                fromTableChoices.choices.push({
+                    tableIdList: highestTables.map(t => t.id),
+                    choose: -remainingMovements,
+                });
+                remainingMovements=0; // Final movement
+            }
+        }
+    } else if (remainingMovements > 0) {
+        // We still have some players to assign
+        while (remainingMovements > 0) {
+            let lowestTables = getTablesWithLowestSize(tablesAfter);
+
+            if (lowestTables.length < remainingMovements) {
+                // Assign to all lowest tables
+                for(const table of lowestTables) {
+                    table.extraPlayers++;
+                    toTableChoices.choices.push({
+                        tableIdList: [table.id],
+                        choose: 1,
+                    });
+                    remainingMovements--;
+                }
+            } else {
+                toTableChoices.choices.push({
+                    tableIdList: lowestTables.map(t => t.id),
+                    choose: remainingMovements,
+                });
+                remainingMovements=0;
+            }
+        }
+    }
+
+    /*
     let targetSeats: Array<SeatSelections> = [];
     
     // console.log("Initial target seats", targetSeats);
@@ -200,9 +355,63 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     } else {
         targetSeats.push(toSeats);
     }
+    */
 
-    // console.log("From Seats", fromSeats);
-    // console.log("Target Seats", targetSeats);
+    // We just need to convert fromTableChoices(TableChoices) and toTableChoices(TableChoices) combinations to fromSeats(SeatSelections) and targetSeats(Array<SeatSelections>)
+    // console.log("FROM CHOICES", JSON.stringify(fromTableChoices, null, 4));
+    // console.log("TO CHOICES", JSON.stringify(toTableChoices, null, 4));
+
+    // We must have a distinct set of fromSeats, so having any choices here will need to be randomly expanded.
+    let fromSeats = new SeatSelections();
+    for(const tableChoice of fromTableChoices.choices) {
+        if (tableChoice.choose < tableChoice.tableIdList.length) {
+            // Randomly choose table selection
+            const tableIdList = randomlyChooseTables(tableChoice.tableIdList, tableChoice.choose); // Note: This choose value should never be higher than the number of table ids
+            for (const tableId of tableIdList) {
+                fromSeats.add(tableId, getSeatListOfActivePlayers(tableId, state), 1);
+            }
+        } else {
+            for (const tableId of tableChoice.tableIdList) {
+                fromSeats.add(tableId, getSeatListOfActivePlayers(tableId, state), 1);
+            }
+        }
+    }
+
+    // We may have choices still in the targetSeats, so these need to be expanded in to an array
+    let targetSeats = [new SeatSelections()];
+
+    for(const tableChoice of toTableChoices.choices) {
+        if (tableChoice.choose === 1 && tableChoice.tableIdList.length === 1) {
+            // Normal target seat, add to all
+            for(const toSeats of targetSeats) {
+                toSeats.add(tableChoice.tableIdList[0], invertSeatList(getSeatListOfActivePlayers(tableChoice.tableIdList[0], state), pokerNowMaxSeatId), 1);
+            }
+        } else {
+            // Choice target seat, multiply by all the current targetSeats
+
+            let tableCombinations: Array<Array<string>> = getTableIdCombinations(tableChoice.tableIdList, tableChoice.choose);
+
+            // console.log("Remaining movements", remainingMovements);
+            // console.log("Table Combos", JSON.stringify(tableCombinations, null, 4));
+
+            let newTargetSeats = [];
+            for(const tableCombo of tableCombinations) {
+                // Expand these table combinations in to the existing targetSeats
+                for(const targetSeat of targetSeats) {
+                    let anotherSeatSelections = new SeatSelections(targetSeat);
+                    for(const tableId of tableCombo) {
+                        anotherSeatSelections.add(tableId, invertSeatList(getSeatListOfActivePlayers(tableId, state), pokerNowMaxSeatId), 1);
+                    }
+                    // console.log("anotherSeatSelections", anotherSeatSelections);
+                    newTargetSeats.push(anotherSeatSelections);
+                }
+            }
+            targetSeats = newTargetSeats
+        }
+    }
+
+    // console.log("From Seats", JSON.stringify(fromSeats, null, 4));
+    // console.log("Target Seats", JSON.stringify(targetSeats, null, 4));
 
     return {
         movements: totalNumberOfMovements,
@@ -465,8 +674,22 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         targetCombos += tsArray.length;
     }
 
-    // console.log("Gloabl From Seats", globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
-    // console.log("Gloabl Target Seats", globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
+    if (globalFromSeats.length === 0) {
+        // No movements necessary
+        logger.log("Finished");
+        const endTime = (new Date()).getTime();
+
+        return {
+            stats: result.stats,
+            movements: [],
+            totalScore: 0,
+            optimalResult: null,
+            msTaken: endTime - startTime,    
+        }
+    }
+
+    // console.log("Global From Seats", globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
+    // console.log("Global Target Seats", globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
 
     const optimalResult = getOptimalPlayerMovements(globalFromSeats, globalTargetSeats);
     logger.log("Obtained Optimal Player Movements");
@@ -491,10 +714,15 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         stats: result.stats,
         movements: playerMovements,
         totalScore,
+
+        optimalResult,
+        /*
         totalCombinations: optimalResult.totalCombinations,
         processedCombinations: optimalResult.processedCombinations,
         totalMovementsChecked: optimalResult.totalMovementsChecked,
         totalMovementsSkipped: optimalResult.totalMovementsSkipped,
+        */
+        
         msTaken: endTime - startTime,
         
     }

@@ -5,6 +5,8 @@ import { TournamentState } from './types/tournamentState';
 const state: TournamentState = {
     config: {
         maxPlayersPerTable: 4,
+        balanceMaxFlexibility: 0,
+        balanceMinFlexibility: 0,
     },
     tables: [
         {
@@ -36,6 +38,7 @@ const state: TournamentState = {
                 }
             ],
             dealerButtonLastRound: 6,
+            hasStartedNextRound: false,
         },
         {
             id: "2",
@@ -58,6 +61,7 @@ const state: TournamentState = {
                 }
             ],
             dealerButtonLastRound: 6,
+            hasStartedNextRound: false,
         },
         {
             id: "3",
@@ -88,6 +92,7 @@ const state: TournamentState = {
                 }
             ],
             dealerButtonLastRound: 5,
+            hasStartedNextRound: false,
         },
     ]
 };

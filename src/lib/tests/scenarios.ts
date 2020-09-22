@@ -4,7 +4,8 @@ import { Table } from "../../types/table";
 
 jest.retryTimes(0);
 
-const createTableOf = (tableId: string, startingIdent: string, numPlayers: number): Table => {
+
+const createTableOf = (tableId: string, startingIdent: string, numPlayers: number, hasStartedNextRound: boolean): Table => {
     let nextIdent = parseInt(startingIdent, 10);
     let players = [];
     for(let i=0; i<numPlayers; i++) {
@@ -21,14 +22,16 @@ const createTableOf = (tableId: string, startingIdent: string, numPlayers: numbe
     return {
         id: tableId,
         dealerButtonLastRound: 1,
+        hasStartedNextRound,
         players: players,
     }
 }
 
 test('Table Creator', () => {
-    expect(createTableOf("A", "1", 10)).toStrictEqual({
+    expect(createTableOf("A", "1", 10, false)).toStrictEqual({
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "1",
             name: "TAS1",
@@ -101,9 +104,10 @@ test('Table Creator', () => {
             seat: 10,
         }]
     });
-    expect(createTableOf("B", "11", 8)).toStrictEqual({
+    expect(createTableOf("B", "11", 8, false)).toStrictEqual({
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "11",
             name: "TBS1",
@@ -163,9 +167,10 @@ test('Table Creator', () => {
         }]
     });
 
-    expect(createTableOf("A", "1", 4)).toStrictEqual({
+    expect(createTableOf("A", "1", 4, false)).toStrictEqual({
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "1",
             name: "TAS1",
@@ -196,9 +201,10 @@ test('Table Creator', () => {
             seat: 4,
         }]
     });
-    expect(createTableOf("B", "5", 6)).toStrictEqual({
+    expect(createTableOf("B", "5", 6, false)).toStrictEqual({
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "5",
             name: "TBS1",
@@ -246,15 +252,58 @@ test('Table Creator', () => {
 })
 
 
+
+test('2 full tables, no movements necessary', () => {
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
+        },
+        tables: [
+            createTableOf("A", "1", 10, false),
+            createTableOf("B", "11", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(0);
+    expect(result.optimalResult).toBe(null);
+})
+
+
+test('5 tables of 9, no movements necessary', () => {
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
+        },
+        tables: [
+            createTableOf("A", "1", 9, false),
+            createTableOf("B", "11", 9, false),
+            createTableOf("C", "21", 9, false),
+            createTableOf("D", "31", 9, false),
+            createTableOf("E", "41", 9, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(0);
+    expect(result.optimalResult).toBe(null);
+})
+
+
+
 test('Case where Table A has 10, and Table B has 8', () => {
     // Should move the best person from table A to B
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 10),
-            createTableOf("B", "11", 8),
+            createTableOf("A", "1", 10, false),
+            createTableOf("B", "11", 8, false),
         ]
     });
     // Only Seat 9 and Seat 10 are available and they would both be the HJ position in a 9 seated table with D moving to seat 2
@@ -274,15 +323,39 @@ test('Case where Table A has 10, and Table B has 8', () => {
 
 });
 
+test('Flexible case where Table A has 10, and Table B has 8, should do nothing', () => {
+    // Should move the best person from table A to B
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 1,
+            balanceMinFlexibility: 1,
+        },
+        tables: [
+            createTableOf("A", "1", 10, false),
+            createTableOf("B", "11", 8, false),
+        ]
+    });
+    // Optimal seat number is 9, but flexibility should allow 8 or 10
+    
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.stats.numberOfPlayersNextRound).toBe(18);
+    expect(result.movements.length).toBe(0);
+    expect(result.optimalResult).toBe(null);
+});
+
+
 test('Case where Table A has 4, and Table B has 6', () => {
     // Should move all 4 players from Table A to Table B
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 4),
-            createTableOf("B", "5", 6),
+            createTableOf("A", "1", 4, false),
+            createTableOf("B", "5", 6, false),
         ]
     });
     // Only seats 7, 8, 9 & 10 are available which would be UTG+2, UTG+3, UTG+4, HJ
@@ -295,24 +368,28 @@ test('Case where Table A has 4, and Table B has 6', () => {
     expect(result.totalScore).toBeGreaterThan(20);
 });
 
+
+
 test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', () => {
     // Total Players 90
     // Should break 1 of the tables with 8 players on it
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 8),
-            createTableOf("B", "11", 8),
-            createTableOf("C", "21", 8),
-            createTableOf("D", "31", 8),
-            createTableOf("E", "41", 9),
-            createTableOf("F", "51", 9),
-            createTableOf("G", "61", 10),
-            createTableOf("H", "71", 10),
-            createTableOf("I", "81", 10),
-            createTableOf("J", "91", 10),
+            createTableOf("A", "1", 8, false),
+            createTableOf("B", "11", 8, false),
+            createTableOf("C", "21", 8, false),
+            createTableOf("D", "31", 8, false),
+            createTableOf("E", "41", 9, false),
+            createTableOf("F", "51", 9, false),
+            createTableOf("G", "61", 10, false),
+            createTableOf("H", "71", 10, false),
+            createTableOf("I", "81", 10, false),
+            createTableOf("J", "91", 10, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["A"]);
@@ -320,8 +397,6 @@ test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', ()
     // console.log(result.processedCombinations + " of " + result.totalCombinations);
 });
 
-// Major Speed Issue with this one (takes 5 minutes of processing)
-// Issue is before getOptimalPlayerMovements
 
 test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => {
     // 83 Players in total
@@ -332,18 +407,20 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => 
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 8),
-            createTableOf("B", "11", 8),
-            createTableOf("C", "21", 8),
-            createTableOf("D", "31", 8),
-            createTableOf("E", "41", 8),
-            createTableOf("F", "51", 8),
-            createTableOf("G", "61", 8),
-            createTableOf("H", "71", 8),
-            createTableOf("I", "81", 9),
-            createTableOf("J", "91", 10),
+            createTableOf("A", "1", 8, false),
+            createTableOf("B", "11", 8, false),
+            createTableOf("C", "21", 8, false),
+            createTableOf("D", "31", 8, false),
+            createTableOf("E", "41", 8, false),
+            createTableOf("F", "51", 8, false),
+            createTableOf("G", "61", 8, false),
+            createTableOf("H", "71", 8, false),
+            createTableOf("I", "81", 9, false),
+            createTableOf("J", "91", 10, false),
         ]
     });
     expect(result.stats.currentNumberOfTables).toBe(10);
@@ -351,6 +428,33 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => 
     expect(result.stats.optimalNumberOfTables).toBe(9);
     expect(result.stats.tableIdsBeingBrokenUp.length).toBe(1);
     expect(result.totalScore).toBeGreaterThan(50);
-    expect(result.totalCombinations).toBe(576);
+    expect(result.optimalResult.totalCombinations).toBe(576);
     expect(result.msTaken).toBeGreaterThan(1000);
 });
+
+test('Case where 1 table has 5, and 6 other tables are full', () => {
+    // Total Players 65
+    // Should not break any tables, but should move 4 players (1 from each of 4 of the full tables) to table A, 
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
+        },
+        tables: [
+            createTableOf("A", "1", 5, false),
+            createTableOf("B", "11", 10, false),
+            createTableOf("C", "21", 10, false),
+            createTableOf("D", "31", 10, false),
+            createTableOf("E", "41", 10, false),
+            createTableOf("F", "51", 10, false),
+            createTableOf("G", "61", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(4);
+
+    // console.log(result.optimalResult.processedCombinations + " of " + result.optimalResult.totalCombinations);
+    // console.log("MOVEMENTS", JSON.stringify(result.movements, null, 4));
+});
+

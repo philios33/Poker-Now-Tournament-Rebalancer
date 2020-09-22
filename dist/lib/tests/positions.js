@@ -46,6 +46,7 @@ test('expandTablePositionsAsLastRound', function () {
                 seat: 3,
             }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -81,6 +82,7 @@ test('Table Position Expansion - Ignore whether in next round or not', function 
                 seat: 3,
             }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -116,6 +118,7 @@ test('Table Position Expansion - Unordered seats, auto sorting by seat', functio
                 seat: 1,
             }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -151,6 +154,7 @@ test('Table Position Expansion - Ignore seat gaps', function () {
                 seat: 9,
             }],
         dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -186,6 +190,7 @@ test('Table Position Expansion - Consider rotation around table', function () {
                 seat: 9,
             }],
         dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -221,6 +226,7 @@ test('Table Position Expansion - Consider dead button', function () {
                 seat: 9,
             }],
         dealerButtonLastRound: 4,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -256,6 +262,7 @@ test('Table Position Expansion - Dont consider players that didnt participate', 
                 seat: 9,
             }],
         dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
     };
     positions_1.expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');

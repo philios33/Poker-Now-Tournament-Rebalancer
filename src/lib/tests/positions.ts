@@ -54,6 +54,7 @@ test('expandTablePositionsAsLastRound', () => {
             seat: 3,
         }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -90,6 +91,7 @@ test('Table Position Expansion - Ignore whether in next round or not', () => {
             seat: 3,
         }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -126,6 +128,7 @@ test('Table Position Expansion - Unordered seats, auto sorting by seat', () => {
             seat: 1,
         }],
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('1');
@@ -162,6 +165,7 @@ test('Table Position Expansion - Ignore seat gaps', () => {
             seat: 9,
         }],
         dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -198,6 +202,7 @@ test('Table Position Expansion - Consider rotation around table', () => {
             seat: 9,
         }],
         dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -234,6 +239,7 @@ test('Table Position Expansion - Consider dead button', () => {
             seat: 9,
         }],
         dealerButtonLastRound: 4,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');
@@ -270,6 +276,7 @@ test('Table Position Expansion - Dont consider players that didnt participate', 
             seat: 9,
         }],
         dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
     }
     expandTablePositionsAsLastRound(table);
     expect(table.players[0].id).toBe('2');

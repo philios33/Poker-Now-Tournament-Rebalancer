@@ -6,6 +6,8 @@ test("getNumberOfPlayersNextRound", () => {
     const emptyTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: []
     }
@@ -14,10 +16,13 @@ test("getNumberOfPlayersNextRound", () => {
     const headsUpTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
             id: "A",
             dealerButtonLastRound: 1,
+            hasStartedNextRound: false,
             players: [
                 {
                     id: "1",
@@ -51,10 +56,13 @@ test("getNumberOfPlayersNextRound", () => {
     const multiTableTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
             id: "A",
             dealerButtonLastRound: 1,
+            hasStartedNextRound: false,
             players: [
                 {
                     id: "1",
@@ -84,6 +92,7 @@ test("getNumberOfPlayersNextRound", () => {
         }, {
             id: "B",
             dealerButtonLastRound: 1,
+            hasStartedNextRound: false,
             players: [
                 {
                     id: "4",
@@ -121,6 +130,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "1",
             name: "1",
@@ -142,6 +152,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const tableB = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "3",
             name: "3",
@@ -159,6 +170,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const tableC = {
         id: "C",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "4",
             name: "4",
@@ -187,6 +199,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const tableD = {
         id: "D",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "7",
             name: "7",
@@ -218,6 +231,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const tableE = {
         id: "E",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "10",
             name: "10",
@@ -243,6 +257,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC, tableD, tableE],
     }, 1);
@@ -251,6 +267,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result2 = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableD, tableE, tableB, tableA, tableC],
     }, 1);
@@ -259,6 +277,8 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result3 = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC, tableD, tableE],
     }, 3);
@@ -274,10 +294,13 @@ test("getRebalancingMovements", () => {
     const result = getRebalancingMovements({
         config: {
             maxPlayersPerTable: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [{
             id: "A",
             dealerButtonLastRound: 1,
+            hasStartedNextRound: false,
             players: [
                 {
                     id: "1",
@@ -307,6 +330,7 @@ test("getRebalancingMovements", () => {
         }, {
             id: "B",
             dealerButtonLastRound: 1,
+            hasStartedNextRound: false,
             players: [
                 {
                     id: "4",
@@ -353,6 +377,7 @@ test("workOutTargetSeatPositions", () => {
     const tableA = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [
             {
                 id: "1",
@@ -389,6 +414,7 @@ test("workOutTargetSeatPositions", () => {
     const tableB = {
         id: "B",
         dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
         players: [
             {
                 id: "1",
@@ -431,6 +457,7 @@ test("getRebalancingPlayerMovements", () => {
     const tableA: Table = {
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "1",
             name: "1",
@@ -464,6 +491,7 @@ test("getRebalancingPlayerMovements", () => {
     const tableB: Table = {
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "5",
             name: "5",
@@ -497,6 +525,7 @@ test("getRebalancingPlayerMovements", () => {
     const tableC: Table = {
         id: "C",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
             id: "9",
             name: "9",
@@ -530,6 +559,8 @@ test("getRebalancingPlayerMovements", () => {
     const state: TournamentState = {
         config: {
             maxPlayersPerTable: 6,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
         },
         tables: [tableA, tableB, tableC]
     }

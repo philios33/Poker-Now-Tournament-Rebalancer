@@ -3,6 +3,7 @@ import { SeatPosition } from "../types/seatPosition";
 import { BalancingPlayersSeatResult } from "../types/balancingPlayersSeatResult";
 import { SeatMovement } from "../types/seatMovement";
 import { multiplyArrays } from "./util";
+import { OptimalResult } from "../types/optimalResult";
 
 // As long as we return the target seats that are empty in an order where they will not make a difference to other positions (empty seats to the right of the dealer)
 // If dealer will be seat 2 with [1,2,3] available, then this should be rotated to [2,3,1]
@@ -246,7 +247,7 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
     return {bestResult, totalMovementsChecked, totalMovementsSkipped};
 }
 
-export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): {bestResult: BalancingPlayersSeatResult, totalCombinations: number, processedCombinations: number, totalMovementsChecked: number, totalMovementsSkipped: number} => {
+export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): OptimalResult => {
     // Try every possible ordering of every fromSeats selection, with every possible selection of targetSeats.
     // The selections have already been expanded, we just need to try every combination of ordering of the fromSeats.
     // This is where we can be more efficient.  If the score has already gone above some threshold, we can rule out every combination below using recursion.
