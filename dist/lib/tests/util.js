@@ -125,6 +125,7 @@ test('findTableById and findPlayerBySeat', function () {
     var state = {
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -256,5 +257,224 @@ test('multiplyArrays', function () {
         [3, 4],
         [3, 5],
     ]);
+});
+test("Work out target seat positions 1", function () {
+    var table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
+    };
+    var result = util_1.workOutTargetSeatPositions(table, [2]);
+    expect(result[0].seat).toBe(2);
+    expect(result[0].position).toBe("BB");
+});
+test("Work out target seat positions 2", function () {
+    var table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: false,
+    };
+    var result = util_1.workOutTargetSeatPositions(table, [6]);
+    expect(result[0].seat).toBe(6);
+    expect(result[0].position).toBe("D");
+});
+test("Work out target seat positions 1 with round already started", function () {
+    var table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: true,
+    };
+    var result = util_1.workOutTargetSeatPositions(table, [2]);
+    expect(result[0].seat).toBe(2);
+    expect(result[0].position).toBe("SB");
+});
+test("Work out target seat positions 2 with round already started", function () {
+    var table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: true,
+    };
+    var result = util_1.workOutTargetSeatPositions(table, [6]);
+    expect(result[0].seat).toBe(6);
+    expect(result[0].position).toBe("UTG");
+});
+test("workOutTargetSeatPositions", function () {
+    var tableA = {
+        id: "A",
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
+        players: [
+            {
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 1,
+            },
+            {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 2,
+            },
+            {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 3,
+            }
+        ]
+    };
+    var result = util_1.workOutTargetSeatPositions(tableA, [4, 5]);
+    expect(result[0].seat).toBe(4);
+    expect(result[0].position).toBe("BB");
+    expect(result[1].seat).toBe(5);
+    expect(result[1].position).toBe("UTG");
+    var tableB = {
+        id: "B",
+        dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
+        players: [
+            {
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 1,
+            },
+            {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 2,
+            },
+            {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 3,
+            }
+        ]
+    };
+    var result2 = util_1.workOutTargetSeatPositions(tableB, [2, 6]);
+    // Seats should be ordered by position, so SB first
+    expect(result2[0].seat).toBe(6);
+    expect(result2[0].position).toBe("SB");
+    expect(result2[1].seat).toBe(2);
+    expect(result2[1].position).toBe("UTG");
 });
 //# sourceMappingURL=util.js.map

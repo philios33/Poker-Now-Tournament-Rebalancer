@@ -27,6 +27,7 @@ test('Table Creator', function () {
     expect(createTableOf("A", "1", 10, false)).toStrictEqual({
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "1",
                 name: "TAS1",
@@ -102,6 +103,7 @@ test('Table Creator', function () {
     expect(createTableOf("B", "11", 8, false)).toStrictEqual({
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "11",
                 name: "TBS1",
@@ -163,6 +165,7 @@ test('Table Creator', function () {
     expect(createTableOf("A", "1", 4, false)).toStrictEqual({
         id: "A",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "1",
                 name: "TAS1",
@@ -196,6 +199,7 @@ test('Table Creator', function () {
     expect(createTableOf("B", "5", 6, false)).toStrictEqual({
         id: "B",
         dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
         players: [{
                 id: "5",
                 name: "TBS1",
@@ -245,6 +249,7 @@ test('2 full tables, no movements necessary', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -261,6 +266,7 @@ test('5 tables of 9, no movements necessary', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -281,6 +287,7 @@ test('Case where Table A has 10, and Table B has 8', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -308,6 +315,7 @@ test('Flexible case where Table A has 10, and Table B has 8, should do nothing',
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 1,
             balanceMinFlexibility: 1,
         },
@@ -327,6 +335,7 @@ test('Case where Table A has 4, and Table B has 6', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -350,6 +359,7 @@ test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', fu
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -379,6 +389,7 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', functi
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -409,6 +420,7 @@ test('Case where 1 table has 5, and 6 other tables are full', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

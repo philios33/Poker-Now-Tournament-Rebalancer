@@ -38,6 +38,11 @@ exports.rotateArray = function (players, count) {
 };
 exports.expandTablePositionsAsLastRound = function (table) {
     // First work out what positions existed for this table last round
+    // Note: Sometimes you need to work out positions for the round after because the table has already started the next round
+    var nextHand = 0;
+    if (table.hasStartedNextRound) {
+        nextHand = 1;
+    }
     table.players.sort(function (a, b) {
         return a.seat - b.seat;
     });
@@ -55,10 +60,24 @@ exports.expandTablePositionsAsLastRound = function (table) {
         }
     }
     var positions = exports.getPositionsForTableSize(tableSize);
-    if (deadButton) {
+    if (deadButton && nextHand === 0) {
         // Get 1 extra position and remove dealer
         positions = exports.getPositionsForTableSize(tableSize + 1);
         positions.shift();
+    }
+    // Adding the extra hands here.  Set to 1 to skip forward an extra hand.
+    if (nextHand === 1) {
+        if (!deadButton) {
+            seatsBeforeDealer += 1; // Don't add 1 if the button is dead because there is the same number of seats behind the button.
+        }
+        else {
+            // But if the button was dead and there are more players now, push the button on.
+            seatsBeforeDealer += table.players.filter(function (p) { return p.participatingNextRound; }).length - table.players.filter(function (p) { return p.participatingLastRound; }).length;
+        }
+        // We MUST recalculate the "players last round" as the players NEXT round.
+        playersLastRound = table.players.filter(function (p) { return p.participatingNextRound; });
+        // Not enough information to work out if button is still dead.  Assume it's not
+        positions = exports.getPositionsForTableSize(playersLastRound.length);
     }
     // Now simply rotate so the players line up with their positions
     exports.rotateArray(playersLastRound, seatsBeforeDealer);

@@ -3,13 +3,13 @@ import { TournamentState } from "../types/tournamentState"
 import { Table } from "../types/table";
 import SeatSelections from "../classes/seatSelections";
 import { BalancingMovementsResult } from "../types/balancingMovementsResult";
-import { getPositionsForTableSize, rotateArray, expandTablePositionsAsLastRound } from "./positions";
+import { expandTablePositionsAsLastRound } from "./positions";
 import { TargetSeat } from "../types/targetSeat";
 import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { invertSeatList, getTableCombinations, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers } from "./util";
+import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions } from "./util";
 import { Logger } from "../classes/logger";
 import { TableChoices } from "../types/tableChoices";
 
@@ -121,8 +121,14 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
     }
     
-    maxNumberOfPlayersOnTables += state.config.balanceMaxFlexibility;
-    minNumberOfPlayersOnTables -= state.config.balanceMinFlexibility;
+    let maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
+    let minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
+
+    // Never lower the min sensitivity to less than 2
+    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
+
+    let preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
+    preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
 
     /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
@@ -156,19 +162,22 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         for (let table of tables) {
             // console.log("Breaking up table", table.id);
             let numActiveSeats = table.players.filter(p => p.participatingNextRound).length;
-            // Move everyone
-            for(let i=0; i<numActiveSeats; i++) {
-                fromTableChoices.choices.push({
-                    tableIdList: [table.id],
-                    choose: 1,
-                });
-                totalNumberOfMovements++;
+
+            if (preventTableBreakingIfMoreThan >= numActiveSeats) {
+                // Move everyone
+                for(let i=0; i<numActiveSeats; i++) {
+                    fromTableChoices.choices.push({
+                        tableIdList: [table.id],
+                        choose: 1,
+                    });
+                    totalNumberOfMovements++;
+                }
+                
+                // fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
+                
+                // Remove from tableSizes counter object
+                tableIdsBeingBrokenUp.push(table.id);
             }
-            
-            // fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
-            
-            // Remove from tableSizes counter object
-            tableIdsBeingBrokenUp.push(table.id);
         }
     }
 
@@ -189,7 +198,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
     for(let table of state.tables) {
         const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length;
-        if (playersParticipatingNextRound > maxNumberOfPlayersOnTables) {
+        if (playersParticipatingNextRound > maxNumberOfPlayersOnTablesWithFlex) {
             const movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
             // console.log("Moving " + movementsFromTable + " players from table " + table.id);
             // fromSeats.add(table.id, table.players.filter(p => p.participatingNextRound).map(p => p.seat), movementsFromTable);
@@ -267,7 +276,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     for(let table of state.tables) {
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length + (table.extraPlayers ? table.extraPlayers : 0);
-            if (playersParticipatingNextRound < minNumberOfPlayersOnTables) {
+            if (playersParticipatingNextRound < minNumberOfPlayersOnTablesWithFlex) {
                 const numberOfMovementsTo = (minNumberOfPlayersOnTables - playersParticipatingNextRound);
                 for(let i=0; i<numberOfMovementsTo; i++) {
                     table.extraPlayers++;
@@ -507,57 +516,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
 
 
 
-export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Array<TargetSeat> => {
-    // Given that the following seats would be filled next round, work out the seating positions next round
-    // Apply all existing players to seats
 
-    const players = table.players.filter(p => p.participatingNextRound);
-    const existingSeats = players.map(p => p.seat);
-    for(let seat of sc) {
-        if (existingSeats.indexOf(seat) !== -1) {
-            throw new Error("Cannot place a player there, that seat is taken: " + seat);
-        }
-        players.push({
-            name: 'New Player',
-            id: 'x',
-            participatingLastRound: false,
-            participatingNextRound: true,
-            seat: seat,
-            movements: 0,
-        });
-    }
-
-    // Sort players array by seat
-    players.sort((a,b) => {
-        return a.seat - b.seat;
-    });
-
-    // Work out where dealer button would be moving to
-    let rotateBy = 1;
-    for(let i=0; i<players.length; i++) {
-        if (players[i].seat < table.dealerButtonLastRound) {
-            rotateBy++;
-        }
-    }
-    rotateArray(players, rotateBy);
-
-    // Get all positions from dealer
-    let positions = getPositionsForTableSize(players.length);
-
-    let targetSeats: Array<TargetSeat> = [];
-    for(let i=0; i<players.length; i++) {
-        const player = players[i];
-        if (player.id === "x") {
-            targetSeats.push({
-                tableId: table.id,
-                seat: player.seat,
-                position: positions[i],
-                numOfPlayers: players.length,
-            });
-        }
-    }
-    return targetSeats;
-}
 
 
 

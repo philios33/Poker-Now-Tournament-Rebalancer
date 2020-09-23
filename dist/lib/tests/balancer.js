@@ -5,6 +5,7 @@ test("getNumberOfPlayersNextRound", function () {
     var emptyTournament = {
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -14,6 +15,7 @@ test("getNumberOfPlayersNextRound", function () {
     var headsUpTournament = {
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -53,6 +55,7 @@ test("getNumberOfPlayersNextRound", function () {
     var multiTableTournament = {
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -243,6 +246,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -252,6 +256,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result2 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -261,6 +266,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result3 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -276,6 +282,7 @@ test("getRebalancingMovements", function () {
     var result = balancer_1.getRebalancingMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -353,81 +360,6 @@ test("getRebalancingMovements", function () {
     expect(result.stats.numberOfPlayersNextRound).toBe(5);
     expect(result.stats.optimalNumberOfTables).toBe(1);
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["B"]);
-});
-test("workOutTargetSeatPositions", function () {
-    var tableA = {
-        id: "A",
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: false,
-        players: [
-            {
-                id: "1",
-                name: "1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            },
-            {
-                id: "2",
-                name: "2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 2,
-            },
-            {
-                id: "3",
-                name: "3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }
-        ]
-    };
-    var result = balancer_1.workOutTargetSeatPositions(tableA, [4, 5]);
-    expect(result[0].seat).toBe(4);
-    expect(result[0].position).toBe("BB");
-    expect(result[1].seat).toBe(5);
-    expect(result[1].position).toBe("UTG");
-    var tableB = {
-        id: "B",
-        dealerButtonLastRound: 2,
-        hasStartedNextRound: false,
-        players: [
-            {
-                id: "1",
-                name: "1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            },
-            {
-                id: "2",
-                name: "2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: false,
-                seat: 2,
-            },
-            {
-                id: "3",
-                name: "3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }
-        ]
-    };
-    var result2 = balancer_1.workOutTargetSeatPositions(tableB, [2, 6]);
-    // Seats should be ordered by position, so SB first
-    expect(result2[0].seat).toBe(6);
-    expect(result2[0].position).toBe("SB");
-    expect(result2[1].seat).toBe(2);
-    expect(result2[1].position).toBe("UTG");
 });
 // This is the primary function
 test("getRebalancingPlayerMovements", function () {
@@ -536,6 +468,7 @@ test("getRebalancingPlayerMovements", function () {
     var state = {
         config: {
             maxPlayersPerTable: 6,
+            preventTableBreakingIfMoreThan: 5,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

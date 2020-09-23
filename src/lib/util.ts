@@ -2,6 +2,8 @@ import { Table } from "../types/table";
 import { TournamentState } from "../types/tournamentState";
 import { SeatMovement } from "../types/seatMovement";
 import { PlayerMovement } from "../types/playerMovement";
+import { TargetSeat } from "../types/targetSeat";
+import { rotateArray, getPositionsForTableSize } from "./positions";
 
 export const getTableCombinations = (tables: Array<Table>, choose: number) => {
     return combine(tables, choose).filter(p => p.length === choose);
@@ -105,4 +107,61 @@ export const randomlyChooseTables = (tableListId: Array<string>, choose: number)
 export const getSeatListOfActivePlayers = (tableId: string, state: TournamentState) => {
     let table = findTableById(state, tableId);
     return table.players.filter(p => p.participatingNextRound).map(p => p.seat);
+}
+
+export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Array<TargetSeat> => {
+    // Given that the following seats would be filled next round, work out the seating positions next round
+    // Apply all existing players to seats
+    // Note: If the table has already begun it's next round already, we need to go forward 2 hands.
+
+    const players = table.players.filter(p => p.participatingNextRound);
+    const existingSeats = players.map(p => p.seat);
+    for(let seat of sc) {
+        if (existingSeats.indexOf(seat) !== -1) {
+            throw new Error("Cannot place a player there, that seat is taken: " + seat);
+        }
+        players.push({
+            name: 'New Player',
+            id: 'x',
+            participatingLastRound: false,
+            participatingNextRound: true,
+            seat: seat,
+            movements: 0,
+        });
+    }
+
+    // Sort players array by seat
+    players.sort((a,b) => {
+        return a.seat - b.seat;
+    });
+
+    // Work out where dealer button would be moving to
+    let rotateBy = 1;
+    for(let i=0; i<players.length; i++) {
+        if (players[i].seat < table.dealerButtonLastRound) {
+            rotateBy++;
+        }
+    }
+    if (table.hasStartedNextRound) {
+        // Move forward 1 extra hand
+        rotateBy++;
+    }
+    rotateArray(players, rotateBy);
+
+    // Get all positions from dealer
+    let positions = getPositionsForTableSize(players.length);
+
+    let targetSeats: Array<TargetSeat> = [];
+    for(let i=0; i<players.length; i++) {
+        const player = players[i];
+        if (player.id === "x") {
+            targetSeats.push({
+                tableId: table.id,
+                seat: player.seat,
+                position: positions[i],
+                numOfPlayers: players.length,
+            });
+        }
+    }
+    return targetSeats;
 }

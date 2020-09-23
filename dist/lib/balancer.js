@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRebalancingPlayerMovements = exports.workOutTargetSeatPositions = exports.getRebalancingMovements = exports.getTablesWithHighestSize = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getNumberOfPlayersNextRound = void 0;
+exports.getRebalancingPlayerMovements = exports.getRebalancingMovements = exports.getTablesWithHighestSize = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getNumberOfPlayersNextRound = void 0;
 var seatSelections_1 = __importDefault(require("../classes/seatSelections"));
 var positions_1 = require("./positions");
 var movement_1 = require("./movement");
@@ -111,8 +111,12 @@ exports.getRebalancingMovements = function (state) {
     if ((maxNumberOfPlayersOnTables * optimalNumberOfTables) === numberOfPlayersNextRound) {
         minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
     }
-    maxNumberOfPlayersOnTables += state.config.balanceMaxFlexibility;
-    minNumberOfPlayersOnTables -= state.config.balanceMinFlexibility;
+    var maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
+    var minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
+    // Never lower the min sensitivity to less than 2
+    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
+    var preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
+    preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
     /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
     console.log("optimalNumberOfTables = " + optimalNumberOfTables);
@@ -140,17 +144,19 @@ exports.getRebalancingMovements = function (state) {
             var table = tables_5[_i];
             // console.log("Breaking up table", table.id);
             var numActiveSeats = table.players.filter(function (p) { return p.participatingNextRound; }).length;
-            // Move everyone
-            for (var i = 0; i < numActiveSeats; i++) {
-                fromTableChoices.choices.push({
-                    tableIdList: [table.id],
-                    choose: 1,
-                });
-                totalNumberOfMovements++;
+            if (preventTableBreakingIfMoreThan >= numActiveSeats) {
+                // Move everyone
+                for (var i = 0; i < numActiveSeats; i++) {
+                    fromTableChoices.choices.push({
+                        tableIdList: [table.id],
+                        choose: 1,
+                    });
+                    totalNumberOfMovements++;
+                }
+                // fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
+                // Remove from tableSizes counter object
+                tableIdsBeingBrokenUp.push(table.id);
             }
-            // fromSeats.add(table.id, activeSeats, activeSeats.length); // Move everyone
-            // Remove from tableSizes counter object
-            tableIdsBeingBrokenUp.push(table.id);
         }
     }
     var tablesAfter = [];
@@ -169,7 +175,7 @@ exports.getRebalancingMovements = function (state) {
     for (var _c = 0, _d = state.tables; _c < _d.length; _c++) {
         var table = _d[_c];
         var playersParticipatingNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length;
-        if (playersParticipatingNextRound > maxNumberOfPlayersOnTables) {
+        if (playersParticipatingNextRound > maxNumberOfPlayersOnTablesWithFlex) {
             var movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
             // console.log("Moving " + movementsFromTable + " players from table " + table.id);
             // fromSeats.add(table.id, table.players.filter(p => p.participatingNextRound).map(p => p.seat), movementsFromTable);
@@ -243,7 +249,7 @@ exports.getRebalancingMovements = function (state) {
         var table = _g[_f];
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             var playersParticipatingNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length + (table.extraPlayers ? table.extraPlayers : 0);
-            if (playersParticipatingNextRound < minNumberOfPlayersOnTables) {
+            if (playersParticipatingNextRound < minNumberOfPlayersOnTablesWithFlex) {
                 var numberOfMovementsTo = (minNumberOfPlayersOnTables - playersParticipatingNextRound);
                 for (var i = 0; i < numberOfMovementsTo; i++) {
                     table.extraPlayers++;
@@ -479,53 +485,6 @@ exports.getRebalancingMovements = function (state) {
 
     */
 };
-exports.workOutTargetSeatPositions = function (table, sc) {
-    // Given that the following seats would be filled next round, work out the seating positions next round
-    // Apply all existing players to seats
-    var players = table.players.filter(function (p) { return p.participatingNextRound; });
-    var existingSeats = players.map(function (p) { return p.seat; });
-    for (var _i = 0, sc_1 = sc; _i < sc_1.length; _i++) {
-        var seat = sc_1[_i];
-        if (existingSeats.indexOf(seat) !== -1) {
-            throw new Error("Cannot place a player there, that seat is taken: " + seat);
-        }
-        players.push({
-            name: 'New Player',
-            id: 'x',
-            participatingLastRound: false,
-            participatingNextRound: true,
-            seat: seat,
-            movements: 0,
-        });
-    }
-    // Sort players array by seat
-    players.sort(function (a, b) {
-        return a.seat - b.seat;
-    });
-    // Work out where dealer button would be moving to
-    var rotateBy = 1;
-    for (var i = 0; i < players.length; i++) {
-        if (players[i].seat < table.dealerButtonLastRound) {
-            rotateBy++;
-        }
-    }
-    positions_1.rotateArray(players, rotateBy);
-    // Get all positions from dealer
-    var positions = positions_1.getPositionsForTableSize(players.length);
-    var targetSeats = [];
-    for (var i = 0; i < players.length; i++) {
-        var player = players[i];
-        if (player.id === "x") {
-            targetSeats.push({
-                tableId: table.id,
-                seat: player.seat,
-                position: positions[i],
-                numOfPlayers: players.length,
-            });
-        }
-    }
-    return targetSeats;
-};
 exports.getRebalancingPlayerMovements = function (state) {
     var startTime = (new Date()).getTime();
     var logger = new logger_1.Logger(false, "Start");
@@ -607,7 +566,7 @@ exports.getRebalancingPlayerMovements = function (state) {
             for (var _i = 0, seatCombos_1 = seatCombos; _i < seatCombos_1.length; _i++) {
                 var sc = seatCombos_1[_i];
                 // Where would the dealer be if these seats were taken next round?
-                var targetSeats = exports.workOutTargetSeatPositions(table, sc);
+                var targetSeats = util_1.workOutTargetSeatPositions(table, sc);
                 currentTargetSeats.push(targetSeats);
             }
             // At this point, multiply every currentTargetSeats in to globalTargetSeats???

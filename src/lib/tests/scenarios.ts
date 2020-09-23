@@ -257,6 +257,7 @@ test('2 full tables, no movements necessary', () => {
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -275,6 +276,7 @@ test('5 tables of 9, no movements necessary', () => {
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -298,6 +300,7 @@ test('Case where Table A has 10, and Table B has 8', () => {
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -328,6 +331,7 @@ test('Flexible case where Table A has 10, and Table B has 8, should do nothing',
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 1,
             balanceMinFlexibility: 1,
         },
@@ -350,6 +354,7 @@ test('Case where Table A has 4, and Table B has 6', () => {
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -376,6 +381,7 @@ test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', ()
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -407,6 +413,7 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => 
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -438,6 +445,7 @@ test('Case where 1 table has 5, and 6 other tables are full', () => {
     const result = getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

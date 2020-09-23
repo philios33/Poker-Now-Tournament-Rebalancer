@@ -7,7 +7,8 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+var positions_1 = require("./positions");
 exports.getTableCombinations = function (tables, choose) {
     return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
 };
@@ -107,5 +108,57 @@ exports.randomlyChooseTables = function (tableListId, choose) {
 exports.getSeatListOfActivePlayers = function (tableId, state) {
     var table = exports.findTableById(state, tableId);
     return table.players.filter(function (p) { return p.participatingNextRound; }).map(function (p) { return p.seat; });
+};
+exports.workOutTargetSeatPositions = function (table, sc) {
+    // Given that the following seats would be filled next round, work out the seating positions next round
+    // Apply all existing players to seats
+    // Note: If the table has already begun it's next round already, we need to go forward 2 hands.
+    var players = table.players.filter(function (p) { return p.participatingNextRound; });
+    var existingSeats = players.map(function (p) { return p.seat; });
+    for (var _i = 0, sc_1 = sc; _i < sc_1.length; _i++) {
+        var seat = sc_1[_i];
+        if (existingSeats.indexOf(seat) !== -1) {
+            throw new Error("Cannot place a player there, that seat is taken: " + seat);
+        }
+        players.push({
+            name: 'New Player',
+            id: 'x',
+            participatingLastRound: false,
+            participatingNextRound: true,
+            seat: seat,
+            movements: 0,
+        });
+    }
+    // Sort players array by seat
+    players.sort(function (a, b) {
+        return a.seat - b.seat;
+    });
+    // Work out where dealer button would be moving to
+    var rotateBy = 1;
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].seat < table.dealerButtonLastRound) {
+            rotateBy++;
+        }
+    }
+    if (table.hasStartedNextRound) {
+        // Move forward 1 extra hand
+        rotateBy++;
+    }
+    positions_1.rotateArray(players, rotateBy);
+    // Get all positions from dealer
+    var positions = positions_1.getPositionsForTableSize(players.length);
+    var targetSeats = [];
+    for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+        if (player.id === "x") {
+            targetSeats.push({
+                tableId: table.id,
+                seat: player.seat,
+                position: positions[i],
+                numOfPlayers: players.length,
+            });
+        }
+    }
+    return targetSeats;
 };
 //# sourceMappingURL=util.js.map

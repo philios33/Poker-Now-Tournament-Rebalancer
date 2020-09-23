@@ -4,6 +4,7 @@ var balancer_1 = require("./lib/balancer");
 var state = {
     config: {
         maxPlayersPerTable: 4,
+        preventTableBreakingIfMoreThan: 3,
         balanceMaxFlexibility: 0,
         balanceMinFlexibility: 0,
     },
@@ -37,7 +38,7 @@ var state = {
                 }
             ],
             dealerButtonLastRound: 6,
-            hasStartedNextRound: false,
+            hasStartedNextRound: true,
         },
         {
             id: "2",
@@ -91,7 +92,7 @@ var state = {
                 }
             ],
             dealerButtonLastRound: 5,
-            hasStartedNextRound: false,
+            hasStartedNextRound: true,
         },
     ]
 };

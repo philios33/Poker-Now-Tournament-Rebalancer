@@ -1,4 +1,4 @@
-import { combine, getTableCombinations, invertSeatList, findTableById, findPlayerBySeat, convertSeatMovementToPlayerMovement, multiplyArrays } from "../util";
+import { combine, getTableCombinations, invertSeatList, findTableById, findPlayerBySeat, convertSeatMovementToPlayerMovement, multiplyArrays, workOutTargetSeatPositions } from "../util";
 import { Table } from "../../types/table";
 import { TournamentState } from "../../types/tournamentState";
 import { SeatMovement } from "../../types/seatMovement";
@@ -137,6 +137,7 @@ test('findTableById and findPlayerBySeat', () => {
     const state: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
+            preventTableBreakingIfMoreThan: 9,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -278,4 +279,234 @@ test('multiplyArrays', () => {
         [3,4],
         [3,5],
     ])
+});
+
+test("Work out target seat positions 1", () => {
+    const table: Table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: false,  // Go 1 round in to the future
+    };
+    const result = workOutTargetSeatPositions(table, [2]);
+    expect(result[0].seat).toBe(2);
+    expect(result[0].position).toBe("BB");
+})
+
+
+test("Work out target seat positions 2", () => {
+    const table: Table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: false,  // Go 1 round in to the future
+    };
+    const result = workOutTargetSeatPositions(table, [6]);
+    expect(result[0].seat).toBe(6);
+    expect(result[0].position).toBe("D");
+    
+})
+
+test("Work out target seat positions 1 with round already started", () => {
+    const table: Table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: true,  // Go 2 rounds in to the future
+    };
+    const result = workOutTargetSeatPositions(table, [2]);
+    expect(result[0].seat).toBe(2);
+    expect(result[0].position).toBe("SB");
+})
+
+
+test("Work out target seat positions 2 with round already started", () => {
+    const table: Table = {
+        id: "3",
+        players: [
+            {
+                id: "6",
+                name: "P6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 5,
+            },
+            {
+                id: "7",
+                name: "P7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 7,
+            },
+            {
+                id: "8",
+                name: "P8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 8,
+            }
+        ],
+        dealerButtonLastRound: 5,
+        hasStartedNextRound: true,  // Go 2 rounds in to the future
+    };
+    const result = workOutTargetSeatPositions(table, [6]);
+    expect(result[0].seat).toBe(6);
+    expect(result[0].position).toBe("UTG");
+    
+})
+
+test("workOutTargetSeatPositions", () => {
+    const tableA = {
+        id: "A",
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
+        players: [
+            {
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 1,
+            },
+            {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 2,
+            },
+            {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 3,
+            }
+        ]
+    }
+    const result = workOutTargetSeatPositions(tableA, [4,5]);
+    expect(result[0].seat).toBe(4);
+    expect(result[0].position).toBe("BB");
+    expect(result[1].seat).toBe(5);
+    expect(result[1].position).toBe("UTG");
+
+    const tableB = {
+        id: "B",
+        dealerButtonLastRound: 2,
+        hasStartedNextRound: false,
+        players: [
+            {
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 1,
+            },
+            {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 2,
+            },
+            {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 3,
+            }
+        ]
+    }
+    const result2 = workOutTargetSeatPositions(tableB, [2,6]);
+    // Seats should be ordered by position, so SB first
+    expect(result2[0].seat).toBe(6);
+    expect(result2[0].position).toBe("SB");
+    expect(result2[1].seat).toBe(2);
+    expect(result2[1].position).toBe("UTG");
+    
 });

@@ -69,14 +69,20 @@ Move Table A Seat 1 -> Table B Seat 2
 
 TODO
 
-Implement position check based on Table.hasStartedNextRound
-    If a fromTable has started their round, they have already participated in the next round, so the players next position should be rotated twice.
-    If a targetTable has started their round (most of the time), we need to rotate the next round positions two times and just assume that nobody will bust.
-    Add basic position tests for this.
+
+Add tests for preventTableBreakingIfMoreThan config value
+
+---
+
+Add tests for new util functions
 
 ---
 
 Add more flexibility tests
+E.g. When table is really low on numbers but not breaching min, should ignore
+E.g. And when breached, it should move as many people as possible to reach the optimal min.
+
+---
 
 Add test for a table break and a rebalance at the same time: e.g. 2,6,10,10,10,10,10,10,10
 
@@ -87,11 +93,24 @@ Add tests for:
 6,6,9,10 = 31, Optimal players (7 or 8), so move 1 from C, 2 from D, Then 1 on A, 1 on B, and the last on either A or B
 5,10,10,10,10,10,10
 
----
+Other tests to add:
+That correct player (by position) is chosen when table A has 8 and table B has 10 players.  
+The movement should be ignored when table A finishes their hand.
+The movement should be applied when table B finishes their hand.
+    Table B should choose the best player by position.
 
-Look at flexibility config again.  
-Can we reduce the sensitivity but still make optimal movements when they happen?
-I can't think why we would NOT want to do this.  Make another two config values for this!
+Check edge case where, table A has 10 players and table B has 1 player.
+When table B finishes their hand, no movement away from this table can occur.  He will have to wait for table A to finish their hand.
+When table A finishes their hand, 4 players move from A -> B
+
+Test case where Table A has 6, Table B has 10 & Table C has 10.
+Table A finish -> Nothing
+Table B finish -> Move 1 player from table B to table A, and move 1 player from table C to table A
+Table C finish -> Move 1 player from table B to table A, and move 1 player from table C to table A
+
+Test table breaking up
+
+Test 2 tables breaking up at once
 
 ---
 
