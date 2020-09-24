@@ -4,6 +4,7 @@ import { SeatMovement } from "../types/seatMovement";
 import { PlayerMovement } from "../types/playerMovement";
 import { TargetSeat } from "../types/targetSeat";
 import { rotateArray, getPositionsForTableSize } from "./positions";
+import { Player } from "../types/player";
 
 export const getTableCombinations = (tables: Array<Table>, choose: number) => {
     return combine(tables, choose).filter(p => p.length === choose);
@@ -164,4 +165,26 @@ export const workOutTargetSeatPositions = (table: Table, sc: Array<number>): Arr
         }
     }
     return targetSeats;
+}
+
+export const createTableOf = (tableId: string, startingIdent: string, numPlayers: number, hasStartedNextRound: boolean): Table => {
+    let nextIdent = parseInt(startingIdent, 10);
+    let players = [];
+    for(let i=0; i<numPlayers; i++) {
+        let player: Player = {
+            id: (nextIdent + i).toString(),
+            name: "T" + tableId + "S" + (i+1).toString(),
+            movements: 0,
+            participatingLastRound: true,
+            participatingNextRound: true,
+            seat: i+1,
+        }
+        players.push(player);
+    }
+    return {
+        id: tableId,
+        dealerButtonLastRound: 1,
+        hasStartedNextRound,
+        players: players,
+    }
 }

@@ -105,16 +105,6 @@ exports.getRebalancingMovements = function (state) {
     var numberOfPlayersNextRound = exports.getNumberOfPlayersNextRound(state);
     var optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
     var currentNumberOfTables = state.tables.length;
-    var maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / optimalNumberOfTables);
-    var minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables - 1;
-    // Unless tables can be exactly balanced
-    if ((maxNumberOfPlayersOnTables * optimalNumberOfTables) === numberOfPlayersNextRound) {
-        minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
-    }
-    var maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
-    var minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
-    // Never lower the min sensitivity to less than 2
-    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
     var preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
     preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
     /*
@@ -167,6 +157,17 @@ exports.getRebalancingMovements = function (state) {
             table.extraPlayers = 0;
         }
     }
+    // Work out the min and max players here based on tablesAfter.length
+    var maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / tablesAfter.length);
+    var minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables - 1;
+    // Unless tables can be exactly balanced
+    if ((maxNumberOfPlayersOnTables * tablesAfter.length) === numberOfPlayersNextRound) {
+        minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
+    }
+    var maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
+    var minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
+    // Never lower the min sensitivity to less than 2
+    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
     // We also need to move those players on tables which now have too many or too few players
     // TODO Fix the problem where a tournament structure such as 5,10,10,10,10,10,10 would not get rebalanced because tables of 10 are allowed still.
     // We must consider tables with less than the minimum number of players

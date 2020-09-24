@@ -1,250 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var balancer_1 = require("../balancer");
+var util_1 = require("../util");
 jest.retryTimes(0);
-var createTableOf = function (tableId, startingIdent, numPlayers, hasStartedNextRound) {
-    var nextIdent = parseInt(startingIdent, 10);
-    var players = [];
-    for (var i = 0; i < numPlayers; i++) {
-        var player = {
-            id: (nextIdent + i).toString(),
-            name: "T" + tableId + "S" + (i + 1).toString(),
-            movements: 0,
-            participatingLastRound: true,
-            participatingNextRound: true,
-            seat: i + 1,
-        };
-        players.push(player);
-    }
-    return {
-        id: tableId,
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: hasStartedNextRound,
-        players: players,
-    };
-};
-test('Table Creator', function () {
-    expect(createTableOf("A", "1", 10, false)).toStrictEqual({
-        id: "A",
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: false,
-        players: [{
-                id: "1",
-                name: "TAS1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            }, {
-                id: "2",
-                name: "TAS2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 2,
-            }, {
-                id: "3",
-                name: "TAS3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }, {
-                id: "4",
-                name: "TAS4",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 4,
-            }, {
-                id: "5",
-                name: "TAS5",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 5,
-            }, {
-                id: "6",
-                name: "TAS6",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 6,
-            }, {
-                id: "7",
-                name: "TAS7",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 7,
-            }, {
-                id: "8",
-                name: "TAS8",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 8,
-            }, {
-                id: "9",
-                name: "TAS9",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 9,
-            }, {
-                id: "10",
-                name: "TAS10",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 10,
-            }]
-    });
-    expect(createTableOf("B", "11", 8, false)).toStrictEqual({
-        id: "B",
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: false,
-        players: [{
-                id: "11",
-                name: "TBS1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            }, {
-                id: "12",
-                name: "TBS2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 2,
-            }, {
-                id: "13",
-                name: "TBS3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }, {
-                id: "14",
-                name: "TBS4",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 4,
-            }, {
-                id: "15",
-                name: "TBS5",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 5,
-            }, {
-                id: "16",
-                name: "TBS6",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 6,
-            }, {
-                id: "17",
-                name: "TBS7",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 7,
-            }, {
-                id: "18",
-                name: "TBS8",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 8,
-            }]
-    });
-    expect(createTableOf("A", "1", 4, false)).toStrictEqual({
-        id: "A",
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: false,
-        players: [{
-                id: "1",
-                name: "TAS1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            }, {
-                id: "2",
-                name: "TAS2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 2,
-            }, {
-                id: "3",
-                name: "TAS3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }, {
-                id: "4",
-                name: "TAS4",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 4,
-            }]
-    });
-    expect(createTableOf("B", "5", 6, false)).toStrictEqual({
-        id: "B",
-        dealerButtonLastRound: 1,
-        hasStartedNextRound: false,
-        players: [{
-                id: "5",
-                name: "TBS1",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 1,
-            }, {
-                id: "6",
-                name: "TBS2",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 2,
-            }, {
-                id: "7",
-                name: "TBS3",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 3,
-            }, {
-                id: "8",
-                name: "TBS4",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 4,
-            }, {
-                id: "9",
-                name: "TBS5",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 5,
-            }, {
-                id: "10",
-                name: "TBS6",
-                movements: 0,
-                participatingLastRound: true,
-                participatingNextRound: true,
-                seat: 6,
-            }]
-    });
-});
 test('2 full tables, no movements necessary', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
@@ -254,8 +12,8 @@ test('2 full tables, no movements necessary', function () {
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 10, false),
-            createTableOf("B", "11", 10, false),
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 10, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
@@ -271,11 +29,11 @@ test('5 tables of 9, no movements necessary', function () {
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 9, false),
-            createTableOf("B", "11", 9, false),
-            createTableOf("C", "21", 9, false),
-            createTableOf("D", "31", 9, false),
-            createTableOf("E", "41", 9, false),
+            util_1.createTableOf("A", "1", 9, false),
+            util_1.createTableOf("B", "11", 9, false),
+            util_1.createTableOf("C", "21", 9, false),
+            util_1.createTableOf("D", "31", 9, false),
+            util_1.createTableOf("E", "41", 9, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
@@ -292,8 +50,8 @@ test('Case where Table A has 10, and Table B has 8', function () {
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 10, false),
-            createTableOf("B", "11", 8, false),
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 8, false),
         ]
     });
     // Only Seat 9 and Seat 10 are available and they would both be the HJ position in a 9 seated table with D moving to seat 2
@@ -320,8 +78,8 @@ test('Flexible case where Table A has 10, and Table B has 8, should do nothing',
             balanceMinFlexibility: 1,
         },
         tables: [
-            createTableOf("A", "1", 10, false),
-            createTableOf("B", "11", 8, false),
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 8, false),
         ]
     });
     // Optimal seat number is 9, but flexibility should allow 8 or 10
@@ -340,8 +98,8 @@ test('Case where Table A has 4, and Table B has 6', function () {
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 4, false),
-            createTableOf("B", "5", 6, false),
+            util_1.createTableOf("A", "1", 4, false),
+            util_1.createTableOf("B", "5", 6, false),
         ]
     });
     // Only seats 7, 8, 9 & 10 are available which would be UTG+2, UTG+3, UTG+4, HJ
@@ -364,16 +122,16 @@ test('Case where 4 tables have 8, and 2 tables have 9, and 4 tables have 10', fu
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 8, false),
-            createTableOf("B", "11", 8, false),
-            createTableOf("C", "21", 8, false),
-            createTableOf("D", "31", 8, false),
-            createTableOf("E", "41", 9, false),
-            createTableOf("F", "51", 9, false),
-            createTableOf("G", "61", 10, false),
-            createTableOf("H", "71", 10, false),
-            createTableOf("I", "81", 10, false),
-            createTableOf("J", "91", 10, false),
+            util_1.createTableOf("A", "1", 8, false),
+            util_1.createTableOf("B", "11", 8, false),
+            util_1.createTableOf("C", "21", 8, false),
+            util_1.createTableOf("D", "31", 8, false),
+            util_1.createTableOf("E", "41", 9, false),
+            util_1.createTableOf("F", "51", 9, false),
+            util_1.createTableOf("G", "61", 10, false),
+            util_1.createTableOf("H", "71", 10, false),
+            util_1.createTableOf("I", "81", 10, false),
+            util_1.createTableOf("J", "91", 10, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["A"]);
@@ -394,16 +152,16 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', functi
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 8, false),
-            createTableOf("B", "11", 8, false),
-            createTableOf("C", "21", 8, false),
-            createTableOf("D", "31", 8, false),
-            createTableOf("E", "41", 8, false),
-            createTableOf("F", "51", 8, false),
-            createTableOf("G", "61", 8, false),
-            createTableOf("H", "71", 8, false),
-            createTableOf("I", "81", 9, false),
-            createTableOf("J", "91", 10, false),
+            util_1.createTableOf("A", "1", 8, false),
+            util_1.createTableOf("B", "11", 8, false),
+            util_1.createTableOf("C", "21", 8, false),
+            util_1.createTableOf("D", "31", 8, false),
+            util_1.createTableOf("E", "41", 8, false),
+            util_1.createTableOf("F", "51", 8, false),
+            util_1.createTableOf("G", "61", 8, false),
+            util_1.createTableOf("H", "71", 8, false),
+            util_1.createTableOf("I", "81", 9, false),
+            util_1.createTableOf("J", "91", 10, false),
         ]
     });
     expect(result.stats.currentNumberOfTables).toBe(10);
@@ -425,13 +183,13 @@ test('Case where 1 table has 5, and 6 other tables are full', function () {
             balanceMinFlexibility: 0,
         },
         tables: [
-            createTableOf("A", "1", 5, false),
-            createTableOf("B", "11", 10, false),
-            createTableOf("C", "21", 10, false),
-            createTableOf("D", "31", 10, false),
-            createTableOf("E", "41", 10, false),
-            createTableOf("F", "51", 10, false),
-            createTableOf("G", "61", 10, false),
+            util_1.createTableOf("A", "1", 5, false),
+            util_1.createTableOf("B", "11", 10, false),
+            util_1.createTableOf("C", "21", 10, false),
+            util_1.createTableOf("D", "31", 10, false),
+            util_1.createTableOf("E", "41", 10, false),
+            util_1.createTableOf("F", "51", 10, false),
+            util_1.createTableOf("G", "61", 10, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);

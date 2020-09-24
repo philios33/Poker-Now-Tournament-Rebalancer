@@ -114,19 +114,6 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     let optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
     let currentNumberOfTables = state.tables.length;
 
-    let maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / optimalNumberOfTables);
-    let minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables - 1;
-    // Unless tables can be exactly balanced
-    if ((maxNumberOfPlayersOnTables * optimalNumberOfTables) === numberOfPlayersNextRound) {
-        minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
-    }
-    
-    let maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
-    let minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
-
-    // Never lower the min sensitivity to less than 2
-    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
-
     let preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
     preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
 
@@ -181,6 +168,8 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         }
     }
 
+    tableIdsBeingBrokenUp.sort(); // Just alphabetically sort
+
     let tablesAfter = []
     for(let table of state.tables) {
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
@@ -188,6 +177,21 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
             table.extraPlayers = 0;
         }
     }
+
+    // Work out the min and max players here based on tablesAfter.length
+    let maxNumberOfPlayersOnTables = Math.ceil(numberOfPlayersNextRound / tablesAfter.length);
+    let minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables - 1;
+    // Unless tables can be exactly balanced
+    if ((maxNumberOfPlayersOnTables * tablesAfter.length) === numberOfPlayersNextRound) {
+        minNumberOfPlayersOnTables = maxNumberOfPlayersOnTables;
+    }
+    
+    let maxNumberOfPlayersOnTablesWithFlex = maxNumberOfPlayersOnTables + state.config.balanceMaxFlexibility;
+    let minNumberOfPlayersOnTablesWithFlex = minNumberOfPlayersOnTables - state.config.balanceMinFlexibility;
+
+    // Never lower the min sensitivity to less than 2
+    minNumberOfPlayersOnTablesWithFlex = Math.max(minNumberOfPlayersOnTablesWithFlex, 2);
+
 
     // We also need to move those players on tables which now have too many or too few players
     

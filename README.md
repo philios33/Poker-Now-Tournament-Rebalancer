@@ -69,48 +69,16 @@ Move Table A Seat 1 -> Table B Seat 2
 
 TODO
 
-
-Add tests for preventTableBreakingIfMoreThan config value
-
----
-
 Add tests for new util functions
+Add debug string in results object so we can print out movements easily
+Add id duplicate checks between table ids and player ids and unique seat numbers!
+Remove the timer check for cases with many combinations, can solve by doing a maximum number of random tries.
 
 ---
 
-Add more flexibility tests
+Add more flexibility tests (e.g. when min is 4)
 E.g. When table is really low on numbers but not breaching min, should ignore
 E.g. And when breached, it should move as many people as possible to reach the optimal min.
-
----
-
-Add test for a table break and a rebalance at the same time: e.g. 2,6,10,10,10,10,10,10,10
-
-Add test for 8,8,10,10,10,10,10,10,10 situation
-Add tests for:
-5,7,8,10 = 30, Get rid of A and use 3 full tables.
-6,7,8,10 = 31, Optimal players (7 or 8), so move 2 from D to A
-6,6,9,10 = 31, Optimal players (7 or 8), so move 1 from C, 2 from D, Then 1 on A, 1 on B, and the last on either A or B
-5,10,10,10,10,10,10
-
-Other tests to add:
-That correct player (by position) is chosen when table A has 8 and table B has 10 players.  
-The movement should be ignored when table A finishes their hand.
-The movement should be applied when table B finishes their hand.
-    Table B should choose the best player by position.
-
-Check edge case where, table A has 10 players and table B has 1 player.
-When table B finishes their hand, no movement away from this table can occur.  He will have to wait for table A to finish their hand.
-When table A finishes their hand, 4 players move from A -> B
-
-Test case where Table A has 6, Table B has 10 & Table C has 10.
-Table A finish -> Nothing
-Table B finish -> Move 1 player from table B to table A, and move 1 player from table C to table A
-Table C finish -> Move 1 player from table B to table A, and move 1 player from table C to table A
-
-Test table breaking up
-
-Test 2 tables breaking up at once
 
 ---
 

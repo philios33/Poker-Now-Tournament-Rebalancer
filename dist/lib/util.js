@@ -7,7 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 var positions_1 = require("./positions");
 exports.getTableCombinations = function (tables, choose) {
     return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
@@ -160,5 +160,26 @@ exports.workOutTargetSeatPositions = function (table, sc) {
         }
     }
     return targetSeats;
+};
+exports.createTableOf = function (tableId, startingIdent, numPlayers, hasStartedNextRound) {
+    var nextIdent = parseInt(startingIdent, 10);
+    var players = [];
+    for (var i = 0; i < numPlayers; i++) {
+        var player = {
+            id: (nextIdent + i).toString(),
+            name: "T" + tableId + "S" + (i + 1).toString(),
+            movements: 0,
+            participatingLastRound: true,
+            participatingNextRound: true,
+            seat: i + 1,
+        };
+        players.push(player);
+    }
+    return {
+        id: tableId,
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: hasStartedNextRound,
+        players: players,
+    };
 };
 //# sourceMappingURL=util.js.map
