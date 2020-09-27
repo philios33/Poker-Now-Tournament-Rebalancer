@@ -6,7 +6,7 @@ test('Dont break tables if more than 5, and no balancing to do', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 5,
+            breakWithLessThan: 6,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -24,7 +24,7 @@ test('Allow the table break if more than 6', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 6,
+            breakWithLessThan: 7,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -41,7 +41,7 @@ test('Dont break tables if more than 4, and no balancing to do', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 4,
+            breakWithLessThan: 5,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -61,7 +61,7 @@ test('Allow table breaking of 2 tables', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 7,
+            breakWithLessThan: 8,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -80,7 +80,7 @@ test('Dont break tables but rebalance', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 4,
+            breakWithLessThan: 5,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -99,7 +99,7 @@ test('Dont break tables and dont rebalance because of max flexibility allows 1 e
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 4,
+            breakWithLessThan: 5,
             balanceMaxFlexibility: 1,
             balanceMinFlexibility: 0,
         },
@@ -118,7 +118,7 @@ test('Dont break up tables if the max is 6 anyway', function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 6,
-            preventTableBreakingIfMoreThan: 7,
+            breakWithLessThan: 8,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -137,7 +137,7 @@ test("Table break and rebalance at the same time", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -162,7 +162,7 @@ test("Table break and skip rebalance at the same time", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 1,
         },
@@ -187,7 +187,7 @@ test("Just rebalance", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -210,7 +210,7 @@ test("Just skip rebalance", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 1,
         },
@@ -233,7 +233,7 @@ test("Just rebalance", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -256,7 +256,7 @@ test("Break table A", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -274,7 +274,7 @@ test("Rebalance 2 from D to A", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -293,7 +293,7 @@ test("Rebalance 3 between all tables", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -312,7 +312,7 @@ test("Test 2 tables breaking up", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -330,7 +330,7 @@ test("Test 3 tables breaking up", function () {
     var result = balancer_1.getRebalancingPlayerMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

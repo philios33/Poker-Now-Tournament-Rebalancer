@@ -105,8 +105,8 @@ exports.getRebalancingMovements = function (state) {
     var numberOfPlayersNextRound = exports.getNumberOfPlayersNextRound(state);
     var optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
     var currentNumberOfTables = state.tables.length;
-    var preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
-    preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
+    var breakWithLessThan = state.config.breakWithLessThan;
+    breakWithLessThan = Math.max(breakWithLessThan, 2);
     /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
     console.log("optimalNumberOfTables = " + optimalNumberOfTables);
@@ -134,7 +134,7 @@ exports.getRebalancingMovements = function (state) {
             var table = tables_5[_i];
             // console.log("Breaking up table", table.id);
             var numActiveSeats = table.players.filter(function (p) { return p.participatingNextRound; }).length;
-            if (preventTableBreakingIfMoreThan >= numActiveSeats) {
+            if (breakWithLessThan > numActiveSeats) {
                 // Move everyone
                 for (var i = 0; i < numActiveSeats; i++) {
                     fromTableChoices.choices.push({
@@ -149,6 +149,7 @@ exports.getRebalancingMovements = function (state) {
             }
         }
     }
+    tableIdsBeingBrokenUp.sort(); // Just alphabetically sort
     var tablesAfter = [];
     for (var _a = 0, _b = state.tables; _a < _b.length; _a++) {
         var table = _b[_a];
@@ -602,6 +603,7 @@ exports.getRebalancingPlayerMovements = function (state) {
         return {
             stats: result.stats,
             movements: [],
+            movementsText: "No movements",
             totalScore: 0,
             optimalResult: null,
             msTaken: endTime_1 - startTime,
@@ -624,9 +626,11 @@ exports.getRebalancingPlayerMovements = function (state) {
     }
     logger.log("Finished");
     var endTime = (new Date()).getTime();
+    // console.log("optimalResult", optimalResult, "score", optimalResult.bestResult.totalScore);
     return {
         stats: result.stats,
         movements: playerMovements,
+        movementsText: util_1.convertMovementsToText(playerMovements),
         totalScore: totalScore,
         optimalResult: optimalResult,
         /*

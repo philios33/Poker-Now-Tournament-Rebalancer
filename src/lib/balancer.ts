@@ -9,7 +9,7 @@ import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions } from "./util";
+import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions, convertMovementsToText } from "./util";
 import { Logger } from "../classes/logger";
 import { TableChoices } from "../types/tableChoices";
 
@@ -114,8 +114,8 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     let optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
     let currentNumberOfTables = state.tables.length;
 
-    let preventTableBreakingIfMoreThan = state.config.preventTableBreakingIfMoreThan;
-    preventTableBreakingIfMoreThan = Math.max(preventTableBreakingIfMoreThan, 1);
+    let breakWithLessThan = state.config.breakWithLessThan;
+    breakWithLessThan = Math.max(breakWithLessThan, 2);
 
     /*
     console.log("numberOfPlayersNextRound = " + numberOfPlayersNextRound);
@@ -150,7 +150,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
             // console.log("Breaking up table", table.id);
             let numActiveSeats = table.players.filter(p => p.participatingNextRound).length;
 
-            if (preventTableBreakingIfMoreThan >= numActiveSeats) {
+            if (breakWithLessThan > numActiveSeats) {
                 // Move everyone
                 for(let i=0; i<numActiveSeats; i++) {
                     fromTableChoices.choices.push({
@@ -645,6 +645,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         return {
             stats: result.stats,
             movements: [],
+            movementsText: "No movements",
             totalScore: 0,
             optimalResult: null,
             msTaken: endTime - startTime,    
@@ -672,10 +673,13 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
 
     logger.log("Finished");
     const endTime = (new Date()).getTime();
-    
+
+    // console.log("optimalResult", optimalResult, "score", optimalResult.bestResult.totalScore);
+
     return {
         stats: result.stats,
         movements: playerMovements,
+        movementsText: convertMovementsToText(playerMovements),
         totalScore,
 
         optimalResult,

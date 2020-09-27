@@ -125,7 +125,7 @@ test('findTableById and findPlayerBySeat', function () {
     var state = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -476,5 +476,19 @@ test("workOutTargetSeatPositions", function () {
     expect(result2[0].position).toBe("SB");
     expect(result2[1].seat).toBe(2);
     expect(result2[1].position).toBe("UTG");
+});
+test("randomlyChooseTables", function () {
+    var result = util_1.randomlyChooseTables(['A', 'B', 'C'], 1);
+    expect(result.length).toBe(1);
+    expect(['A', 'B', 'C'].indexOf(result[0])).toBeGreaterThanOrEqual(0);
+    expect(['A', 'B', 'C'].indexOf(result[0])).toBeLessThan(3);
+});
+test("randomlyChooseTables 2", function () {
+    var result = util_1.randomlyChooseTables(['A', 'B', 'C'], 2);
+    expect(result.length).toBe(2);
+});
+test("randomlyChooseTables 3", function () {
+    var result = util_1.randomlyChooseTables(['A', 'B', 'C'], 3);
+    expect(result.length).toBe(3);
 });
 //# sourceMappingURL=util.js.map

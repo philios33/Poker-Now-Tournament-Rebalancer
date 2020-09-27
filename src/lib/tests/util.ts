@@ -1,4 +1,4 @@
-import { combine, getTableCombinations, invertSeatList, findTableById, findPlayerBySeat, convertSeatMovementToPlayerMovement, multiplyArrays, workOutTargetSeatPositions } from "../util";
+import { combine, getTableCombinations, invertSeatList, findTableById, findPlayerBySeat, convertSeatMovementToPlayerMovement, multiplyArrays, workOutTargetSeatPositions, randomlyChooseTables } from "../util";
 import { Table } from "../../types/table";
 import { TournamentState } from "../../types/tournamentState";
 import { SeatMovement } from "../../types/seatMovement";
@@ -137,7 +137,7 @@ test('findTableById and findPlayerBySeat', () => {
     const state: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -509,4 +509,21 @@ test("workOutTargetSeatPositions", () => {
     expect(result2[1].seat).toBe(2);
     expect(result2[1].position).toBe("UTG");
     
+});
+
+test("randomlyChooseTables", () => {
+    const result = randomlyChooseTables(['A','B','C'], 1);
+    expect(result.length).toBe(1);
+    expect(['A','B','C'].indexOf(result[0])).toBeGreaterThanOrEqual(0);
+    expect(['A','B','C'].indexOf(result[0])).toBeLessThan(3);
+});
+
+test("randomlyChooseTables 2", () => {
+    const result = randomlyChooseTables(['A','B','C'], 2);
+    expect(result.length).toBe(2);
+});
+
+test("randomlyChooseTables 3", () => {
+    const result = randomlyChooseTables(['A','B','C'], 3);
+    expect(result.length).toBe(3);
 });

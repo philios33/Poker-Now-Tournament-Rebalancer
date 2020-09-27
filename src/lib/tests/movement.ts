@@ -163,7 +163,7 @@ test('getBestPlayerMovementsFor 1', () => {
         numOfPlayers: 3,
     }
     const targetSeats: Array<TargetSeat> = [seat1TableB, seat2TableB, seat3TableB];
-    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats);
+    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
 
     // This should be 15 because it checks
     /*
@@ -277,7 +277,7 @@ test('getBestPlayerMovementsFor 2', () => {
         numOfPlayers: 4,
     }
     const targetSeats: Array<TargetSeat> = [seat1TableB, seat2TableB, seat3TableB, seat4TableB];
-    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats);
+    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
 
     expect(movement.totalMovementsSkipped + movement.totalMovementsChecked).toBe(64);
     // expect(movement.totalMovementsChecked).toBe(22);
@@ -353,7 +353,7 @@ test('getBestPlayerMovementsFor 3', () => {
         numOfPlayers: 7,
     }
     const targetSeats: Array<TargetSeat> = [seat1TableB, seat2TableB, seat3TableB, seat4TableB, seat5TableB];
-    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats);
+    const movement = getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
 
     expect(movement.totalMovementsSkipped + movement.totalMovementsChecked).toBe(325);
     // expect(movement.totalMovementsChecked).toBe(60);

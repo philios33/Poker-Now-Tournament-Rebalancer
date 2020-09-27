@@ -148,7 +148,7 @@ test('getBestPlayerMovementsFor 1', function () {
         numOfPlayers: 3,
     };
     var targetSeats = [seat1TableB, seat2TableB, seat3TableB];
-    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats);
+    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
     // This should be 15 because it checks
     /*
         A1->B1
@@ -255,7 +255,7 @@ test('getBestPlayerMovementsFor 2', function () {
         numOfPlayers: 4,
     };
     var targetSeats = [seat1TableB, seat2TableB, seat3TableB, seat4TableB];
-    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats);
+    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
     expect(movement.totalMovementsSkipped + movement.totalMovementsChecked).toBe(64);
     // expect(movement.totalMovementsChecked).toBe(22);
     // expect(movement.totalMovementsSkipped).toBe(42);
@@ -328,7 +328,7 @@ test('getBestPlayerMovementsFor 3', function () {
         numOfPlayers: 7,
     };
     var targetSeats = [seat1TableB, seat2TableB, seat3TableB, seat4TableB, seat5TableB];
-    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats);
+    var movement = movement_1.getBestPlayerMovementsFor(seatPositions, targetSeats, 1000);
     expect(movement.totalMovementsSkipped + movement.totalMovementsChecked).toBe(325);
     // expect(movement.totalMovementsChecked).toBe(60);
     // expect(movement.totalMovementsSkipped).toBe(265);

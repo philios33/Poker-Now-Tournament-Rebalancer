@@ -69,10 +69,8 @@ Move Table A Seat 1 -> Table B Seat 2
 
 TODO
 
-Add tests for new util functions
-Add debug string in results object so we can print out movements easily
 Add id duplicate checks between table ids and player ids and unique seat numbers!
-Remove the timer check for cases with many combinations, can solve by doing a maximum number of random tries.
+Add result boolean for whether we tried every combination or not, or if we hit some limit
 
 ---
 
@@ -96,3 +94,6 @@ All hands are logged by time.
 Table formats are logged before and after each set of movements.
 When the tournament is over, the number of movements are logged with their scores and positions.
 This should hopefully help us work out the best threshold to move players at.
+
+ANSI escape sequences which should help draw out the models to console
+https://stackoverflow.com/questions/11474391/is-there-go-up-line-character-opposite-of-n

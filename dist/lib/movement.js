@@ -160,7 +160,7 @@ exports.numberOfMovementsRequiredForSeats = function (seats) {
         throw new Error("Unknown number of movements required for seats: " + seats);
     }
 };
-exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, giveUpIfScoreBreaches, consoleText) {
+exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCheckLimit, giveUpIfScoreBreaches, consoleText) {
     if (giveUpIfScoreBreaches === void 0) { giveUpIfScoreBreaches = null; }
     if (consoleText === void 0) { consoleText = ""; }
     var totalMovementsChecked = 0;
@@ -168,6 +168,7 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, giveUpIfSc
     // Given this combination, work out the best movements to choose
     // Do this by applying the first fromSeat to the first targetSeat and trying out all other combinations
     var bestResult = null;
+    var maxChecksPerSeat = Math.round(movementCheckLimit / fromSeats.length); // Divide equally between the remaining seats
     for (var i = 0; i < fromSeats.length; i++) {
         // Apply this startingSeat to the first targetSeat
         var otherFromSeats = fromSeats.slice(0);
@@ -195,7 +196,7 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, giveUpIfSc
         // Then recurse with the rest of the otherFromSeats & otherTargetSeats if there are more remaining
         if (otherFromSeats.length > 0) {
             // console.log("Recursing...");
-            var result = exports.getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, newBreachLimit, consoleText + thisConsoleText);
+            var result = exports.getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, maxChecksPerSeat, newBreachLimit, consoleText + thisConsoleText);
             // This is always returned even when no best player movements are found
             totalMovementsChecked += result.totalMovementsChecked;
             totalMovementsSkipped += result.totalMovementsSkipped;
@@ -232,6 +233,9 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, giveUpIfSc
             }
             // console.log("Score for: " + [{fromSeat, targetSeat}]);
         }
+        if (totalMovementsChecked > movementCheckLimit) {
+            break;
+        }
     }
     // console.log("Returning best player movements after checks: " + totalMovementsChecked);
     return { bestResult: bestResult, totalMovementsChecked: totalMovementsChecked, totalMovementsSkipped: totalMovementsSkipped };
@@ -248,13 +252,16 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
     // console.log("From Combo Count", globalFromSeats.length);
     // console.log("Target Combo Count", globalTargetSeats.length);
     // If there are too many combinations, we could try doing only 5 seconds of processing the combinations and just go with the best result.
-    var stopAfterMs = 5000;
+    // const stopAfterMs = 5000;
+    // We now limit the number of checks made so that we dont thrash the CPU.  This is better than trying to find best results for X seconds.
+    var maxChecksToMake = 800 * 1000;
     // If we do this, it is important to shuffle the 2 arrays
     // It is better to multiply these arrays first, then randomise the result
     // This would give more of a range of from seat combos
     var joinedGlobals = util_1.multiplyArrays(globalFromSeats, globalTargetSeats, false);
     var totalCombinations = joinedGlobals.length;
     joinedGlobals.sort(function () { return Math.random() - 0.5; });
+    var checksPerCombo = Math.round(maxChecksToMake / totalCombinations);
     var startTime = (new Date()).getTime();
     var processedCombinations = 0;
     for (var _i = 0, joinedGlobals_1 = joinedGlobals; _i < joinedGlobals_1.length; _i++) {
@@ -262,7 +269,7 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
         var froms = joinedItem[0];
         var targets = joinedItem[1];
         // console.log("Getting best result of ", froms, targets);
-        var result = exports.getBestPlayerMovementsFor(froms, targets, bestScore);
+        var result = exports.getBestPlayerMovementsFor(froms, targets, checksPerCombo, bestScore);
         processedCombinations++;
         totalMovementsChecked += result.totalMovementsChecked;
         totalMovementsSkipped += result.totalMovementsSkipped;
@@ -275,11 +282,11 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
         }
         // console.log("Best score is", bestScore);
         // Check if the time is up
-        var timeNow = (new Date()).getTime();
-        if (timeNow - startTime > stopAfterMs) {
-            // console.log("Stopping after: " + stopAfterMs + " ms");
-            break;
-        }
+        // const timeNow = (new Date()).getTime();
+        // if (timeNow - startTime > stopAfterMs) {
+        // console.log("Stopping after: " + stopAfterMs + " ms");
+        //    break;
+        //}
     }
     // console.log("Processed " + processedCombinations + " of " + totalCombinations);
     // console.log("BEST RESULT", bestResult);

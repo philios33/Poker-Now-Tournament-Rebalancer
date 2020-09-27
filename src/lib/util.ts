@@ -188,3 +188,18 @@ export const createTableOf = (tableId: string, startingIdent: string, numPlayers
         players: players,
     }
 }
+
+export function convertMovementsToText(movements: Array<PlayerMovement>) {
+    let txt = "";
+    for(let i=0; i<movements.length; i++) {
+        const m = movements[i];
+        txt += "MOVEMENT " + (i+1) + " / " + movements.length + ": ";
+        txt += m.fromPlayer.id + " at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
+        txt += " --> ";
+        txt += " to table " + m.to.tableId + " in seat " + m.to.seat + " (" + m.to.position + ")";
+        txt += " score: " + m.movementScore;
+        txt += "\n";
+    }
+    // console.log(txt);
+    return txt;
+}

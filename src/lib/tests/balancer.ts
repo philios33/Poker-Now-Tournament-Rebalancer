@@ -6,7 +6,7 @@ test("getNumberOfPlayersNextRound", () => {
     const emptyTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -17,7 +17,7 @@ test("getNumberOfPlayersNextRound", () => {
     const headsUpTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -58,7 +58,7 @@ test("getNumberOfPlayersNextRound", () => {
     const multiTableTournament: TournamentState = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -260,7 +260,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -271,7 +271,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result2 = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -282,7 +282,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     const result3 = getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -300,7 +300,7 @@ test("getRebalancingMovements", () => {
     const result = getRebalancingMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -489,7 +489,7 @@ test("getRebalancingPlayerMovements", () => {
     const state: TournamentState = {
         config: {
             maxPlayersPerTable: 6,
-            preventTableBreakingIfMoreThan: 5,
+            breakWithLessThan: 6,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

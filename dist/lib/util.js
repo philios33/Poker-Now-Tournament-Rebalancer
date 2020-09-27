@@ -7,7 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 var positions_1 = require("./positions");
 exports.getTableCombinations = function (tables, choose) {
     return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
@@ -182,4 +182,19 @@ exports.createTableOf = function (tableId, startingIdent, numPlayers, hasStarted
         players: players,
     };
 };
+function convertMovementsToText(movements) {
+    var txt = "";
+    for (var i = 0; i < movements.length; i++) {
+        var m = movements[i];
+        txt += "MOVEMENT " + (i + 1) + " / " + movements.length + ": ";
+        txt += m.fromPlayer.id + " at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
+        txt += " --> ";
+        txt += " to table " + m.to.tableId + " in seat " + m.to.seat + " (" + m.to.position + ")";
+        txt += " score: " + m.movementScore;
+        txt += "\n";
+    }
+    // console.log(txt);
+    return txt;
+}
+exports.convertMovementsToText = convertMovementsToText;
 //# sourceMappingURL=util.js.map

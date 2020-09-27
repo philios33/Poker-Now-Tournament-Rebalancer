@@ -4,7 +4,7 @@ var balancer_1 = require("./lib/balancer");
 var state = {
     config: {
         maxPlayersPerTable: 4,
-        preventTableBreakingIfMoreThan: 3,
+        breakWithLessThan: 4,
         balanceMaxFlexibility: 0,
         balanceMinFlexibility: 0,
     },

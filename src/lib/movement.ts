@@ -163,12 +163,13 @@ export const numberOfMovementsRequiredForSeats = (seats: number) => {
     }
 }
 
-export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, giveUpIfScoreBreaches: number = null, consoleText: string = ""): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
+export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, movementCheckLimit: number, giveUpIfScoreBreaches: number = null, consoleText: string = ""): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
     let totalMovementsChecked = 0;
     let totalMovementsSkipped = 0;
     // Given this combination, work out the best movements to choose
     // Do this by applying the first fromSeat to the first targetSeat and trying out all other combinations
     let bestResult = null;
+    let maxChecksPerSeat = Math.round(movementCheckLimit / fromSeats.length); // Divide equally between the remaining seats
     for(let i=0; i<fromSeats.length; i++) {
         // Apply this startingSeat to the first targetSeat
         const otherFromSeats = fromSeats.slice(0);
@@ -198,7 +199,7 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
         // Then recurse with the rest of the otherFromSeats & otherTargetSeats if there are more remaining
         if (otherFromSeats.length > 0) {
             // console.log("Recursing...");
-            let result = getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, newBreachLimit, consoleText + thisConsoleText);
+            let result = getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, maxChecksPerSeat, newBreachLimit, consoleText + thisConsoleText);
 
             // This is always returned even when no best player movements are found
             totalMovementsChecked += result.totalMovementsChecked;
@@ -241,6 +242,11 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
             }
             // console.log("Score for: " + [{fromSeat, targetSeat}]);
         }
+        
+        if (totalMovementsChecked > movementCheckLimit) {
+            break;
+        }
+        
     }
     
     // console.log("Returning best player movements after checks: " + totalMovementsChecked);
@@ -260,7 +266,9 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
     // console.log("Target Combo Count", globalTargetSeats.length);
 
     // If there are too many combinations, we could try doing only 5 seconds of processing the combinations and just go with the best result.
-    const stopAfterMs = 5000;
+    // const stopAfterMs = 5000;
+    // We now limit the number of checks made so that we dont thrash the CPU.  This is better than trying to find best results for X seconds.
+    const maxChecksToMake = 800 * 1000;
 
     // If we do this, it is important to shuffle the 2 arrays
     // It is better to multiply these arrays first, then randomise the result
@@ -268,6 +276,7 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
     const joinedGlobals = multiplyArrays(globalFromSeats, globalTargetSeats, false);
     const totalCombinations = joinedGlobals.length;
     joinedGlobals.sort(() => Math.random() - 0.5);
+    const checksPerCombo = Math.round(maxChecksToMake / totalCombinations);
 
     const startTime = (new Date()).getTime();
     let processedCombinations = 0;
@@ -277,7 +286,7 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
         const targets = joinedItem[1];
 
         // console.log("Getting best result of ", froms, targets);
-        const result = getBestPlayerMovementsFor(froms, targets, bestScore);
+        const result = getBestPlayerMovementsFor(froms, targets, checksPerCombo, bestScore);
         processedCombinations++;
         totalMovementsChecked += result.totalMovementsChecked;
         totalMovementsSkipped += result.totalMovementsSkipped;
@@ -291,11 +300,11 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
         // console.log("Best score is", bestScore);
 
         // Check if the time is up
-        const timeNow = (new Date()).getTime();
-        if (timeNow - startTime > stopAfterMs) {
+        // const timeNow = (new Date()).getTime();
+        // if (timeNow - startTime > stopAfterMs) {
             // console.log("Stopping after: " + stopAfterMs + " ms");
-            break;
-        }
+        //    break;
+        //}
     }
 
     // console.log("Processed " + processedCombinations + " of " + totalCombinations);

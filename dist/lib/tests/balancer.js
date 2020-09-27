@@ -5,7 +5,7 @@ test("getNumberOfPlayersNextRound", function () {
     var emptyTournament = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -15,7 +15,7 @@ test("getNumberOfPlayersNextRound", function () {
     var headsUpTournament = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -55,7 +55,7 @@ test("getNumberOfPlayersNextRound", function () {
     var multiTableTournament = {
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -246,7 +246,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -256,7 +256,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result2 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -266,7 +266,7 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var result3 = balancer_1.getTablesWithLeastSizeAndMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -282,7 +282,7 @@ test("getRebalancingMovements", function () {
     var result = balancer_1.getRebalancingMovements({
         config: {
             maxPlayersPerTable: 10,
-            preventTableBreakingIfMoreThan: 9,
+            breakWithLessThan: 10,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },
@@ -468,7 +468,7 @@ test("getRebalancingPlayerMovements", function () {
     var state = {
         config: {
             maxPlayersPerTable: 6,
-            preventTableBreakingIfMoreThan: 5,
+            breakWithLessThan: 6,
             balanceMaxFlexibility: 0,
             balanceMinFlexibility: 0,
         },

@@ -5,6 +5,7 @@ import { OptimalResult } from "./optimalResult";
 export interface BalancingPlayersResult {
     stats: BalancingStats;
     movements: Array<PlayerMovement>;
+    movementsText: string;
     totalScore: number;
 
     optimalResult: OptimalResult;

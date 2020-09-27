@@ -5,7 +5,7 @@ import { TournamentState } from './types/tournamentState';
 const state: TournamentState = {
     config: {
         maxPlayersPerTable: 4,
-        preventTableBreakingIfMoreThan: 3,
+        breakWithLessThan: 4,
         balanceMaxFlexibility: 0,
         balanceMinFlexibility: 0,
     },
