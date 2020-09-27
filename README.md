@@ -20,60 +20,125 @@ Finally, install the package with
 
 ```javascript
 const Balancer = require("@poker-now/tournament-rebalancer");
-const tournament = {
-    config: {
-        maxPlayersPerTable: 10,
+const state: PokerNowTournamentState = {
+    players: {
+        "P1": {
+            id: "P1",
+            name: "Phil",
+            currentTable: "A",
+            movements: 0,
+            seat: 2,
+            stack: 1000,
+        },
+        "P2": {
+            id: "P2",
+            name: "Sam",
+            currentTable: "A",
+            movements: 1,
+            seat: 4,
+            stack: 1000,
+        },
+        "P3": {
+            id: "P3",
+            name: "Clive",
+            currentTable: "A",
+            movements: 0,
+            seat: 6,
+            stack: 1000,
+        },
+        "P4": {
+            id: "P4",
+            name: "Benny",
+            currentTable: "B",
+            movements: 0,
+            seat: 5,
+            stack: 1000,
+        },
+        "P5": {
+            id: "P5",
+            name: "Josh",
+            currentTable: "B",
+            movements: 0,
+            seat: 6,
+            stack: 1000,
+        },
+        "P6": {
+            id: "P6",
+            name: "Will",
+            currentTable: "C",
+            movements: 0,
+            seat: 5,
+            stack: 1000,
+        },
+        "P7": {
+            id: "P7",
+            name: "Katie",
+            currentTable: "C",
+            movements: 0,
+            seat: 7,
+            stack: 1000,
+        },
+        "P8": {
+            id: "P8",
+            name: "Sarah",
+            currentTable: "C",
+            movements: 0,
+            seat: 9,
+            stack: 1000,
+        }
     },
-    tables: [
-        {
+    tables: {
+        "A": {
             id: "A",
-            dealerButtonLastRound: 1,
-            players: [
-                {
-                    id: "1",
-                    name: "1",
-                    movements: 0,
-                    participatingLastRound: true,
-                    participatingNextRound: true,
-                    seat: 1,
-                }
+            dealerButtonLastRound: 6,
+            seats: [
+                [2, "P1"],
+                [4, "P2"],
+                [6, "P3"],
             ]
         },
-        {
+        "B": {
             id: "B",
-            dealerButtonLastRound: 1,
-            players: [
-                {
-                    id: "2",
-                    name: "2",
-                    movements: 0,
-                    participatingLastRound: true,
-                    participatingNextRound: true,
-                    seat: 1,
-                }
+            dealerButtonLastRound: 6,
+            seats: [
+                [5, "P4"],
+                [6, "P5"],
+            ]
+        },
+        "C": {
+            id: "C",
+            dealerButtonLastRound: 5,
+            seats: [
+                [5, "P6"],
+                [7, "P7"],
+                [9, "P8"],
             ]
         }
-    ]
+    }
+};
+
+const config: Config = {
+    maxPlayersPerTable: 8,
+    breakWithLessThan: 8,  // This allows table breaking (if possible) for tables with less than 8 players.
+    balanceMinFlexibility: 0, // Increase these to prevent over rebalancing.
+    balanceMaxFlexibility: 0, // 0 = Rebalance as much as possible
 }
-const result = Balancer.getRebalancingPlayerMovements(tournament);
-for(const movement of result.movements) {
-    console.log("Move Table " + movement.fromTable.id + " Seat " + movement.fromPlayer.seat + " -> Table " + movement.to.tableId + " Seat " + movement.to.seat);
-}
+
+const result = Balancer.getMovements(state, config, "B");
+console.log(result.movementsText);
 ```
 
 Gives
 
 ```javascript
-Move Table A Seat 1 -> Table B Seat 2
+MOVEMENT 1 / 5: Benny (P4) at table B in seat 5 (SB) --> to table A in seat 8 (D) score: 0
+MOVEMENT 2 / 5: Will (P6) at table C in seat 5 (BB) --> to table A in seat 1 (SB) score: 0
+MOVEMENT 3 / 5: Sarah (P8) at table C in seat 9 (SB) --> to table A in seat 3 (UTG) score: 15
+MOVEMENT 4 / 5: Josh (P5) at table B in seat 6 (D) --> to table A in seat 5 (UTG+2) score: 8
+MOVEMENT 5 / 5: Katie (P7) at table C in seat 7 (D) --> to table A in seat 7 (CO) score: 0
 ```
 
-TODO
-
-Add converter to map Sam's tournament state format in to my structure.  
-E.g. Logic for if stack=0 we assume participatingNextRound=false
-And unless we can get the data for participatingLastRound (for dead button reasons), we must assume that all players participated.
-
----
+## Other ideas
 
 Write a simulator which randomly generates a tournament where rounds last a random amount of time and players bust out at random intervals.
 The lib is used to queue up player movements if the table that finished a hand has players to move away.

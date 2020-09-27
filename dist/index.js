@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRebalancingPlayerMovements = exports.getRebalancingMovements = void 0;
+exports.getMovements = void 0;
 var balancer_1 = require("./lib/balancer");
-Object.defineProperty(exports, "getRebalancingMovements", { enumerable: true, get: function () { return balancer_1.getRebalancingMovements; } });
-Object.defineProperty(exports, "getRebalancingPlayerMovements", { enumerable: true, get: function () { return balancer_1.getRebalancingPlayerMovements; } });
+var util_1 = require("./lib/util");
+function getMovements(state, config, tableIdThatCompletedHand) {
+    return balancer_1.getRebalancingPlayerMovements(util_1.buildTournamentState(state, config, tableIdThatCompletedHand));
+}
+exports.getMovements = getMovements;
 //# sourceMappingURL=index.js.map

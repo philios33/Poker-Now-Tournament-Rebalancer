@@ -7,7 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.arrayShuffle = exports.doSanityCheckOnSeatNumber = exports.doSanityChecksOnPlayerObject = exports.doSanityChecksOnTableObject = exports.doSanityChecksOnStateTables = exports.doSanityChecksOnStateConfig = exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.buildTournamentState = exports.arrayShuffle = exports.doSanityCheckOnSeatNumber = exports.doSanityChecksOnPlayerObject = exports.doSanityChecksOnTableObject = exports.doSanityChecksOnStateTables = exports.doSanityChecksOnStateConfig = exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 var positions_1 = require("./positions");
 var tournamentStateError_1 = require("../classes/tournamentStateError");
 exports.getTableCombinations = function (tables, choose) {
@@ -189,8 +189,8 @@ function convertMovementsToText(movements) {
     for (var i = 0; i < movements.length; i++) {
         var m = movements[i];
         txt += "MOVEMENT " + (i + 1) + " / " + movements.length + ": ";
-        txt += m.fromPlayer.id + " at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
-        txt += " --> ";
+        txt += m.fromPlayer.name + " (" + m.fromPlayer.id + ") at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
+        txt += " -->";
         txt += " to table " + m.to.tableId + " in seat " + m.to.seat + " (" + m.to.position + ")";
         txt += " score: " + m.movementScore;
         txt += "\n";
@@ -348,4 +348,53 @@ function arrayShuffle(arr) {
 }
 exports.arrayShuffle = arrayShuffle;
 ;
+function buildTournamentState(state, config, tableIdThatCompletedHand) {
+    // Get the tables array with all the players from the PN Table & Player objects
+    var tables = [];
+    for (var tableId in state.tables) {
+        var table = state.tables[tableId];
+        if (table.id !== tableId) {
+            throw new Error("Table referenced as id: " + tableId + " has incorrect table.id: " + table.id);
+        }
+        // Import table
+        var playersList = [];
+        for (var _i = 0, _a = table.seats; _i < _a.length; _i++) {
+            var tup = _a[_i];
+            var seatNum = tup[0];
+            var playerId = tup[1];
+            if (!(playerId in state.players)) {
+                throw new Error("Could not find player with id: " + playerId + " referenced in table with id: " + table.id);
+            }
+            var player = state.players[playerId];
+            if (player.id !== playerId) {
+                throw new Error("Player referenced as id: " + playerId + " has incorrect player.id: " + player.id);
+            }
+            if (player.seat !== seatNum) {
+                throw new Error("Player id: " + playerId + " has inconsistent seat number: " + player.seat + " but referenced in the table model at seat number: " + seatNum);
+            }
+            if (player.currentTable !== tableId) {
+                throw new Error("Player id: " + playerId + " has inconsistent currentTable id: " + player.currentTable + " but referenced in table with id: " + table.id);
+            }
+            playersList.push({
+                id: player.id,
+                movements: player.movements,
+                name: player.name,
+                participatingLastRound: true,
+                participatingNextRound: player.stack > 0,
+                seat: player.seat,
+            });
+        }
+        tables.push({
+            id: table.id,
+            dealerButtonLastRound: table.dealerButtonLastRound,
+            hasStartedNextRound: table.id !== tableIdThatCompletedHand,
+            players: playersList,
+        });
+    }
+    return {
+        config: config,
+        tables: tables
+    };
+}
+exports.buildTournamentState = buildTournamentState;
 //# sourceMappingURL=util.js.map

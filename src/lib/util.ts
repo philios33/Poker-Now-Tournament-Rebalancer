@@ -7,6 +7,7 @@ import { rotateArray, getPositionsForTableSize } from "./positions";
 import { Player } from "../types/player";
 import { Config } from "../types/config";
 import { TournamentStateError } from "../classes/tournamentStateError";
+import { PokerNowTournamentState } from "../types/pokerNowTournamentState";
 
 export const getTableCombinations = (tables: Array<Table>, choose: number) => {
     return combine(tables, choose).filter(p => p.length === choose);
@@ -197,8 +198,8 @@ export function convertMovementsToText(movements: Array<PlayerMovement>) {
     for(let i=0; i<movements.length; i++) {
         const m = movements[i];
         txt += "MOVEMENT " + (i+1) + " / " + movements.length + ": ";
-        txt += m.fromPlayer.id + " at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
-        txt += " --> ";
+        txt += m.fromPlayer.name + " (" + m.fromPlayer.id + ") at table " + m.fromTable.id + " in seat " + m.fromPlayer.seat + " (" + m.fromPlayer.position + ")";
+        txt += " -->";
         txt += " to table " + m.to.tableId + " in seat " + m.to.seat + " (" + m.to.position + ")";
         txt += " score: " + m.movementScore;
         txt += "\n";
@@ -369,3 +370,54 @@ export function arrayShuffle(arr) {
     }
     return newArr
 };
+
+export function buildTournamentState(state: PokerNowTournamentState, config: Config, tableIdThatCompletedHand: string): TournamentState {
+
+    // Get the tables array with all the players from the PN Table & Player objects
+    const tables: Array<Table> = [];
+    for(const tableId in state.tables) {
+        const table = state.tables[tableId];
+        if (table.id !== tableId) {
+            throw new Error("Table referenced as id: " + tableId + " has incorrect table.id: " + table.id);
+        }
+        // Import table
+        const playersList: Array<Player> = [];
+
+        for(const tup of table.seats) {
+            const seatNum = tup[0];
+            const playerId = tup[1];
+            if (!(playerId in state.players)) {
+                throw new Error("Could not find player with id: " + playerId + " referenced in table with id: " + table.id);
+            }
+            const player = state.players[playerId];
+            if (player.id !== playerId) {
+                throw new Error("Player referenced as id: " + playerId + " has incorrect player.id: " + player.id);
+            }
+            if (player.seat !== seatNum) {
+                throw new Error("Player id: " + playerId + " has inconsistent seat number: " + player.seat + " but referenced in the table model at seat number: " + seatNum);
+            }
+            if (player.currentTable !== tableId) {
+                throw new Error("Player id: " + playerId + " has inconsistent currentTable id: " + player.currentTable + " but referenced in table with id: " + table.id);
+            }
+            playersList.push({
+                id: player.id,
+                movements: player.movements,
+                name: player.name,
+                participatingLastRound: true,
+                participatingNextRound: player.stack > 0,
+                seat: player.seat,
+            });
+        }
+
+        tables.push({
+            id: table.id,
+            dealerButtonLastRound: table.dealerButtonLastRound,
+            hasStartedNextRound: table.id !== tableIdThatCompletedHand,
+            players: playersList,
+        });
+    }
+    return {
+        config,
+        tables
+    }
+}
