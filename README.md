@@ -117,6 +117,7 @@ const state: PokerNowTournamentState = {
     }
 };
 
+// This is a configuration object which controls how much table breaking and rebalancing happens.
 const config: Config = {
     maxPlayersPerTable: 8,
     breakWithLessThan: 8,  // This allows table breaking (if possible) for tables with less than 8 players.
@@ -124,8 +125,10 @@ const config: Config = {
     balanceMaxFlexibility: 0, // 0 = Rebalance as much as possible
 }
 
-const result = Balancer.getMovements(state, config, "B");
+const result = Balancer.getMovements(state, config, "B"); // It needs to know the table that just finished its hand so it can work out future player positions better.
+
 console.log(result.movementsText);
+
 ```
 
 Gives
