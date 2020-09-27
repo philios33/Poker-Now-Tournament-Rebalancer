@@ -257,17 +257,41 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
     // If there are too many combinations, we could try doing only 5 seconds of processing the combinations and just go with the best result.
     // const stopAfterMs = 5000;
     // We now limit the number of checks made so that we dont thrash the CPU.  This is better than trying to find best results for X seconds.
-    var maxChecksToMake = 800 * 1000;
+    var maxChecksToMake = 500 * 1000;
+    // Also minimise the number of combinations to check if there are loads
+    //const maxCombosToCheck = 10 * 1000;
+    var maxGlobalFromSeats = 500;
+    var maxGlobalTargetSeats = 100;
+    var thisTriedAllCombinations = true;
     // If we do this, it is important to shuffle the 2 arrays
     // It is better to multiply these arrays first, then randomise the result
     // This would give more of a range of from seat combos
+    // multiplyArrays can take up a lot of time and memory, we randomly sort and trim down each array BEFORE we make the joinedGlobals
+    if (globalFromSeats.length > maxGlobalFromSeats) {
+        thisTriedAllCombinations = false;
+        globalFromSeats = util_1.arrayShuffle(globalFromSeats);
+        // globalFromSeats.sort(() => Math.random() - 0.5);
+        globalFromSeats = globalFromSeats.slice(0, maxGlobalFromSeats);
+    }
+    if (globalTargetSeats.length > maxGlobalTargetSeats) {
+        thisTriedAllCombinations = false;
+        globalTargetSeats = util_1.arrayShuffle(globalTargetSeats);
+        // globalTargetSeats.sort(() => Math.random() - 0.5);
+        globalTargetSeats = globalTargetSeats.slice(0, maxGlobalTargetSeats);
+    }
     var joinedGlobals = util_1.multiplyArrays(globalFromSeats, globalTargetSeats, false);
+    //joinedGlobals.sort(() => Math.random() - 0.5);
+    /*
+    if (joinedGlobals.length > maxCombosToCheck) {
+        thisTriedAllCombinations = false;
+        joinedGlobals = joinedGlobals.slice(0, maxCombosToCheck);
+    }
+    */
     var totalCombinations = joinedGlobals.length;
-    joinedGlobals.sort(function () { return Math.random() - 0.5; });
     var checksPerCombo = Math.round(maxChecksToMake / totalCombinations);
+    checksPerCombo = Math.max(checksPerCombo, 2); // Minimum 2 checks
     var startTime = (new Date()).getTime();
     var processedCombinations = 0;
-    var thisTriedAllCombinations = true;
     for (var _i = 0, joinedGlobals_1 = joinedGlobals; _i < joinedGlobals_1.length; _i++) {
         var joinedItem = joinedGlobals_1[_i];
         var froms = joinedItem[0];
@@ -292,6 +316,11 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
         // console.log("Stopping after: " + stopAfterMs + " ms");
         //    break;
         //}
+        // Break if there is a total score of 0 already found in any combination
+        if (bestScore === 0) {
+            thisTriedAllCombinations = false;
+            break;
+        }
     }
     // console.log("Processed " + processedCombinations + " of " + totalCombinations);
     // console.log("BEST RESULT", bestResult);

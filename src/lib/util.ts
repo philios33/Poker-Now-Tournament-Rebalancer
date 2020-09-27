@@ -103,7 +103,8 @@ export const randomlyChooseTables = (tableListId: Array<string>, choose: number)
     if (choose > tableListId.length) {
         throw new Error("ERROR: The number of tables is " + tableListId.length + " but we are choosing " + choose + " random");
     }
-    tableListId.sort(() => Math.random() - 0.5);
+    tableListId = arrayShuffle(tableListId);
+    // tableListId.sort(() => Math.random() - 0.5);
     return tableListId.slice(0, choose);
 }
 
@@ -292,6 +293,7 @@ export function doSanityChecksOnTableObject(table: Table, index: number, playerI
     if (!Array.isArray(table.players)) {
         throw new TournamentStateError("Expecting players array at state.tables[" + index + "].players");
     }
+    const seatIdsObj: {[key:number]: boolean} = {};
     for(let i=0; i<table.players.length; i++) {
         const player = table.players[i];
         
@@ -301,6 +303,12 @@ export function doSanityChecksOnTableObject(table: Table, index: number, playerI
             throw new TournamentStateError("Duplicate player id " + player.id + " found at table with id: " + table.id + " previously seen at table with id: " + playerIdsObj[player.id]);
         } else {
             playerIdsObj[player.id] = table.id;
+        }
+
+        if (player.seat in seatIdsObj) {
+            throw new TournamentStateError("Seat " + player.seat + " on table with id: " + table.id + " has more than 1 player in it");
+        } else {
+            seatIdsObj[player.seat] = true;
         }
     }
 }
@@ -352,3 +360,12 @@ export function doSanityCheckOnSeatNumber(value, stateRef) {
         throw new TournamentStateError("Seat position cannot be more than 10 at " + stateRef + " but found value: " + value);
     }
 }
+
+export function arrayShuffle(arr) {
+    const newArr = arr.slice()
+    for (let i = newArr.length - 1; i > 0; i--) {
+        const rand = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+    }
+    return newArr
+};

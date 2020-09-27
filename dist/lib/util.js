@@ -7,7 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.doSanityCheckOnSeatNumber = exports.doSanityChecksOnPlayerObject = exports.doSanityChecksOnTableObject = exports.doSanityChecksOnStateTables = exports.doSanityChecksOnStateConfig = exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.arrayShuffle = exports.doSanityCheckOnSeatNumber = exports.doSanityChecksOnPlayerObject = exports.doSanityChecksOnTableObject = exports.doSanityChecksOnStateTables = exports.doSanityChecksOnStateConfig = exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 var positions_1 = require("./positions");
 var tournamentStateError_1 = require("../classes/tournamentStateError");
 exports.getTableCombinations = function (tables, choose) {
@@ -103,7 +103,8 @@ exports.randomlyChooseTables = function (tableListId, choose) {
     if (choose > tableListId.length) {
         throw new Error("ERROR: The number of tables is " + tableListId.length + " but we are choosing " + choose + " random");
     }
-    tableListId.sort(function () { return Math.random() - 0.5; });
+    tableListId = arrayShuffle(tableListId);
+    // tableListId.sort(() => Math.random() - 0.5);
     return tableListId.slice(0, choose);
 };
 exports.getSeatListOfActivePlayers = function (tableId, state) {
@@ -276,6 +277,7 @@ function doSanityChecksOnTableObject(table, index, playerIdsObj) {
     if (!Array.isArray(table.players)) {
         throw new tournamentStateError_1.TournamentStateError("Expecting players array at state.tables[" + index + "].players");
     }
+    var seatIdsObj = {};
     for (var i = 0; i < table.players.length; i++) {
         var player = table.players[i];
         doSanityChecksOnPlayerObject(player, i, table, index);
@@ -284,6 +286,12 @@ function doSanityChecksOnTableObject(table, index, playerIdsObj) {
         }
         else {
             playerIdsObj[player.id] = table.id;
+        }
+        if (player.seat in seatIdsObj) {
+            throw new tournamentStateError_1.TournamentStateError("Seat " + player.seat + " on table with id: " + table.id + " has more than 1 player in it");
+        }
+        else {
+            seatIdsObj[player.seat] = true;
         }
     }
 }
@@ -329,4 +337,15 @@ function doSanityCheckOnSeatNumber(value, stateRef) {
     }
 }
 exports.doSanityCheckOnSeatNumber = doSanityCheckOnSeatNumber;
+function arrayShuffle(arr) {
+    var _a;
+    var newArr = arr.slice();
+    for (var i = newArr.length - 1; i > 0; i--) {
+        var rand = Math.floor(Math.random() * (i + 1));
+        _a = [newArr[rand], newArr[i]], newArr[i] = _a[0], newArr[rand] = _a[1];
+    }
+    return newArr;
+}
+exports.arrayShuffle = arrayShuffle;
+;
 //# sourceMappingURL=util.js.map

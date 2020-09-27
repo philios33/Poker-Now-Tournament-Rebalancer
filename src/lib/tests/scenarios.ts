@@ -185,8 +185,9 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', () => 
     expect(result.stats.optimalNumberOfTables).toBe(9);
     expect(result.stats.tableIdsBeingBrokenUp.length).toBe(1);
     expect(result.totalScore).toBeGreaterThan(50);
-    expect(result.optimalResult.totalCombinations).toBe(576);
-    expect(result.msTaken).toBeGreaterThan(1000);
+    // These things are not deterministic
+    // expect(result.optimalResult.totalCombinations).toBe(576);
+    // expect(result.msTaken).toBeGreaterThan(1000);
 });
 
 test('Case where 1 table has 5, and 6 other tables are full', () => {
@@ -214,5 +215,99 @@ test('Case where 1 table has 5, and 6 other tables are full', () => {
 
     // console.log(result.optimalResult.processedCombinations + " of " + result.optimalResult.totalCombinations);
     // console.log("MOVEMENTS", JSON.stringify(result.movements, null, 4));
+});
+
+test('High flexibility scenario 1', () => {
+    // Total Players 55
+    // Should not make any movements yet
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4, // 0 = Balance anything under 9, 1 = Balance anything under 8, 2 = Balance anything under 7, 3 = Balance anything under 6, 4 = Balance anything under 5
+        },
+        tables: [
+            createTableOf("A", "1", 10, false),  
+            createTableOf("B", "11", 10, false),
+            createTableOf("C", "21", 5, false), // So leave this one until it does down to 4 (see next test)
+            createTableOf("D", "31", 10, false),
+            createTableOf("E", "41", 10, false),
+            createTableOf("F", "51", 10, false),
+            createTableOf("G", "61", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(0);
+});
+
+test('High flexibility scenario 2', () => {
+    // Total Players 64
+    // Now fully balance table C
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4, // 0 = Balance anything under 9, 1 = Balance anything under 8, 2 = Balance anything under 7, 3 = Balance anything under 6, 4 = Balance anything under 5
+        },
+        tables: [
+            createTableOf("A", "1", 10, false),  
+            createTableOf("B", "11", 10, false),
+            createTableOf("C", "21", 4, false),  // Fully balance this one now up to the optimal 9 players.  So take 5 players from the 6 other tables.
+            createTableOf("D", "31", 10, false),
+            createTableOf("E", "41", 10, false),
+            createTableOf("F", "51", 10, false),
+            createTableOf("G", "61", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(5);
+});
+
+test('High flexibility scenario 3', () => {
+    // Total Players 54
+    // Now fully balance table C
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4, // 0 = Balance anything under 9, 1 = Balance anything under 8, 2 = Balance anything under 7, 3 = Balance anything under 6, 4 = Balance anything under 5
+        },
+        tables: [
+            createTableOf("A", "1", 10, false),  
+            createTableOf("B", "11", 10, false),
+            createTableOf("C", "21", 4, false),  // Fully balance this one now up to the optimal 9 players.  So take 5 players from the 5 other tables.
+            createTableOf("D", "31", 10, false),
+            createTableOf("E", "41", 10, false),
+            createTableOf("F", "51", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(5);
+});
+
+test('High flexibility scenario 4', () => {
+    // Total Players 46
+    // But break up table C if possible before doing any rebalancing
+    const result = getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4,
+        },
+        tables: [
+            createTableOf("A", "1", 9, false),  
+            createTableOf("B", "11", 9, false),
+            createTableOf("C", "21", 4, false),
+            createTableOf("D", "31", 7, false),
+            createTableOf("E", "41", 7, false),
+            createTableOf("F", "51", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["C"]);
+    expect(result.movements.length).toBe(4);
 });
 

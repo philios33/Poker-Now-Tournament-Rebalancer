@@ -644,7 +644,7 @@ exports.getRebalancingPlayerMovements = function (state) {
     }
     logger.log("Finished");
     var endTime = (new Date()).getTime();
-    // console.log("optimalResult", "score", optimalResult.bestResult.totalScore, "tried all combos", optimalResult.triedAllCombinations);
+    // console.log("optimalResult", "score", optimalResult.bestResult.totalScore, "tried all combos", optimalResult.triedAllCombinations, "processed combos", optimalResult.processedCombinations, "of", optimalResult.totalCombinations, "movements checked", optimalResult.totalMovementsChecked, "movements skipped", optimalResult.totalMovementsSkipped, "msTook", endTime - startTime);
     return {
         stats: result.stats,
         movements: playerMovements,

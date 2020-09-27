@@ -69,16 +69,6 @@ Move Table A Seat 1 -> Table B Seat 2
 
 TODO
 
-Add more flexibility tests (e.g. when min is 4)
-E.g. When table is really low on numbers but not breaching min, should ignore
-E.g. And when breached, it should move as many people as possible to reach the optimal min.
-Add test for duplicate player id
-Add test for duplicate table id
-Add test for null table/player id
-Add test for empty string table/player id
-
----
-
 Add converter to map Sam's tournament state format in to my structure.  
 E.g. Logic for if stack=0 we assume participatingNextRound=false
 And unless we can get the data for participatingLastRound (for dead button reasons), we must assume that all players participated.

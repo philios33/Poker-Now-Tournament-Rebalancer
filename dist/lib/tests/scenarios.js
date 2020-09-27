@@ -169,8 +169,9 @@ test('Case where 8 tables have 8, and 1 table has 9, and 1 table has 10', functi
     expect(result.stats.optimalNumberOfTables).toBe(9);
     expect(result.stats.tableIdsBeingBrokenUp.length).toBe(1);
     expect(result.totalScore).toBeGreaterThan(50);
-    expect(result.optimalResult.totalCombinations).toBe(576);
-    expect(result.msTaken).toBeGreaterThan(1000);
+    // These things are not deterministic
+    // expect(result.optimalResult.totalCombinations).toBe(576);
+    // expect(result.msTaken).toBeGreaterThan(1000);
 });
 test('Case where 1 table has 5, and 6 other tables are full', function () {
     // Total Players 65
@@ -196,5 +197,95 @@ test('Case where 1 table has 5, and 6 other tables are full', function () {
     expect(result.movements.length).toBe(4);
     // console.log(result.optimalResult.processedCombinations + " of " + result.optimalResult.totalCombinations);
     // console.log("MOVEMENTS", JSON.stringify(result.movements, null, 4));
+});
+test('High flexibility scenario 1', function () {
+    // Total Players 55
+    // Should not make any movements yet
+    var result = balancer_1.getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4,
+        },
+        tables: [
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 10, false),
+            util_1.createTableOf("C", "21", 5, false),
+            util_1.createTableOf("D", "31", 10, false),
+            util_1.createTableOf("E", "41", 10, false),
+            util_1.createTableOf("F", "51", 10, false),
+            util_1.createTableOf("G", "61", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(0);
+});
+test('High flexibility scenario 2', function () {
+    // Total Players 64
+    // Now fully balance table C
+    var result = balancer_1.getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4,
+        },
+        tables: [
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 10, false),
+            util_1.createTableOf("C", "21", 4, false),
+            util_1.createTableOf("D", "31", 10, false),
+            util_1.createTableOf("E", "41", 10, false),
+            util_1.createTableOf("F", "51", 10, false),
+            util_1.createTableOf("G", "61", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(5);
+});
+test('High flexibility scenario 3', function () {
+    // Total Players 54
+    // Now fully balance table C
+    var result = balancer_1.getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4,
+        },
+        tables: [
+            util_1.createTableOf("A", "1", 10, false),
+            util_1.createTableOf("B", "11", 10, false),
+            util_1.createTableOf("C", "21", 4, false),
+            util_1.createTableOf("D", "31", 10, false),
+            util_1.createTableOf("E", "41", 10, false),
+            util_1.createTableOf("F", "51", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual([]);
+    expect(result.movements.length).toBe(5);
+});
+test('High flexibility scenario 4', function () {
+    // Total Players 46
+    // But break up table C if possible before doing any rebalancing
+    var result = balancer_1.getRebalancingPlayerMovements({
+        config: {
+            maxPlayersPerTable: 10,
+            breakWithLessThan: 10,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 4,
+        },
+        tables: [
+            util_1.createTableOf("A", "1", 9, false),
+            util_1.createTableOf("B", "11", 9, false),
+            util_1.createTableOf("C", "21", 4, false),
+            util_1.createTableOf("D", "31", 7, false),
+            util_1.createTableOf("E", "41", 7, false),
+            util_1.createTableOf("F", "51", 10, false),
+        ]
+    });
+    expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(["C"]);
+    expect(result.movements.length).toBe(4);
 });
 //# sourceMappingURL=scenarios.js.map
