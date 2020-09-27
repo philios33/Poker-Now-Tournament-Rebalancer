@@ -339,7 +339,7 @@ test("Test 3 tables breaking up", function () {
             util_1.createTableOf("B", "11", 7, false),
             util_1.createTableOf("C", "21", 6, false),
             util_1.createTableOf("D", "31", 2, false),
-            util_1.createTableOf("E", "31", 1, false),
+            util_1.createTableOf("E", "41", 1, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(['A', 'D', 'E']);

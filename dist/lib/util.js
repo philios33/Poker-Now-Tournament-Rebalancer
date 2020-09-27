@@ -7,8 +7,9 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
+exports.doSanityCheckOnSeatNumber = exports.doSanityChecksOnPlayerObject = exports.doSanityChecksOnTableObject = exports.doSanityChecksOnStateTables = exports.doSanityChecksOnStateConfig = exports.convertMovementsToText = exports.createTableOf = exports.workOutTargetSeatPositions = exports.getSeatListOfActivePlayers = exports.randomlyChooseTables = exports.multiplyArrays = exports.convertSeatMovementToPlayerMovement = exports.findPlayerBySeat = exports.findTableById = exports.invertSeatList = exports.combine = exports.getTableIdCombinations = exports.getTableCombinations = void 0;
 var positions_1 = require("./positions");
+var tournamentStateError_1 = require("../classes/tournamentStateError");
 exports.getTableCombinations = function (tables, choose) {
     return exports.combine(tables, choose).filter(function (p) { return p.length === choose; });
 };
@@ -197,4 +198,135 @@ function convertMovementsToText(movements) {
     return txt;
 }
 exports.convertMovementsToText = convertMovementsToText;
+function doSanityChecksOnStateConfig(config) {
+    if (typeof config === "undefined") {
+        throw new tournamentStateError_1.TournamentStateError("Expecting state key: config");
+    }
+    if (typeof config !== "object") {
+        throw new tournamentStateError_1.TournamentStateError("state.config must be an object");
+    }
+    var expectingNumericKeys = ['maxPlayersPerTable', 'breakWithLessThan', 'balanceMinFlexibility', 'balanceMaxFlexibility'];
+    for (var _i = 0, expectingNumericKeys_1 = expectingNumericKeys; _i < expectingNumericKeys_1.length; _i++) {
+        var key = expectingNumericKeys_1[_i];
+        if (!(key in config)) {
+            throw new tournamentStateError_1.TournamentStateError("state.config object must contain numeric key: " + key);
+        }
+        if (typeof config[expectingNumericKeys[key]] === "number" && Number.isInteger(config[expectingNumericKeys[key]])) {
+            throw new tournamentStateError_1.TournamentStateError("state.config." + key + " is not an integer: " + config[expectingNumericKeys[key]]);
+        }
+    }
+    if (config.maxPlayersPerTable > 10) {
+        throw new tournamentStateError_1.TournamentStateError("state.config.maxPlayersPerTable cannot be more than 10 because PN doesnt support this many players");
+    }
+    if (config.maxPlayersPerTable < 2) {
+        throw new tournamentStateError_1.TournamentStateError("state.config.maxPlayersPerTable cannot be less than 2 because tables need at least 2 players to be active");
+    }
+    if (config.breakWithLessThan < 2) {
+        throw new tournamentStateError_1.TournamentStateError("state.config.breakWithLessThan must be at least 2 to break up tables with 1 player left");
+    }
+    if (config.balanceMinFlexibility < 0) {
+        throw new tournamentStateError_1.TournamentStateError("state.config.balanceMinFlexibility must not be negative");
+    }
+    if (config.balanceMaxFlexibility < 0) {
+        throw new tournamentStateError_1.TournamentStateError("state.config.balanceMaxFlexibility must not be negative");
+    }
+}
+exports.doSanityChecksOnStateConfig = doSanityChecksOnStateConfig;
+function doSanityChecksOnStateTables(tables) {
+    if (typeof tables === "undefined") {
+        throw new tournamentStateError_1.TournamentStateError("Expecting state key: tables");
+    }
+    if (!Array.isArray(tables)) {
+        throw new tournamentStateError_1.TournamentStateError("Expecting state.tables to be an array");
+    }
+    var tableIdsObj = {};
+    var playerIdsObj = {};
+    for (var i = 0; i < tables.length; i++) {
+        var table = tables[i];
+        doSanityChecksOnTableObject(table, i, playerIdsObj);
+        if (table.id in tableIdsObj) {
+            throw new tournamentStateError_1.TournamentStateError("Duplicate table id found in state.tables: " + table.id);
+        }
+        else {
+            tableIdsObj[table.id] = true;
+        }
+    }
+    if (tables.length === 0) {
+        throw new tournamentStateError_1.TournamentStateError("Expecting state.tables array to contain at least 1 table object");
+    }
+}
+exports.doSanityChecksOnStateTables = doSanityChecksOnStateTables;
+function doSanityChecksOnTableObject(table, index, playerIdsObj) {
+    // Table must be an object
+    if (typeof table !== "object") {
+        throw new tournamentStateError_1.TournamentStateError("Non object found at index " + index + " of state.tables");
+    }
+    // Table must have an id of string type
+    if (typeof table.id !== "string") {
+        throw new tournamentStateError_1.TournamentStateError("Table at state.tables[" + index + "] must contain a unique identity string at key: id, but found: " + typeof table.id);
+    }
+    if (table.id === "") {
+        throw new tournamentStateError_1.TournamentStateError("state.tables[" + index + "].id must not be empty string");
+    }
+    doSanityCheckOnSeatNumber(table.dealerButtonLastRound, "state.table[" + index + "].dealerButtonLastRound");
+    if (typeof table.hasStartedNextRound !== "boolean") {
+        throw new tournamentStateError_1.TournamentStateError("Table at state.tables[" + index + "] must contain boolean at key: hasStartedNextRound, but found" + typeof table.hasStartedNextRound);
+    }
+    // Check all players
+    if (!Array.isArray(table.players)) {
+        throw new tournamentStateError_1.TournamentStateError("Expecting players array at state.tables[" + index + "].players");
+    }
+    for (var i = 0; i < table.players.length; i++) {
+        var player = table.players[i];
+        doSanityChecksOnPlayerObject(player, i, table, index);
+        if (player.id in playerIdsObj) {
+            throw new tournamentStateError_1.TournamentStateError("Duplicate player id " + player.id + " found at table with id: " + table.id + " previously seen at table with id: " + playerIdsObj[player.id]);
+        }
+        else {
+            playerIdsObj[player.id] = table.id;
+        }
+    }
+}
+exports.doSanityChecksOnTableObject = doSanityChecksOnTableObject;
+function doSanityChecksOnPlayerObject(player, playerIndex, table, tableIndex) {
+    if (typeof player !== "object") {
+        throw new tournamentStateError_1.TournamentStateError("Non object found at index " + playerIndex + " of state.tables[" + tableIndex + "].players");
+    }
+    // Player must have an id of string type
+    if (typeof player.id !== "string") {
+        throw new tournamentStateError_1.TournamentStateError("Player at state.tables[" + tableIndex + "].players[" + playerIndex + "] must contain a unique identity string at key: id, but found: " + typeof player.id);
+    }
+    if (player.id === "") {
+        throw new tournamentStateError_1.TournamentStateError("state.tables[" + tableIndex + "].players[" + playerIndex + "].id must not be empty string");
+    }
+    if (typeof player.name !== "string") {
+        throw new tournamentStateError_1.TournamentStateError("Player at state.tables[" + tableIndex + "].players[" + playerIndex + "] must contain a name string at key: name, but found: " + typeof player.name);
+    }
+    doSanityCheckOnSeatNumber(player.seat, "state.tables[" + tableIndex + "].players[" + playerIndex + "].seat");
+    if (typeof player.movements !== "number") {
+        throw new tournamentStateError_1.TournamentStateError("Player at state.tables[" + tableIndex + "].players[" + playerIndex + "] must contain the number of movements they have previously made at key: movements, but found: " + typeof player.movements);
+    }
+    if (typeof player.participatingLastRound !== "boolean") {
+        throw new tournamentStateError_1.TournamentStateError("Player at state.tables[" + tableIndex + "].players[" + playerIndex + "] must contain whether the player participated in the previous round at key: participatingLastRound, but found: " + typeof player.participatingLastRound);
+    }
+    if (typeof player.participatingNextRound !== "boolean") {
+        throw new tournamentStateError_1.TournamentStateError("Player at state.tables[" + tableIndex + "].players[" + playerIndex + "] must contain whether the player will participate in the next round at key: participatingNextRound, but found: " + typeof player.participatingNextRound);
+    }
+}
+exports.doSanityChecksOnPlayerObject = doSanityChecksOnPlayerObject;
+function doSanityCheckOnSeatNumber(value, stateRef) {
+    if (typeof value !== "number") {
+        throw new tournamentStateError_1.TournamentStateError("Expected seat position number at " + stateRef + " but found type: " + typeof value);
+    }
+    if (!Number.isInteger(value)) {
+        throw new tournamentStateError_1.TournamentStateError("Expected seat position integer (e.g. 1-10) at " + stateRef + " but found value: " + value);
+    }
+    if (value < 1) {
+        throw new tournamentStateError_1.TournamentStateError("Seat position cannot be less than 1 at " + stateRef + " but found value: " + value);
+    }
+    if (value > 10) {
+        throw new tournamentStateError_1.TournamentStateError("Seat position cannot be more than 10 at " + stateRef + " but found value: " + value);
+    }
+}
+exports.doSanityCheckOnSeatNumber = doSanityCheckOnSeatNumber;
 //# sourceMappingURL=util.js.map

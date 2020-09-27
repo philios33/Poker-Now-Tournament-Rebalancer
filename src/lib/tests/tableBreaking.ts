@@ -357,7 +357,7 @@ test("Test 3 tables breaking up", () => {
             createTableOf("B", "11", 7, false),
             createTableOf("C", "21", 6, false),
             createTableOf("D", "31", 2, false),
-            createTableOf("E", "31", 1, false),
+            createTableOf("E", "41", 1, false),
         ]
     });
     expect(result.stats.tableIdsBeingBrokenUp).toStrictEqual(['A','D','E']);

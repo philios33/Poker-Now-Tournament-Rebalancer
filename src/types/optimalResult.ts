@@ -5,7 +5,7 @@ export interface OptimalResult {
     bestResult: BalancingPlayersSeatResult;
     totalCombinations: number;
     processedCombinations: number;
-    totalMovementsChecked: number; 
+    totalMovementsChecked: number;
     totalMovementsSkipped: number;
-    
+    triedAllCombinations: boolean;
 }

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var balancer_1 = require("../balancer");
+var finalTableDetectedError_1 = require("../../classes/finalTableDetectedError");
+var noActiveTableError_1 = require("../../classes/noActiveTableError");
 test("getNumberOfPlayersNextRound", function () {
     var emptyTournament = {
         config: {
@@ -243,35 +245,11 @@ test("getTableSizeAndMovementsScore and getTablesWithLeastSizeAndMovements and g
     var tableEScore = balancer_1.getTableSizeAndMovementsScore(tableE);
     expect(tableCScore).toBeLessThan(tableEScore);
     // getTablesWithLeastSizeAndMovements
-    var result = balancer_1.getTablesWithLeastSizeAndMovements({
-        config: {
-            maxPlayersPerTable: 10,
-            breakWithLessThan: 10,
-            balanceMaxFlexibility: 0,
-            balanceMinFlexibility: 0,
-        },
-        tables: [tableA, tableB, tableC, tableD, tableE],
-    }, 1);
+    var result = balancer_1.getTablesWithLeastSizeAndMovements([tableA, tableB, tableC, tableD, tableE], 1);
     expect(result).toStrictEqual([tableB]);
-    var result2 = balancer_1.getTablesWithLeastSizeAndMovements({
-        config: {
-            maxPlayersPerTable: 10,
-            breakWithLessThan: 10,
-            balanceMaxFlexibility: 0,
-            balanceMinFlexibility: 0,
-        },
-        tables: [tableD, tableE, tableB, tableA, tableC],
-    }, 1);
+    var result2 = balancer_1.getTablesWithLeastSizeAndMovements([tableD, tableE, tableB, tableA, tableC], 1);
     expect(result2).toStrictEqual([tableB]);
-    var result3 = balancer_1.getTablesWithLeastSizeAndMovements({
-        config: {
-            maxPlayersPerTable: 10,
-            breakWithLessThan: 10,
-            balanceMaxFlexibility: 0,
-            balanceMinFlexibility: 0,
-        },
-        tables: [tableA, tableB, tableC, tableD, tableE],
-    }, 3);
+    var result3 = balancer_1.getTablesWithLeastSizeAndMovements([tableA, tableB, tableC, tableD, tableE], 3);
     expect(result3).toStrictEqual([tableB, tableA, tableC]);
     expect(balancer_1.getTablesWithLowestSize([tableA, tableB, tableC, tableD, tableE])).toStrictEqual([tableB]);
     expect(balancer_1.getTablesWithLowestSize([tableA, tableC, tableD, tableE])).toStrictEqual([tableA, tableE]);
@@ -485,5 +463,171 @@ test("getRebalancingPlayerMovements", function () {
     // console.log(JSON.stringify(result.movements, null, 4));
     // console.log("Checked", result.totalMovementsChecked);
     // console.log("Skipped", result.totalMovementsSkipped);
+});
+test("Check zero movements when only 1 active table", function () {
+    var tableA = {
+        id: "A",
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
+        players: [{
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 1,
+            }, {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 2,
+            }, {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 3,
+            }, {
+                id: "4",
+                name: "4",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: true,
+                seat: 4,
+            }]
+    };
+    var tableB = {
+        id: "B",
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
+        players: [{
+                id: "5",
+                name: "5",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 1,
+            }, {
+                id: "6",
+                name: "6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 2,
+            }, {
+                id: "7",
+                name: "7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 3,
+            }, {
+                id: "8",
+                name: "8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 4,
+            }]
+    };
+    var state = {
+        config: {
+            maxPlayersPerTable: 6,
+            breakWithLessThan: 6,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
+        },
+        tables: [tableA, tableB]
+    };
+    // Should throw final table error
+    expect(function () {
+        var result = balancer_1.getRebalancingPlayerMovements(state);
+    }).toThrowError(finalTableDetectedError_1.FinalTableDetectedError);
+});
+test("Detects zero active tables", function () {
+    var tableA = {
+        id: "A",
+        dealerButtonLastRound: 3,
+        hasStartedNextRound: false,
+        players: [{
+                id: "1",
+                name: "1",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 1,
+            }, {
+                id: "2",
+                name: "2",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 2,
+            }, {
+                id: "3",
+                name: "3",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 3,
+            }, {
+                id: "4",
+                name: "4",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 4,
+            }]
+    };
+    var tableB = {
+        id: "B",
+        dealerButtonLastRound: 1,
+        hasStartedNextRound: false,
+        players: [{
+                id: "5",
+                name: "5",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 1,
+            }, {
+                id: "6",
+                name: "6",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 2,
+            }, {
+                id: "7",
+                name: "7",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 3,
+            }, {
+                id: "8",
+                name: "8",
+                movements: 0,
+                participatingLastRound: true,
+                participatingNextRound: false,
+                seat: 4,
+            }]
+    };
+    var state = {
+        config: {
+            maxPlayersPerTable: 6,
+            breakWithLessThan: 6,
+            balanceMaxFlexibility: 0,
+            balanceMinFlexibility: 0,
+        },
+        tables: [tableA, tableB]
+    };
+    // Should throw no tables error
+    expect(function () {
+        var result = balancer_1.getRebalancingPlayerMovements(state);
+    }).toThrowError(noActiveTableError_1.NoActiveTablesError);
 });
 //# sourceMappingURL=balancer.js.map

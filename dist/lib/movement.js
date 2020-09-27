@@ -169,6 +169,7 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCh
     // Do this by applying the first fromSeat to the first targetSeat and trying out all other combinations
     var bestResult = null;
     var maxChecksPerSeat = Math.round(movementCheckLimit / fromSeats.length); // Divide equally between the remaining seats
+    var thisTriedAllCombinations = true;
     for (var i = 0; i < fromSeats.length; i++) {
         // Apply this startingSeat to the first targetSeat
         var otherFromSeats = fromSeats.slice(0);
@@ -200,6 +201,7 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCh
             // This is always returned even when no best player movements are found
             totalMovementsChecked += result.totalMovementsChecked;
             totalMovementsSkipped += result.totalMovementsSkipped;
+            thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
             if (result.bestResult !== null) {
                 var totalScore = result.bestResult.totalScore + score;
                 //       console.log("Recursed deeper, adding result", result.totalMovementsChecked);
@@ -234,11 +236,12 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCh
             // console.log("Score for: " + [{fromSeat, targetSeat}]);
         }
         if (totalMovementsChecked > movementCheckLimit) {
+            thisTriedAllCombinations = false;
             break;
         }
     }
     // console.log("Returning best player movements after checks: " + totalMovementsChecked);
-    return { bestResult: bestResult, totalMovementsChecked: totalMovementsChecked, totalMovementsSkipped: totalMovementsSkipped };
+    return { bestResult: bestResult, totalMovementsChecked: totalMovementsChecked, totalMovementsSkipped: totalMovementsSkipped, triedAllCombinations: thisTriedAllCombinations };
 };
 exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats) {
     // Try every possible ordering of every fromSeats selection, with every possible selection of targetSeats.
@@ -264,6 +267,7 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
     var checksPerCombo = Math.round(maxChecksToMake / totalCombinations);
     var startTime = (new Date()).getTime();
     var processedCombinations = 0;
+    var thisTriedAllCombinations = true;
     for (var _i = 0, joinedGlobals_1 = joinedGlobals; _i < joinedGlobals_1.length; _i++) {
         var joinedItem = joinedGlobals_1[_i];
         var froms = joinedItem[0];
@@ -273,6 +277,7 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
         processedCombinations++;
         totalMovementsChecked += result.totalMovementsChecked;
         totalMovementsSkipped += result.totalMovementsSkipped;
+        thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
         // console.log("Result was: " + result.totalScore);
         if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
             bestResult = result.bestResult;
@@ -290,6 +295,6 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
     }
     // console.log("Processed " + processedCombinations + " of " + totalCombinations);
     // console.log("BEST RESULT", bestResult);
-    return { bestResult: bestResult, totalCombinations: totalCombinations, processedCombinations: processedCombinations, totalMovementsChecked: totalMovementsChecked, totalMovementsSkipped: totalMovementsSkipped };
+    return { bestResult: bestResult, totalCombinations: totalCombinations, processedCombinations: processedCombinations, totalMovementsChecked: totalMovementsChecked, totalMovementsSkipped: totalMovementsSkipped, triedAllCombinations: thisTriedAllCombinations };
 };
 //# sourceMappingURL=movement.js.map

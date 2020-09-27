@@ -69,14 +69,13 @@ Move Table A Seat 1 -> Table B Seat 2
 
 TODO
 
-Add id duplicate checks between table ids and player ids and unique seat numbers!
-Add result boolean for whether we tried every combination or not, or if we hit some limit
-
----
-
 Add more flexibility tests (e.g. when min is 4)
 E.g. When table is really low on numbers but not breaching min, should ignore
 E.g. And when breached, it should move as many people as possible to reach the optimal min.
+Add test for duplicate player id
+Add test for duplicate table id
+Add test for null table/player id
+Add test for empty string table/player id
 
 ---
 
@@ -97,3 +96,12 @@ This should hopefully help us work out the best threshold to move players at.
 
 ANSI escape sequences which should help draw out the models to console
 https://stackoverflow.com/questions/11474391/is-there-go-up-line-character-opposite-of-n
+
+Or
+
+Write a web frontend where you can configure the setup, add a random table with x players on it and visualise each table, and visualise the movements and apply the movements.
+Then also have a mode where random busts occur and movements are auto applied in real time.
+Tables finish rounds independantly, with dead button logic for bust outs.
+Random round times, random stack changes, and random bust outs based on probabilities.
+Everything rendered in canvas.
+

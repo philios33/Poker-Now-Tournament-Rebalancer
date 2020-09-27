@@ -9,9 +9,11 @@ import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions, convertMovementsToText } from "./util";
+import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions, convertMovementsToText, doSanityChecksOnStateConfig, doSanityChecksOnStateTables } from "./util";
 import { Logger } from "../classes/logger";
 import { TableChoices } from "../types/tableChoices";
+import { NoActiveTablesError } from "../classes/noActiveTableError";
+import { FinalTableDetectedError } from "../classes/finalTableDetectedError";
 
 
 
@@ -21,6 +23,13 @@ export const getNumberOfPlayersNextRound = (state: TournamentState): number => {
         numberOfPlayers += table.players.filter(p => p.participatingNextRound).length;
     }
     return numberOfPlayers;
+}
+
+export const getActiveTablesNextRound = (state: TournamentState): Array<Table> => {
+    return state.tables.filter(table => {
+        let tablePlayersNextRound = table.players.filter(p => p.participatingNextRound).length;
+        return tablePlayersNextRound > 0;
+    })
 }
 
 const pokerNowMaxSeatId = 10;
@@ -37,10 +46,10 @@ export const getTableSizeAndMovementsScore = (table: Table): number => {
     return score;
 }
 
-export const getTablesWithLeastSizeAndMovements = (state: TournamentState, num: number): Array<Table> => {
+export const getTablesWithLeastSizeAndMovements = (tables: Array<Table>, num: number): Array<Table> => {
     // First score each table by number of players remaining and number of movements made already
     // So if it's a tie, the table with the players which have made the least number of existing table movements will be chosen to break up
-    let orderedTables = state.tables.sort((a: Table,b: Table): number => {
+    let orderedTables = tables.sort((a: Table,b: Table): number => {
         const scoreA = getTableSizeAndMovementsScore(a);
         const scoreB = getTableSizeAndMovementsScore(b);
         return scoreA - scoreB;
@@ -110,9 +119,21 @@ export const getTablesWithHighestSize = (tables: Array<Table>): Array<Table> => 
 
 export const getRebalancingMovements = (state: TournamentState): BalancingMovementsResult => {
 
-    let numberOfPlayersNextRound = getNumberOfPlayersNextRound(state);
+    doSanityChecksOnStateConfig(state.config);
+    doSanityChecksOnStateTables(state.tables);
+
+    let numberOfPlayersNextRound = getNumberOfPlayersNextRound(state); // Only considers those player next round
     let optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
-    let currentNumberOfTables = state.tables.length;
+    const activeTablesNextRound = getActiveTablesNextRound(state);
+    let currentNumberOfTables = activeTablesNextRound.length; // We need to only consider tables with players playing next round
+
+    if (currentNumberOfTables === 0) {
+        throw new NoActiveTablesError();
+    }
+    else if (currentNumberOfTables === 1) {
+        // Final table
+        throw new FinalTableDetectedError(activeTablesNextRound[0]);
+    }
 
     let breakWithLessThan = state.config.breakWithLessThan;
     breakWithLessThan = Math.max(breakWithLessThan, 2);
@@ -145,7 +166,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
         let numberOfTablesToBreakUp = currentNumberOfTables - optimalNumberOfTables;
 
         // Break up the tables with the lowest number of people
-        let tables = getTablesWithLeastSizeAndMovements(state, numberOfTablesToBreakUp);
+        let tables = getTablesWithLeastSizeAndMovements(activeTablesNextRound, numberOfTablesToBreakUp);
         for (let table of tables) {
             // console.log("Breaking up table", table.id);
             let numActiveSeats = table.players.filter(p => p.participatingNextRound).length;
@@ -171,7 +192,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     tableIdsBeingBrokenUp.sort(); // Just alphabetically sort
 
     let tablesAfter = []
-    for(let table of state.tables) {
+    for(let table of activeTablesNextRound) {
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             tablesAfter.push(table);
             table.extraPlayers = 0;
@@ -200,7 +221,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     // E.g. In this case in strict mode, 4 extra players should move so that 9,10,10,9,9,9,9 is made.
     // Check this later on.
 
-    for(let table of state.tables) {
+    for(let table of activeTablesNextRound) {
         const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length;
         if (playersParticipatingNextRound > maxNumberOfPlayersOnTablesWithFlex) {
             const movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
@@ -277,7 +298,7 @@ export const getRebalancingMovements = (state: TournamentState): BalancingMoveme
     // At this point, we need to look at which tables are too low on numbers.
     // We first work out how many extra movements are needed.
     // let totalNumberOfExtraMovements = 0;
-    for(let table of state.tables) {
+    for(let table of activeTablesNextRound) {
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             const playersParticipatingNextRound = table.players.filter(p => p.participatingNextRound).length + (table.extraPlayers ? table.extraPlayers : 0);
             if (playersParticipatingNextRound < minNumberOfPlayersOnTablesWithFlex) {
@@ -674,7 +695,7 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
     logger.log("Finished");
     const endTime = (new Date()).getTime();
 
-    // console.log("optimalResult", optimalResult, "score", optimalResult.bestResult.totalScore);
+    // console.log("optimalResult", "score", optimalResult.bestResult.totalScore, "tried all combos", optimalResult.triedAllCombinations);
 
     return {
         stats: result.stats,

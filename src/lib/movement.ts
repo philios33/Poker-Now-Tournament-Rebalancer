@@ -163,13 +163,15 @@ export const numberOfMovementsRequiredForSeats = (seats: number) => {
     }
 }
 
-export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, movementCheckLimit: number, giveUpIfScoreBreaches: number = null, consoleText: string = ""): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number} => {
+export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, targetSeats: Array<TargetSeat>, movementCheckLimit: number, giveUpIfScoreBreaches: number = null, consoleText: string = ""): {bestResult: BalancingPlayersSeatResult, totalMovementsChecked: number, totalMovementsSkipped: number, triedAllCombinations: boolean} => {
     let totalMovementsChecked = 0;
     let totalMovementsSkipped = 0;
     // Given this combination, work out the best movements to choose
     // Do this by applying the first fromSeat to the first targetSeat and trying out all other combinations
     let bestResult = null;
     let maxChecksPerSeat = Math.round(movementCheckLimit / fromSeats.length); // Divide equally between the remaining seats
+    let thisTriedAllCombinations = true;
+
     for(let i=0; i<fromSeats.length; i++) {
         // Apply this startingSeat to the first targetSeat
         const otherFromSeats = fromSeats.slice(0);
@@ -204,6 +206,7 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
             // This is always returned even when no best player movements are found
             totalMovementsChecked += result.totalMovementsChecked;
             totalMovementsSkipped += result.totalMovementsSkipped;
+            thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
 
             if (result.bestResult !== null) {
                 let totalScore = result.bestResult.totalScore + score;
@@ -244,13 +247,14 @@ export const getBestPlayerMovementsFor = (fromSeats: Array<SeatPosition>, target
         }
         
         if (totalMovementsChecked > movementCheckLimit) {
+            thisTriedAllCombinations = false;
             break;
         }
         
     }
     
     // console.log("Returning best player movements after checks: " + totalMovementsChecked);
-    return {bestResult, totalMovementsChecked, totalMovementsSkipped};
+    return {bestResult, totalMovementsChecked, totalMovementsSkipped, triedAllCombinations: thisTriedAllCombinations};
 }
 
 export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosition>>, globalTargetSeats: Array<Array<TargetSeat>>): OptimalResult => {
@@ -281,6 +285,7 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
     const startTime = (new Date()).getTime();
     let processedCombinations = 0;
 
+    let thisTriedAllCombinations = true;
     for (const joinedItem of joinedGlobals) {
         const froms = joinedItem[0];
         const targets = joinedItem[1];
@@ -290,6 +295,8 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
         processedCombinations++;
         totalMovementsChecked += result.totalMovementsChecked;
         totalMovementsSkipped += result.totalMovementsSkipped;
+        thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
+
         // console.log("Result was: " + result.totalScore);
         if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
             bestResult = result.bestResult;
@@ -310,5 +317,5 @@ export const getOptimalPlayerMovements = (globalFromSeats: Array<Array<SeatPosit
     // console.log("Processed " + processedCombinations + " of " + totalCombinations);
     
     // console.log("BEST RESULT", bestResult);
-    return {bestResult, totalCombinations, processedCombinations, totalMovementsChecked, totalMovementsSkipped};
+    return {bestResult, totalCombinations, processedCombinations, totalMovementsChecked, totalMovementsSkipped, triedAllCombinations: thisTriedAllCombinations};
 }

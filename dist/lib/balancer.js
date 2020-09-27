@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRebalancingPlayerMovements = exports.getRebalancingMovements = exports.getTablesWithHighestSize = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getNumberOfPlayersNextRound = void 0;
+exports.getRebalancingPlayerMovements = exports.getRebalancingMovements = exports.getTablesWithHighestSize = exports.getTablesWithLowestSize = exports.getTablesWithLeastSizeAndMovements = exports.getTableSizeAndMovementsScore = exports.getActiveTablesNextRound = exports.getNumberOfPlayersNextRound = void 0;
 var seatSelections_1 = __importDefault(require("../classes/seatSelections"));
 var positions_1 = require("./positions");
 var movement_1 = require("./movement");
 var util_1 = require("./util");
 var logger_1 = require("../classes/logger");
+var noActiveTableError_1 = require("../classes/noActiveTableError");
+var finalTableDetectedError_1 = require("../classes/finalTableDetectedError");
 exports.getNumberOfPlayersNextRound = function (state) {
     var numberOfPlayers = 0;
     for (var _i = 0, _a = state.tables; _i < _a.length; _i++) {
@@ -16,6 +18,12 @@ exports.getNumberOfPlayersNextRound = function (state) {
         numberOfPlayers += table.players.filter(function (p) { return p.participatingNextRound; }).length;
     }
     return numberOfPlayers;
+};
+exports.getActiveTablesNextRound = function (state) {
+    return state.tables.filter(function (table) {
+        var tablePlayersNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length;
+        return tablePlayersNextRound > 0;
+    });
 };
 var pokerNowMaxSeatId = 10;
 var playerMovementsWeighting = 10;
@@ -29,10 +37,10 @@ exports.getTableSizeAndMovementsScore = function (table) {
     });
     return score;
 };
-exports.getTablesWithLeastSizeAndMovements = function (state, num) {
+exports.getTablesWithLeastSizeAndMovements = function (tables, num) {
     // First score each table by number of players remaining and number of movements made already
     // So if it's a tie, the table with the players which have made the least number of existing table movements will be chosen to break up
-    var orderedTables = state.tables.sort(function (a, b) {
+    var orderedTables = tables.sort(function (a, b) {
         var scoreA = exports.getTableSizeAndMovementsScore(a);
         var scoreB = exports.getTableSizeAndMovementsScore(b);
         return scoreA - scoreB;
@@ -102,9 +110,19 @@ exports.getTablesWithHighestSize = function (tables) {
     return toReturn;
 };
 exports.getRebalancingMovements = function (state) {
-    var numberOfPlayersNextRound = exports.getNumberOfPlayersNextRound(state);
+    util_1.doSanityChecksOnStateConfig(state.config);
+    util_1.doSanityChecksOnStateTables(state.tables);
+    var numberOfPlayersNextRound = exports.getNumberOfPlayersNextRound(state); // Only considers those player next round
     var optimalNumberOfTables = Math.ceil(numberOfPlayersNextRound / state.config.maxPlayersPerTable);
-    var currentNumberOfTables = state.tables.length;
+    var activeTablesNextRound = exports.getActiveTablesNextRound(state);
+    var currentNumberOfTables = activeTablesNextRound.length; // We need to only consider tables with players playing next round
+    if (currentNumberOfTables === 0) {
+        throw new noActiveTableError_1.NoActiveTablesError();
+    }
+    else if (currentNumberOfTables === 1) {
+        // Final table
+        throw new finalTableDetectedError_1.FinalTableDetectedError(activeTablesNextRound[0]);
+    }
     var breakWithLessThan = state.config.breakWithLessThan;
     breakWithLessThan = Math.max(breakWithLessThan, 2);
     /*
@@ -129,7 +147,7 @@ exports.getRebalancingMovements = function (state) {
     if (optimalNumberOfTables < currentNumberOfTables) {
         var numberOfTablesToBreakUp = currentNumberOfTables - optimalNumberOfTables;
         // Break up the tables with the lowest number of people
-        var tables = exports.getTablesWithLeastSizeAndMovements(state, numberOfTablesToBreakUp);
+        var tables = exports.getTablesWithLeastSizeAndMovements(activeTablesNextRound, numberOfTablesToBreakUp);
         for (var _i = 0, tables_5 = tables; _i < tables_5.length; _i++) {
             var table = tables_5[_i];
             // console.log("Breaking up table", table.id);
@@ -151,8 +169,8 @@ exports.getRebalancingMovements = function (state) {
     }
     tableIdsBeingBrokenUp.sort(); // Just alphabetically sort
     var tablesAfter = [];
-    for (var _a = 0, _b = state.tables; _a < _b.length; _a++) {
-        var table = _b[_a];
+    for (var _a = 0, activeTablesNextRound_1 = activeTablesNextRound; _a < activeTablesNextRound_1.length; _a++) {
+        var table = activeTablesNextRound_1[_a];
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             tablesAfter.push(table);
             table.extraPlayers = 0;
@@ -174,8 +192,8 @@ exports.getRebalancingMovements = function (state) {
     // We must consider tables with less than the minimum number of players
     // E.g. In this case in strict mode, 4 extra players should move so that 9,10,10,9,9,9,9 is made.
     // Check this later on.
-    for (var _c = 0, _d = state.tables; _c < _d.length; _c++) {
-        var table = _d[_c];
+    for (var _b = 0, activeTablesNextRound_2 = activeTablesNextRound; _b < activeTablesNextRound_2.length; _b++) {
+        var table = activeTablesNextRound_2[_b];
         var playersParticipatingNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length;
         if (playersParticipatingNextRound > maxNumberOfPlayersOnTablesWithFlex) {
             var movementsFromTable = playersParticipatingNextRound - maxNumberOfPlayersOnTables;
@@ -216,8 +234,8 @@ exports.getRebalancingMovements = function (state) {
         // console.log(remainingMovements + " remaining.  Number of lowest tables is " + lowestTables.length);
         if (lowestTables.length <= remainingMovements) {
             // If there is a tie when assigning the next player to a table, just assign a player to each table.
-            for (var _e = 0, lowestTables_1 = lowestTables; _e < lowestTables_1.length; _e++) {
-                var table = lowestTables_1[_e];
+            for (var _c = 0, lowestTables_1 = lowestTables; _c < lowestTables_1.length; _c++) {
+                var table = lowestTables_1[_c];
                 table.extraPlayers++; // Signifys that this table will receive a new player
                 toTableChoices.choices.push({
                     tableIdList: [table.id],
@@ -247,8 +265,8 @@ exports.getRebalancingMovements = function (state) {
     // At this point, we need to look at which tables are too low on numbers.
     // We first work out how many extra movements are needed.
     // let totalNumberOfExtraMovements = 0;
-    for (var _f = 0, _g = state.tables; _f < _g.length; _f++) {
-        var table = _g[_f];
+    for (var _d = 0, activeTablesNextRound_3 = activeTablesNextRound; _d < activeTablesNextRound_3.length; _d++) {
+        var table = activeTablesNextRound_3[_d];
         if (tableIdsBeingBrokenUp.indexOf(table.id) === -1) {
             var playersParticipatingNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length + (table.extraPlayers ? table.extraPlayers : 0);
             if (playersParticipatingNextRound < minNumberOfPlayersOnTablesWithFlex) {
@@ -296,8 +314,8 @@ exports.getRebalancingMovements = function (state) {
             var lowestTables = exports.getTablesWithLowestSize(tablesAfter);
             if (lowestTables.length < remainingMovements) {
                 // Assign to all lowest tables
-                for (var _h = 0, lowestTables_2 = lowestTables; _h < lowestTables_2.length; _h++) {
-                    var table = lowestTables_2[_h];
+                for (var _e = 0, lowestTables_2 = lowestTables; _e < lowestTables_2.length; _e++) {
+                    var table = lowestTables_2[_e];
                     table.extraPlayers++;
                     toTableChoices.choices.push({
                         tableIdList: [table.id],
@@ -345,31 +363,31 @@ exports.getRebalancingMovements = function (state) {
     // console.log("TO CHOICES", JSON.stringify(toTableChoices, null, 4));
     // We must have a distinct set of fromSeats, so having any choices here will need to be randomly expanded.
     var fromSeats = new seatSelections_1.default();
-    for (var _j = 0, _k = fromTableChoices.choices; _j < _k.length; _j++) {
-        var tableChoice = _k[_j];
+    for (var _f = 0, _g = fromTableChoices.choices; _f < _g.length; _f++) {
+        var tableChoice = _g[_f];
         if (tableChoice.choose < tableChoice.tableIdList.length) {
             // Randomly choose table selection
             var tableIdList = util_1.randomlyChooseTables(tableChoice.tableIdList, tableChoice.choose); // Note: This choose value should never be higher than the number of table ids
-            for (var _l = 0, tableIdList_1 = tableIdList; _l < tableIdList_1.length; _l++) {
-                var tableId = tableIdList_1[_l];
+            for (var _h = 0, tableIdList_1 = tableIdList; _h < tableIdList_1.length; _h++) {
+                var tableId = tableIdList_1[_h];
                 fromSeats.add(tableId, util_1.getSeatListOfActivePlayers(tableId, state), 1);
             }
         }
         else {
-            for (var _m = 0, _o = tableChoice.tableIdList; _m < _o.length; _m++) {
-                var tableId = _o[_m];
+            for (var _j = 0, _k = tableChoice.tableIdList; _j < _k.length; _j++) {
+                var tableId = _k[_j];
                 fromSeats.add(tableId, util_1.getSeatListOfActivePlayers(tableId, state), 1);
             }
         }
     }
     // We may have choices still in the targetSeats, so these need to be expanded in to an array
     var targetSeats = [new seatSelections_1.default()];
-    for (var _p = 0, _q = toTableChoices.choices; _p < _q.length; _p++) {
-        var tableChoice = _q[_p];
+    for (var _l = 0, _m = toTableChoices.choices; _l < _m.length; _l++) {
+        var tableChoice = _m[_l];
         if (tableChoice.choose === 1 && tableChoice.tableIdList.length === 1) {
             // Normal target seat, add to all
-            for (var _r = 0, targetSeats_1 = targetSeats; _r < targetSeats_1.length; _r++) {
-                var toSeats = targetSeats_1[_r];
+            for (var _o = 0, targetSeats_1 = targetSeats; _o < targetSeats_1.length; _o++) {
+                var toSeats = targetSeats_1[_o];
                 toSeats.add(tableChoice.tableIdList[0], util_1.invertSeatList(util_1.getSeatListOfActivePlayers(tableChoice.tableIdList[0], state), pokerNowMaxSeatId), 1);
             }
         }
@@ -379,14 +397,14 @@ exports.getRebalancingMovements = function (state) {
             // console.log("Remaining movements", remainingMovements);
             // console.log("Table Combos", JSON.stringify(tableCombinations, null, 4));
             var newTargetSeats = [];
-            for (var _s = 0, tableCombinations_1 = tableCombinations; _s < tableCombinations_1.length; _s++) {
-                var tableCombo = tableCombinations_1[_s];
+            for (var _p = 0, tableCombinations_1 = tableCombinations; _p < tableCombinations_1.length; _p++) {
+                var tableCombo = tableCombinations_1[_p];
                 // Expand these table combinations in to the existing targetSeats
-                for (var _t = 0, targetSeats_2 = targetSeats; _t < targetSeats_2.length; _t++) {
-                    var targetSeat = targetSeats_2[_t];
+                for (var _q = 0, targetSeats_2 = targetSeats; _q < targetSeats_2.length; _q++) {
+                    var targetSeat = targetSeats_2[_q];
                     var anotherSeatSelections = new seatSelections_1.default(targetSeat);
-                    for (var _u = 0, tableCombo_1 = tableCombo; _u < tableCombo_1.length; _u++) {
-                        var tableId = tableCombo_1[_u];
+                    for (var _r = 0, tableCombo_1 = tableCombo; _r < tableCombo_1.length; _r++) {
+                        var tableId = tableCombo_1[_r];
                         anotherSeatSelections.add(tableId, util_1.invertSeatList(util_1.getSeatListOfActivePlayers(tableId, state), pokerNowMaxSeatId), 1);
                     }
                     // console.log("anotherSeatSelections", anotherSeatSelections);
@@ -626,7 +644,7 @@ exports.getRebalancingPlayerMovements = function (state) {
     }
     logger.log("Finished");
     var endTime = (new Date()).getTime();
-    // console.log("optimalResult", optimalResult, "score", optimalResult.bestResult.totalScore);
+    // console.log("optimalResult", "score", optimalResult.bestResult.totalScore, "tried all combos", optimalResult.triedAllCombinations);
     return {
         stats: result.stats,
         movements: playerMovements,
