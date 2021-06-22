@@ -21,6 +21,7 @@ exports.getNumberOfPlayersNextRound = function (state) {
 };
 exports.getActiveTablesNextRound = function (state) {
     return state.tables.filter(function (table) {
+        // console.log("Players for table", table.id, table.players);
         var tablePlayersNextRound = table.players.filter(function (p) { return p.participatingNextRound; }).length;
         return tablePlayersNextRound > 0;
     });

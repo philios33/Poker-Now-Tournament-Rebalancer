@@ -2,108 +2,66 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Balancer = require('./index');
 var state = {
-    players: {
-        "P1": {
-            id: "P1",
-            name: "Phil",
-            currentTable: "A",
-            movements: 0,
-            seat: 2,
-            stack: 1000,
+    "players": {
+        "samuel2": {
+            "id": "samuel2",
+            "name": "samuel2",
+            "currentTable": "OGLRmg1latOvKkjZZuaPPcu97",
+            "movements": 0,
+            "seat": 2,
+            "stack": 500
         },
-        "P2": {
-            id: "P2",
-            name: "Sam",
-            currentTable: "A",
-            movements: 1,
-            seat: 4,
-            stack: 1000,
+        "samuel4": {
+            "id": "samuel4",
+            "name": "samuel4",
+            "currentTable": "sxCxAxrVhHODTHXIJPcRjGeGz",
+            "movements": 0,
+            "seat": 2,
+            "stack": 500
         },
-        "P3": {
-            id: "P3",
-            name: "Clive",
-            currentTable: "A",
-            movements: 0,
-            seat: 6,
-            stack: 1000,
-        },
-        "P4": {
-            id: "P4",
-            name: "Benny",
-            currentTable: "B",
-            movements: 0,
-            seat: 5,
-            stack: 1000,
-        },
-        "P5": {
-            id: "P5",
-            name: "Josh",
-            currentTable: "B",
-            movements: 0,
-            seat: 6,
-            stack: 1000,
-        },
-        "P6": {
-            id: "P6",
-            name: "Will",
-            currentTable: "C",
-            movements: 0,
-            seat: 5,
-            stack: 1000,
-        },
-        "P7": {
-            id: "P7",
-            name: "Katie",
-            currentTable: "C",
-            movements: 0,
-            seat: 7,
-            stack: 1000,
-        },
-        "P8": {
-            id: "P8",
-            name: "Sarah",
-            currentTable: "C",
-            movements: 0,
-            seat: 9,
-            stack: 1000,
+        "samuel1": {
+            "id": "samuel1",
+            "name": "samuel1",
+            "currentTable": "sxCxAxrVhHODTHXIJPcRjGeGz",
+            "movements": 0,
+            "seat": 1,
+            "stack": 500
         }
     },
-    tables: {
-        "A": {
-            id: "A",
-            dealerButtonLastRound: 6,
-            seats: [
-                [2, "P1"],
-                [4, "P2"],
-                [6, "P3"],
+    "tables": {
+        "OGLRmg1latOvKkjZZuaPPcu97": {
+            "id": "OGLRmg1latOvKkjZZuaPPcu97",
+            "dealerButtonLastRound": 1,
+            "seats": [
+                [
+                    2,
+                    "samuel2"
+                ]
             ]
         },
-        "B": {
-            id: "B",
-            dealerButtonLastRound: 6,
-            seats: [
-                [5, "P4"],
-                [6, "P5"],
-            ]
-        },
-        "C": {
-            id: "C",
-            dealerButtonLastRound: 5,
-            seats: [
-                [5, "P6"],
-                [7, "P7"],
-                [9, "P8"],
+        "sxCxAxrVhHODTHXIJPcRjGeGz": {
+            "id": "sxCxAxrVhHODTHXIJPcRjGeGz",
+            "dealerButtonLastRound": 1,
+            "seats": [
+                [
+                    2,
+                    "samuel4"
+                ],
+                [
+                    1,
+                    "samuel1"
+                ]
             ]
         }
     }
 };
 var config = {
-    maxPlayersPerTable: 8,
-    breakWithLessThan: 8,
+    maxPlayersPerTable: 2,
+    breakWithLessThan: 2,
     balanceMinFlexibility: 0,
-    balanceMaxFlexibility: 0,
+    balanceMaxFlexibility: 0 // 0 = Rebalance as much as possible
 };
-var result = Balancer.getMovements(state, config, "B");
+var result = Balancer.getMovements(state, config, "OGLRmg1latOvKkjZZuaPPcu97");
 console.log(result.movementsText);
 console.log("Total movements: " + result.movements.length);
 console.log("Total score: " + result.totalScore);

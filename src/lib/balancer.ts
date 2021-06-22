@@ -27,6 +27,7 @@ export const getNumberOfPlayersNextRound = (state: TournamentState): number => {
 
 export const getActiveTablesNextRound = (state: TournamentState): Array<Table> => {
     return state.tables.filter(table => {
+        // console.log("Players for table", table.id, table.players);
         let tablePlayersNextRound = table.players.filter(p => p.participatingNextRound).length;
         return tablePlayersNextRound > 0;
     })

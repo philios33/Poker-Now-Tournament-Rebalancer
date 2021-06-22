@@ -349,6 +349,10 @@ function arrayShuffle(arr) {
 exports.arrayShuffle = arrayShuffle;
 ;
 function buildTournamentState(state, config, tableIdThatCompletedHand) {
+    validateTournamenState(state);
+    if (!(tableIdThatCompletedHand in state.tables)) {
+        throw new Error("Table id that completed hand not found in state.tables: " + tableIdThatCompletedHand);
+    }
     // Get the tables array with all the players from the PN Table & Player objects
     var tables = [];
     for (var tableId in state.tables) {
@@ -397,4 +401,62 @@ function buildTournamentState(state, config, tableIdThatCompletedHand) {
     };
 }
 exports.buildTournamentState = buildTournamentState;
+function validateTournamenState(state) {
+    if (typeof state !== "object") {
+        throw new Error("Tournament state expected be an object but was: " + typeof state);
+    }
+    if (typeof state.players !== "object") {
+        throw new Error("Tournament state.players expected to be an object but was: " + typeof state.players);
+    }
+    Object.keys(state.players).forEach(function (playerId) {
+        var player = state.players[playerId];
+        validatePlayer(player);
+    });
+    if (typeof state.tables !== "object") {
+        throw new Error("Tournament state.tables expected to be an object but was: " + typeof state.tables);
+    }
+    Object.keys(state.tables).forEach(function (tableId) {
+        var table = state.tables[tableId];
+        validateTable(table);
+    });
+}
+function validatePlayer(player) {
+    var fields = {
+        id: "string",
+        name: "string",
+        stack: "number",
+        movements: "number",
+        currentTable: "string",
+        seat: "number",
+    };
+    Object.keys(fields).forEach(function (fieldName) {
+        var expectedType = fields[fieldName];
+        if (typeof player[fieldName] !== expectedType) {
+            throw new Error("player." + fieldName + " expected to be " + expectedType + " but was: " + typeof player[fieldName]);
+        }
+    });
+}
+function validateTable(table) {
+    if (typeof table.id !== "string") {
+        throw new Error("table.id expected to be a string but was: " + typeof table.id);
+    }
+    if (typeof table.dealerButtonLastRound !== "number") {
+        throw new Error("table.dealerButtonLastRound expected to be a number but was: " + typeof table.dealerButtonLastRound);
+    }
+    if (typeof table.seats !== "object" || !(table.seats instanceof Array)) {
+        throw new Error("table.seats expected to be an array object but was of type: " + typeof table.seats);
+    }
+    table.seats.forEach(function (seat, i) {
+        // Validate seat
+        if (seat.length !== 2) {
+            throw new Error("Seat array length at index " + i + " should be 2 for table " + table.id);
+        }
+        if (typeof seat[0] !== "number") {
+            throw new Error("Seat at index " + i + " should be a number at index 0 for table " + table.id + " but was " + typeof seat[0]);
+        }
+        if (typeof seat[1] !== "string") {
+            throw new Error("Seat at index " + i + " should be a string at index 1 for table " + table.id + " but was " + typeof seat[1]);
+        }
+    });
+}
 //# sourceMappingURL=util.js.map
