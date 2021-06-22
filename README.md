@@ -28,7 +28,6 @@ const state: PokerNowTournamentState = {
             currentTable: "A",
             movements: 0,
             seat: 2,
-            stack: 1000,
         },
         "P2": {
             id: "P2",
@@ -36,7 +35,6 @@ const state: PokerNowTournamentState = {
             currentTable: "A",
             movements: 1,
             seat: 4,
-            stack: 1000,
         },
         "P3": {
             id: "P3",
@@ -44,7 +42,6 @@ const state: PokerNowTournamentState = {
             currentTable: "A",
             movements: 0,
             seat: 6,
-            stack: 1000,
         },
         "P4": {
             id: "P4",
@@ -52,7 +49,6 @@ const state: PokerNowTournamentState = {
             currentTable: "B",
             movements: 0,
             seat: 5,
-            stack: 1000,
         },
         "P5": {
             id: "P5",
@@ -60,7 +56,6 @@ const state: PokerNowTournamentState = {
             currentTable: "B",
             movements: 0,
             seat: 6,
-            stack: 1000,
         },
         "P6": {
             id: "P6",
@@ -68,7 +63,6 @@ const state: PokerNowTournamentState = {
             currentTable: "C",
             movements: 0,
             seat: 5,
-            stack: 1000,
         },
         "P7": {
             id: "P7",
@@ -76,7 +70,6 @@ const state: PokerNowTournamentState = {
             currentTable: "C",
             movements: 0,
             seat: 7,
-            stack: 1000,
         },
         "P8": {
             id: "P8",
@@ -84,7 +77,6 @@ const state: PokerNowTournamentState = {
             currentTable: "C",
             movements: 0,
             seat: 9,
-            stack: 1000,
         }
     },
     tables: {

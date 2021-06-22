@@ -14,7 +14,7 @@ const state = {
           "currentTable": "OGLRmg1latOvKkjZZuaPPcu97",
           "movements": 0,
           "seat": 2,
-          "stack": 500
+          // "stack": 500
         },
         "samuel4": {
           "id": "samuel4",
@@ -22,7 +22,7 @@ const state = {
           "currentTable": "sxCxAxrVhHODTHXIJPcRjGeGz",
           "movements": 0,
           "seat": 2,
-          "stack": 500
+          // "stack": 500
         },
         "samuel1": {
           "id": "samuel1",
@@ -30,7 +30,7 @@ const state = {
           "currentTable": "sxCxAxrVhHODTHXIJPcRjGeGz",
           "movements": 0,
           "seat": 1,
-          "stack": 0
+          // "stack": 0
         }
       },
       "tables": {

@@ -384,7 +384,8 @@ function buildTournamentState(state, config, tableIdThatCompletedHand) {
                 movements: player.movements,
                 name: player.name,
                 participatingLastRound: true,
-                participatingNextRound: player.stack > 0,
+                // participatingNextRound: player.stack > 0,
+                participatingNextRound: true,
                 seat: player.seat,
             });
         }
@@ -424,7 +425,7 @@ function validatePlayer(player) {
     var fields = {
         id: "string",
         name: "string",
-        stack: "number",
+        // stack: "number",
         movements: "number",
         currentTable: "string",
         seat: "number",

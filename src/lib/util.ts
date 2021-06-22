@@ -410,7 +410,8 @@ export function buildTournamentState(state: PokerNowTournamentState, config: Con
                 movements: player.movements,
                 name: player.name,
                 participatingLastRound: true,
-                participatingNextRound: player.stack > 0,
+                // participatingNextRound: player.stack > 0,
+                participatingNextRound: true, // We now assume that if the player exists in the tournament state, that they havent busted out and are in the next hand.
                 seat: player.seat,
             });
         }
@@ -455,7 +456,7 @@ function validatePlayer(player) {
     const fields = {
         id: "string",
         name: "string",
-        stack: "number",
+        // stack: "number",
         movements: "number",
         currentTable: "string",
         seat: "number",
