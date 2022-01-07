@@ -83,20 +83,20 @@ exports.multiplyArrays = function (array1, array2, considerAsArrays) {
             return array1;
         }
         // For every item of array2, push it against every item of array 1
-        var result = [];
+        var result_1 = [];
         for (var _i = 0, array1_1 = array1; _i < array1_1.length; _i++) {
             var array1Item = array1_1[_i];
             for (var _a = 0, array2_1 = array2; _a < array2_1.length; _a++) {
                 var array2Item = array2_1[_a];
                 if (considerAsArrays) {
-                    result.push(__spreadArrays(array1Item, array2Item));
+                    result_1.push(__spreadArrays(array1Item, array2Item));
                 }
                 else {
-                    result.push([array1Item, array2Item]);
+                    result_1.push([array1Item, array2Item]);
                 }
             }
         }
-        return result;
+        return result_1;
     }
 };
 exports.randomlyChooseTables = function (tableListId, choose) {

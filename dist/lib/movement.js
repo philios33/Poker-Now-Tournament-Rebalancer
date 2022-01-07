@@ -197,13 +197,13 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCh
         // Then recurse with the rest of the otherFromSeats & otherTargetSeats if there are more remaining
         if (otherFromSeats.length > 0) {
             // console.log("Recursing...");
-            var result = exports.getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, maxChecksPerSeat, newBreachLimit, consoleText + thisConsoleText);
+            var result_1 = exports.getBestPlayerMovementsFor(otherFromSeats, otherTargetSeats, maxChecksPerSeat, newBreachLimit, consoleText + thisConsoleText);
             // This is always returned even when no best player movements are found
-            totalMovementsChecked += result.totalMovementsChecked;
-            totalMovementsSkipped += result.totalMovementsSkipped;
-            thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
-            if (result.bestResult !== null) {
-                var totalScore = result.bestResult.totalScore + score;
+            totalMovementsChecked += result_1.totalMovementsChecked;
+            totalMovementsSkipped += result_1.totalMovementsSkipped;
+            thisTriedAllCombinations = thisTriedAllCombinations && result_1.triedAllCombinations;
+            if (result_1.bestResult !== null) {
+                var totalScore = result_1.bestResult.totalScore + score;
                 //       console.log("Recursed deeper, adding result", result.totalMovementsChecked);
                 // console.log("The best result for the other " + otherFromSeats.length + " seats was " + result.bestResult.totalScore + " so total so far for these " + (otherFromSeats.length + 1) + " seats is " + totalScore);
                 if (bestResult === null || bestResult.totalScore > totalScore) {
@@ -213,7 +213,7 @@ exports.getBestPlayerMovementsFor = function (fromSeats, targetSeats, movementCh
                         movementScore: score,
                     };
                     bestResult = {
-                        movements: __spreadArrays([movement], result.bestResult.movements),
+                        movements: __spreadArrays([movement], result_1.bestResult.movements),
                         totalScore: totalScore,
                     };
                     giveUpIfScoreBreaches = totalScore;
@@ -297,16 +297,16 @@ exports.getOptimalPlayerMovements = function (globalFromSeats, globalTargetSeats
         var froms = joinedItem[0];
         var targets = joinedItem[1];
         // console.log("Getting best result of ", froms, targets);
-        var result = exports.getBestPlayerMovementsFor(froms, targets, checksPerCombo, bestScore);
+        var result_2 = exports.getBestPlayerMovementsFor(froms, targets, checksPerCombo, bestScore);
         processedCombinations++;
-        totalMovementsChecked += result.totalMovementsChecked;
-        totalMovementsSkipped += result.totalMovementsSkipped;
-        thisTriedAllCombinations = thisTriedAllCombinations && result.triedAllCombinations;
+        totalMovementsChecked += result_2.totalMovementsChecked;
+        totalMovementsSkipped += result_2.totalMovementsSkipped;
+        thisTriedAllCombinations = thisTriedAllCombinations && result_2.triedAllCombinations;
         // console.log("Result was: " + result.totalScore);
-        if (bestResult === null || (result.bestResult !== null && result.bestResult.totalScore < bestResult.totalScore)) {
-            bestResult = result.bestResult;
-            if (result.bestResult !== null) {
-                bestScore = result.bestResult.totalScore;
+        if (bestResult === null || (result_2.bestResult !== null && result_2.bestResult.totalScore < bestResult.totalScore)) {
+            bestResult = result_2.bestResult;
+            if (result_2.bestResult !== null) {
+                bestScore = result_2.bestResult.totalScore;
             }
         }
         // console.log("Best score is", bestScore);

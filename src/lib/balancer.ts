@@ -9,7 +9,7 @@ import { SeatPosition } from "../types/seatPosition";
 import { SeatPositions } from "../types/seatPositions";
 import { getOptimalPlayerMovements } from "./movement";
 import { BalancingPlayersResult } from "../types/balancingPlayersResult";
-import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions, convertMovementsToText, doSanityChecksOnStateConfig, doSanityChecksOnStateTables } from "./util";
+import { invertSeatList, findTableById, combine, multiplyArrays, convertSeatMovementToPlayerMovement, randomlyChooseTables, getTableIdCombinations, getSeatListOfActivePlayers, workOutTargetSeatPositions, convertMovementsToText, doSanityChecksOnStateConfig, doSanityChecksOnStateTables, arrayShuffle } from "./util";
 import { Logger } from "../classes/logger";
 import { TableChoices } from "../types/tableChoices";
 import { NoActiveTablesError } from "../classes/noActiveTableError";
@@ -598,14 +598,31 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         });
 
     }
-    logger.log("All From Seat Positions Worked Out");
+    logger.log("All From Seat Positions Worked Out: " + allSeatPositions.length);
     // console.log("SP", JSON.stringify(allSeatPositions, null, 4));
 
     let globalFromSeats = [];
     // 2. Choose each seatPositions and multiply them out with every selection (This will give every possible player selection choice)
+
+    // Bug fix: This can cause "Out of memory" since it finds absolutely every "From Seat" combination.  
+    // Even a single hand where everyone busts out can cause this since it can require up to 10 movements.
+    // Total combos = Choices.length ^ allSeatPositions.length.
+    // E.g. 10 ^ 8 = 100 M
+    const limitGlobalFromSeatCombos = 9000;
+
     for(const sp of allSeatPositions) {
         const choices = combine(sp.sps, sp.chooseNumber).filter(p => p.length === sp.chooseNumber);
+        logger.log("Choices: " + choices.length);
+
+        logger.log("Global from seats before: " + globalFromSeats.length);
         globalFromSeats = multiplyArrays(globalFromSeats, choices);
+        logger.log("Global from seats after: " + globalFromSeats.length);
+
+        // To counteract the affect of exponential growth here, we shuffle and cap the length.
+        if (globalFromSeats.length > limitGlobalFromSeatCombos) {
+            // console.log("Capping to " + limitGlobalFromSeatCombos);
+            globalFromSeats = arrayShuffle(globalFromSeats).slice(0, limitGlobalFromSeatCombos);
+        }
     }
 
     logger.log("Expanded Global From Seats");
@@ -674,8 +691,8 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
         }
     }
 
-    // console.log("Global From Seats", globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
-    // console.log("Global Target Seats", globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
+    logger.log("Global From Seats " + globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
+    logger.log("Global Target Seats " + globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
 
     const optimalResult = getOptimalPlayerMovements(globalFromSeats, globalTargetSeats);
     logger.log("Obtained Optimal Player Movements");

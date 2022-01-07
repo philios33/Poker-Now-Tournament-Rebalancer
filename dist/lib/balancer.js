@@ -558,14 +558,27 @@ exports.getRebalancingPlayerMovements = function (state) {
     for (var tableId in result.fromSeats.selections) {
         _loop_1(tableId);
     }
-    logger.log("All From Seat Positions Worked Out");
+    logger.log("All From Seat Positions Worked Out: " + allSeatPositions.length);
     // console.log("SP", JSON.stringify(allSeatPositions, null, 4));
     var globalFromSeats = [];
+    // 2. Choose each seatPositions and multiply them out with every selection (This will give every possible player selection choice)
+    // Bug fix: This can cause "Out of memory" since it finds absolutely every "From Seat" combination.  
+    // Even a single hand where everyone busts out can cause this since it can require up to 10 movements.
+    // Total combos = Choices.length ^ allSeatPositions.length.
+    // E.g. 10 ^ 8 = 100 M
+    var limitGlobalFromSeatCombos = 9000;
     var _loop_2 = function (sp) {
         var choices = util_1.combine(sp.sps, sp.chooseNumber).filter(function (p) { return p.length === sp.chooseNumber; });
+        logger.log("Choices: " + choices.length);
+        logger.log("Global from seats before: " + globalFromSeats.length);
         globalFromSeats = util_1.multiplyArrays(globalFromSeats, choices);
+        logger.log("Global from seats after: " + globalFromSeats.length);
+        // To counteract the affect of exponential growth here, we shuffle and cap the length.
+        if (globalFromSeats.length > limitGlobalFromSeatCombos) {
+            // console.log("Capping to " + limitGlobalFromSeatCombos);
+            globalFromSeats = util_1.arrayShuffle(globalFromSeats).slice(0, limitGlobalFromSeatCombos);
+        }
     };
-    // 2. Choose each seatPositions and multiply them out with every selection (This will give every possible player selection choice)
     for (var _b = 0, allSeatPositions_1 = allSeatPositions; _b < allSeatPositions_1.length; _b++) {
         var sp = allSeatPositions_1[_b];
         _loop_2(sp);
@@ -628,8 +641,8 @@ exports.getRebalancingPlayerMovements = function (state) {
             msTaken: endTime_1 - startTime,
         };
     }
-    // console.log("Global From Seats", globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
-    // console.log("Global Target Seats", globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
+    logger.log("Global From Seats " + globalFromSeats.length + " groups with a total of " + fromCombos + " combinations");
+    logger.log("Global Target Seats " + globalTargetSeats.length + " groups with a total of " + targetCombos + " combinations");
     var optimalResult = movement_1.getOptimalPlayerMovements(globalFromSeats, globalTargetSeats);
     logger.log("Obtained Optimal Player Movements");
     // console.log("Final result", JSON.stringify(optimalResult, null, 4));
