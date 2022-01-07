@@ -1,5 +1,5 @@
 {
-  "name": "@poker-now/tournament-rebalancer",
+  "name": "@philios33/poker-now-tournament-rebalancer",
   "version": "2.0.3",
   "description": "A JS algorithm to decide what player movements to make when re-balancing a multi-table tournament.",
   "main": "dist/index.js",
@@ -7,6 +7,9 @@
     "test": "jest",
     "build": "rm -Rf ./dist && tsc",
     "dev": "ts-node ./src/start.ts"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
