@@ -2,24 +2,28 @@
 
 A JS algorithm to decide what player movements to make when re-balancing a multi-table tournament.
 
-## Setup @poker-now private NPM registry
+## Github Registry
+
+Add this line to your ~/.npmrc file or .npmrc file
+
+`@philios33:registry=https://npm.pkg.github.com`
 
 Login with your credentials
 
-`npm login --registry=https://npm.code67.com`
+`npm login --registry=https://npm.pkg.github.com`
 
-Add this line to your ~/.npmrc file
+OR setup a token in Github and add to your .npmrc file
 
-`@poker-now:registry=https://npm.code67.com`
+`//npm.pkg.github.com/:_authToken=xxxx`
 
 Finally, install the package with
 
-`npm i @poker-now/tournament-rebalancer`
+`npm i @philios33/poker-now-tournament-rebalancer`
 
 ## Basic Usage
 
 ```javascript
-const Balancer = require("@poker-now/tournament-rebalancer");
+const Balancer = require("@philios33/poker-now-tournament-rebalancer");
 const state: PokerNowTournamentState = {
     players: {
         "P1": {

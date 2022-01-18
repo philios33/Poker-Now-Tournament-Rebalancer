@@ -117,7 +117,18 @@ exports.getMovingPlayerPositionScore = function (fromPos, toPos, toNum) {
     if (fromPos in weights && toPos in weights[fromPos]) {
         return weights[fromPos][toPos];
     }
-    throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
+    else {
+        // It looks like we have selected the wrong matrix somehow.
+        // Try again with the weights10 matrix
+        if (fromPos in weights10 && toPos in weights10[fromPos]) {
+            return weights10[fromPos][toPos];
+        }
+        else {
+            // Something is still not right, just return some token meaningless value so that the calculation can proceed.
+            return 10;
+        }
+    }
+    // throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
 };
 exports.getMovementScoreFor = function (fromSeat, targetSeat) {
     return (fromSeat.movements * playerMovementScoreWeighting) + exports.getMovingPlayerPositionScore(fromSeat.position, targetSeat.position, Math.max(fromSeat.numOfPlayers, targetSeat.numOfPlayers));

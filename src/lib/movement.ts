@@ -125,10 +125,21 @@ export const getMovingPlayerPositionScore = (fromPos: string, toPos: string, toN
     const allWeights = [weights2, weights3, weights4, weights5, weights6, weights7, weights8, weights9, weights10];
     const weights = allWeights[toNum - 2]; // Offset by 2
 
+    
+
     if (fromPos in weights && toPos in weights[fromPos]) {
         return weights[fromPos][toPos];
+    } else {
+        // It looks like we have selected the wrong matrix somehow.
+        // Try again with the weights10 matrix
+        if (fromPos in weights10 && toPos in weights10[fromPos]) {
+            return weights10[fromPos][toPos];
+        } else {
+            // Something is still not right, just return some token meaningless value so that the calculation can proceed.
+            return 10;
+        }
     }
-    throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
+    // throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
 }
 
 export const getMovementScoreFor = (fromSeat: SeatPosition, targetSeat: TargetSeat) => {
