@@ -130,6 +130,9 @@ export const getMovingPlayerPositionScore = (fromPos: string, toPos: string, toN
     if (fromPos in weights && toPos in weights[fromPos]) {
         return weights[fromPos][toPos];
     } else {
+        // BUG FIX
+        // throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
+
         // It looks like we have selected the wrong matrix somehow.
         // Try again with the weights10 matrix
         if (fromPos in weights10 && toPos in weights10[fromPos]) {
@@ -139,7 +142,7 @@ export const getMovingPlayerPositionScore = (fromPos: string, toPos: string, toN
             return 10;
         }
     }
-    // throw new Error("Could not find movement score for position change of " + fromPos + " -> " + toPos);
+    
 }
 
 export const getMovementScoreFor = (fromSeat: SeatPosition, targetSeat: TargetSeat) => {
