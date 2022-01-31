@@ -2,3 +2,4 @@ node_modules/
 testNew/
 test/
 .npmrc
+performanceTest.ts

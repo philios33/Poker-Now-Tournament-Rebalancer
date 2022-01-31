@@ -1,962 +1,2103 @@
 var Balancer = require('./index');
 var state = {
     "players": {
-        "bKhTZxmKs9": {
-            "id": "bKhTZxmKs9",
-            "name": "samuel2",
-            "currentTable": "o6QHocC6TwJhsxT0bf-PHknsG",
+        "MINT🍫#2662": {
+            "id": "MINT🍫#2662",
+            "name": "MINT🍫#2662",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "movements": 0,
             "seat": 1
         },
-        "6T5i21QyZj": {
-            "id": "6T5i21QyZj",
-            "name": "rwin_hn#8328",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 5
-        },
-        "BQtVePhMDB": {
-            "id": "BQtVePhMDB",
-            "name": "GuraGawr#8705",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 3
-        },
-        "G5nod1pUiA": {
-            "id": "G5nod1pUiA",
-            "name": "SgtSavage4",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
+        "Solution999": {
+            "id": "Solution999",
+            "name": "Solution999",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "movements": 0,
             "seat": 2
         },
-        "CYk5uPahZT": {
-            "id": "CYk5uPahZT",
-            "name": "nickparich#387",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 9
-        },
-        "97AMBmJi9B": {
-            "id": "97AMBmJi9B",
-            "name": "l1l.sol",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 8
-        },
-        "BIkPKXN7Fm": {
-            "id": "BIkPKXN7Fm",
-            "name": "cocob3lle#5935",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 6
-        },
-        "zvhEU-TCom": {
-            "id": "zvhEU-TCom",
-            "name": "Avidlearner",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 7
-        },
-        "dzZJrleeq0": {
-            "id": "dzZJrleeq0",
-            "name": "DimasGembil",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 10
-        },
-        "YofI_CspYO": {
-            "id": "YofI_CspYO",
-            "name": "Andizulfikar",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 1
-        },
-        "_xdgioDqlS": {
-            "id": "_xdgioDqlS",
-            "name": "Herza#2070",
-            "currentTable": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "movements": 0,
-            "seat": 4
-        },
-        "dX34SaiYwH": {
-            "id": "dX34SaiYwH",
-            "name": "samuel1",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 5
-        },
-        "KFJH7So0l6": {
-            "id": "KFJH7So0l6",
-            "name": "Fortingzaly",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 6
-        },
-        "w4VSXxQsGc": {
-            "id": "w4VSXxQsGc",
-            "name": "Trijepsi",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 8
-        },
-        "KX9W-zxRzy": {
-            "id": "KX9W-zxRzy",
-            "name": "Cajzmedom",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 2
-        },
-        "yojavmupYN": {
-            "id": "yojavmupYN",
-            "name": "Vajrus#7682",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 9
-        },
-        "FcXr4QNhHY": {
-            "id": "FcXr4QNhHY",
-            "name": "White_lime",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 10
-        },
-        "j_AsB-Qtwn": {
-            "id": "j_AsB-Qtwn",
-            "name": "Zul",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
+        "Luther702": {
+            "id": "Luther702",
+            "name": "Luther702",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "movements": 0,
             "seat": 3
         },
-        "53JuEoaY8C": {
-            "id": "53JuEoaY8C",
-            "name": "Milka#3895",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 7
-        },
-        "Y6ZWDPjpzD": {
-            "id": "Y6ZWDPjpzD",
-            "name": "Sixin",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
-            "movements": 0,
-            "seat": 1
-        },
-        "qXDk55SPP5": {
-            "id": "qXDk55SPP5",
-            "name": "Zighy",
-            "currentTable": "8nk7xH3or2vT5B4boFlm0Cn4P",
+        "DimK": {
+            "id": "DimK",
+            "name": "DimK",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "movements": 0,
             "seat": 4
         },
-        "LzpfjoZPFr": {
-            "id": "LzpfjoZPFr",
-            "name": "samuel5",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
+        "Subaru |Rebels": {
+            "id": "Subaru |Rebels",
+            "name": "Subaru |Rebels",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "movements": 0,
-            "seat": 10
+            "seat": 5
         },
-        "J8tMLSeipc": {
-            "id": "J8tMLSeipc",
-            "name": "Spec_gaming",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
+        "Grillongle": {
+            "id": "Grillongle",
+            "name": "Grillongle",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
+            "movements": 0,
+            "seat": 6
+        },
+        "Paixao #3890": {
+            "id": "Paixao #3890",
+            "name": "Paixao #3890",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
+            "movements": 0,
+            "seat": 7
+        },
+        "Salpo106": {
+            "id": "Salpo106",
+            "name": "Salpo106",
+            "currentTable": "H1ySczcfxEKgnVUfDDA5C2aW7",
+            "movements": 0,
+            "seat": 8
+        },
+        "Solcrystal#964": {
+            "id": "Solcrystal#964",
+            "name": "Solcrystal#964",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 1
+        },
+        "yorong#2388": {
+            "id": "yorong#2388",
+            "name": "yorong#2388",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 2
+        },
+        "l2gs#3944": {
+            "id": "l2gs#3944",
+            "name": "l2gs#3944",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 3
+        },
+        "emilbochnik": {
+            "id": "emilbochnik",
+            "name": "emilbochnik",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 4
+        },
+        "Nit#3912": {
+            "id": "Nit#3912",
+            "name": "Nit#3912",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 5
+        },
+        "Neon482000": {
+            "id": "Neon482000",
+            "name": "Neon482000",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 6
+        },
+        "Ihave2GME": {
+            "id": "Ihave2GME",
+            "name": "Ihave2GME",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 7
+        },
+        "Donfckundo": {
+            "id": "Donfckundo",
+            "name": "Donfckundo",
+            "currentTable": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "movements": 0,
+            "seat": 8
+        },
+        "Ebro88": {
+            "id": "Ebro88",
+            "name": "Ebro88",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 1
+        },
+        "Shentpup": {
+            "id": "Shentpup",
+            "name": "Shentpup",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 2
+        },
+        "Pepdagoat": {
+            "id": "Pepdagoat",
+            "name": "Pepdagoat",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 3
+        },
+        "nft_thor#9690": {
+            "id": "nft_thor#9690",
+            "name": "nft_thor#9690",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 4
+        },
+        "Kuma#6027": {
+            "id": "Kuma#6027",
+            "name": "Kuma#6027",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 6
+        },
+        "Batman | BAPES": {
+            "id": "Batman | BAPES",
+            "name": "Batman | BAPES",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 7
+        },
+        "Ahno": {
+            "id": "Ahno",
+            "name": "Ahno",
+            "currentTable": "uKQafFLfBsulSU9MPcTb5PouY",
+            "movements": 0,
+            "seat": 8
+        },
+        "CryptoJoe1313": {
+            "id": "CryptoJoe1313",
+            "name": "CryptoJoe1313",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 1
+        },
+        "Aaron |": {
+            "id": "Aaron |",
+            "name": "Aaron |",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 2
+        },
+        "SportinG": {
+            "id": "SportinG",
+            "name": "SportinG",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 3
+        },
+        "DTX": {
+            "id": "DTX",
+            "name": "DTX",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 4
+        },
+        "SkyDoge | Soul": {
+            "id": "SkyDoge | Soul",
+            "name": "SkyDoge | Soul",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 5
+        },
+        "Vjallin": {
+            "id": "Vjallin",
+            "name": "Vjallin",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 6
+        },
+        "Max Thomas": {
+            "id": "Max Thomas",
+            "name": "Max Thomas",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 7
+        },
+        "Kluex #8556": {
+            "id": "Kluex #8556",
+            "name": "Kluex #8556",
+            "currentTable": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "movements": 0,
+            "seat": 8
+        },
+        "MoZaK2K": {
+            "id": "MoZaK2K",
+            "name": "MoZaK2K",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 1
+        },
+        "jimpap": {
+            "id": "jimpap",
+            "name": "jimpap",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 2
+        },
+        "Tiny fear": {
+            "id": "Tiny fear",
+            "name": "Tiny fear",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 3
+        },
+        "glee": {
+            "id": "glee",
+            "name": "glee",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 4
+        },
+        "CG88": {
+            "id": "CG88",
+            "name": "CG88",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 5
+        },
+        "King Sahbee": {
+            "id": "King Sahbee",
+            "name": "King Sahbee",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 6
+        },
+        "StephMoon": {
+            "id": "StephMoon",
+            "name": "StephMoon",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 7
+        },
+        "LostBTC": {
+            "id": "LostBTC",
+            "name": "LostBTC",
+            "currentTable": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "movements": 0,
+            "seat": 8
+        },
+        "louk04": {
+            "id": "louk04",
+            "name": "louk04",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 1
+        },
+        "Arthereox": {
+            "id": "Arthereox",
+            "name": "Arthereox",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 2
+        },
+        "Amitco": {
+            "id": "Amitco",
+            "name": "Amitco",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 3
+        },
+        "LuckyP!!!": {
+            "id": "LuckyP!!!",
+            "name": "LuckyP!!!",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 5
+        },
+        "Strangest": {
+            "id": "Strangest",
+            "name": "Strangest",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 6
+        },
+        "Miloute": {
+            "id": "Miloute",
+            "name": "Miloute",
+            "currentTable": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
+            "movements": 0,
+            "seat": 7
+        },
+        "theSOLhoe": {
+            "id": "theSOLhoe",
+            "name": "theSOLhoe",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 1
+        },
+        "HangLooseRette": {
+            "id": "HangLooseRette",
+            "name": "HangLooseRette",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 2
+        },
+        "Kezutan": {
+            "id": "Kezutan",
+            "name": "Kezutan",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 3
+        },
+        "BenDover99": {
+            "id": "BenDover99",
+            "name": "BenDover99",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 4
+        },
+        "Maruc": {
+            "id": "Maruc",
+            "name": "Maruc",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 5
+        },
+        "goldieshdash": {
+            "id": "goldieshdash",
+            "name": "goldieshdash",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 6
+        },
+        "JeromieRomie02": {
+            "id": "JeromieRomie02",
+            "name": "JeromieRomie02",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 7
+        },
+        "suppercious": {
+            "id": "suppercious",
+            "name": "suppercious",
+            "currentTable": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "movements": 0,
+            "seat": 8
+        },
+        "Shadowfart8136": {
+            "id": "Shadowfart8136",
+            "name": "Shadowfart8136",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 1
+        },
+        "Kuora": {
+            "id": "Kuora",
+            "name": "Kuora",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 2
+        },
+        "Shreks#8141": {
+            "id": "Shreks#8141",
+            "name": "Shreks#8141",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 3
+        },
+        "prodbyzander": {
+            "id": "prodbyzander",
+            "name": "prodbyzander",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 4
+        },
+        "WenRare": {
+            "id": "WenRare",
+            "name": "WenRare",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 5
+        },
+        "heretovin": {
+            "id": "heretovin",
+            "name": "heretovin",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 6
+        },
+        "upsAder": {
+            "id": "upsAder",
+            "name": "upsAder",
+            "currentTable": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "movements": 0,
+            "seat": 7
+        },
+        "TillOneMill": {
+            "id": "TillOneMill",
+            "name": "TillOneMill",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 1
+        },
+        "Cryptofunk": {
+            "id": "Cryptofunk",
+            "name": "Cryptofunk",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 2
+        },
+        "turlututu": {
+            "id": "turlututu",
+            "name": "turlututu",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 3
+        },
+        "Killerqueen": {
+            "id": "Killerqueen",
+            "name": "Killerqueen",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 4
+        },
+        "Beowolf": {
+            "id": "Beowolf",
+            "name": "Beowolf",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 5
+        },
+        "Kierk": {
+            "id": "Kierk",
+            "name": "Kierk",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 6
+        },
+        "freecss": {
+            "id": "freecss",
+            "name": "freecss",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 7
+        },
+        "El Vega": {
+            "id": "El Vega",
+            "name": "El Vega",
+            "currentTable": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "movements": 0,
+            "seat": 8
+        },
+        "MrennerBorel": {
+            "id": "MrennerBorel",
+            "name": "MrennerBorel",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 1
+        },
+        "Viosil": {
+            "id": "Viosil",
+            "name": "Viosil",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 2
+        },
+        "JeremyV": {
+            "id": "JeremyV",
+            "name": "JeremyV",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 3
+        },
+        "iamburaky": {
+            "id": "iamburaky",
+            "name": "iamburaky",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 4
+        },
+        "YY10_SOL": {
+            "id": "YY10_SOL",
+            "name": "YY10_SOL",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 5
+        },
+        "NFTtradez": {
+            "id": "NFTtradez",
+            "name": "NFTtradez",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 6
+        },
+        "Nicofrosty7": {
+            "id": "Nicofrosty7",
+            "name": "Nicofrosty7",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 7
+        },
+        "Raamiana": {
+            "id": "Raamiana",
+            "name": "Raamiana",
+            "currentTable": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "movements": 0,
+            "seat": 8
+        },
+        "RedruM": {
+            "id": "RedruM",
+            "name": "RedruM",
+            "currentTable": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "movements": 0,
+            "seat": 1
+        },
+        "topzzz": {
+            "id": "topzzz",
+            "name": "topzzz",
+            "currentTable": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "movements": 0,
+            "seat": 2
+        },
+        "ThePureSoulDog": {
+            "id": "ThePureSoulDog",
+            "name": "ThePureSoulDog",
+            "currentTable": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "movements": 0,
+            "seat": 3
+        },
+        "Staus": {
+            "id": "Staus",
+            "name": "Staus",
+            "currentTable": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "movements": 0,
+            "seat": 4
+        },
+        "Ficky Shen": {
+            "id": "Ficky Shen",
+            "name": "Ficky Shen",
+            "currentTable": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "movements": 0,
+            "seat": 6
+        },
+        "Puddin2010": {
+            "id": "Puddin2010",
+            "name": "Puddin2010",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 1
+        },
+        "Tripwood": {
+            "id": "Tripwood",
+            "name": "Tripwood",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 2
+        },
+        "Eightba11": {
+            "id": "Eightba11",
+            "name": "Eightba11",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 3
+        },
+        "David 1254": {
+            "id": "David 1254",
+            "name": "David 1254",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 5
+        },
+        "Tsoupoutsou": {
+            "id": "Tsoupoutsou",
+            "name": "Tsoupoutsou",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 6
+        },
+        "bigscott": {
+            "id": "bigscott",
+            "name": "bigscott",
+            "currentTable": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "movements": 0,
+            "seat": 7
+        },
+        "Popel": {
+            "id": "Popel",
+            "name": "Popel",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 1
+        },
+        "shooterboy": {
+            "id": "shooterboy",
+            "name": "shooterboy",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 2
+        },
+        "Indio_Jau": {
+            "id": "Indio_Jau",
+            "name": "Indio_Jau",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 3
+        },
+        "EmmaKgLy": {
+            "id": "EmmaKgLy",
+            "name": "EmmaKgLy",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 4
+        },
+        "Phaasz": {
+            "id": "Phaasz",
+            "name": "Phaasz",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 5
+        },
+        "Wy2K | Soul do": {
+            "id": "Wy2K | Soul do",
+            "name": "Wy2K | Soul do",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 6
+        },
+        "Skoo": {
+            "id": "Skoo",
+            "name": "Skoo",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 7
+        },
+        "VasilisK": {
+            "id": "VasilisK",
+            "name": "VasilisK",
+            "currentTable": "P-madOjG3WSxPu33ufyLDnsh1",
+            "movements": 0,
+            "seat": 8
+        },
+        "Billy Woods": {
+            "id": "Billy Woods",
+            "name": "Billy Woods",
+            "currentTable": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "movements": 0,
+            "seat": 2
+        },
+        "Aimee#7260": {
+            "id": "Aimee#7260",
+            "name": "Aimee#7260",
+            "currentTable": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "movements": 0,
+            "seat": 3
+        },
+        "FabioN": {
+            "id": "FabioN",
+            "name": "FabioN",
+            "currentTable": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "movements": 0,
+            "seat": 5
+        },
+        "BennyX": {
+            "id": "BennyX",
+            "name": "BennyX",
+            "currentTable": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "movements": 0,
+            "seat": 6
+        },
+        "Kaz#3017": {
+            "id": "Kaz#3017",
+            "name": "Kaz#3017",
+            "currentTable": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "movements": 0,
+            "seat": 8
+        },
+        "Alibaba": {
+            "id": "Alibaba",
+            "name": "Alibaba",
+            "currentTable": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "movements": 0,
+            "seat": 2
+        },
+        "Wahbart": {
+            "id": "Wahbart",
+            "name": "Wahbart",
+            "currentTable": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "movements": 0,
+            "seat": 4
+        },
+        "Tj22": {
+            "id": "Tj22",
+            "name": "Tj22",
+            "currentTable": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "movements": 0,
+            "seat": 5
+        },
+        "robinomega": {
+            "id": "robinomega",
+            "name": "robinomega",
+            "currentTable": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "movements": 0,
+            "seat": 6
+        },
+        "BlazinMitchie": {
+            "id": "BlazinMitchie",
+            "name": "BlazinMitchie",
+            "currentTable": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "movements": 0,
+            "seat": 8
+        },
+        "MCS7192": {
+            "id": "MCS7192",
+            "name": "MCS7192",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 1
+        },
+        "Coletrain": {
+            "id": "Coletrain",
+            "name": "Coletrain",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 2
+        },
+        "cammypacz": {
+            "id": "cammypacz",
+            "name": "cammypacz",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 3
+        },
+        "Prince of Keny": {
+            "id": "Prince of Keny",
+            "name": "Prince of Keny",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 4
+        },
+        "Lukas 12": {
+            "id": "Lukas 12",
+            "name": "Lukas 12",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 5
+        },
+        "jakep1999#5516": {
+            "id": "jakep1999#5516",
+            "name": "jakep1999#5516",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 6
+        },
+        "ztudorx": {
+            "id": "ztudorx",
+            "name": "ztudorx",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 7
+        },
+        "MikzNFT": {
+            "id": "MikzNFT",
+            "name": "MikzNFT",
+            "currentTable": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "movements": 0,
+            "seat": 8
+        },
+        "Bazzzhe": {
+            "id": "Bazzzhe",
+            "name": "Bazzzhe",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 1
+        },
+        "InsideGod#8698": {
+            "id": "InsideGod#8698",
+            "name": "InsideGod#8698",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 3
+        },
+        "GASTON": {
+            "id": "GASTON",
+            "name": "GASTON",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 4
+        },
+        "BOO_Teng27": {
+            "id": "BOO_Teng27",
+            "name": "BOO_Teng27",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 5
+        },
+        "JungleTosh": {
+            "id": "JungleTosh",
+            "name": "JungleTosh",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 6
+        },
+        "Nixon Jr": {
+            "id": "Nixon Jr",
+            "name": "Nixon Jr",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 7
+        },
+        "aka_mene | RCC": {
+            "id": "aka_mene | RCC",
+            "name": "aka_mene | RCC",
+            "currentTable": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "movements": 0,
+            "seat": 8
+        },
+        "Mr-Tii": {
+            "id": "Mr-Tii",
+            "name": "Mr-Tii",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 1
+        },
+        "Simdog": {
+            "id": "Simdog",
+            "name": "Simdog",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 2
+        },
+        "Gabry#8322": {
+            "id": "Gabry#8322",
+            "name": "Gabry#8322",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 3
+        },
+        "Sto1c": {
+            "id": "Sto1c",
+            "name": "Sto1c",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 5
+        },
+        "matcha_queen": {
+            "id": "matcha_queen",
+            "name": "matcha_queen",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 6
+        },
+        "Dufflebagboi": {
+            "id": "Dufflebagboi",
+            "name": "Dufflebagboi",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 7
+        },
+        "esrever": {
+            "id": "esrever",
+            "name": "esrever",
+            "currentTable": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "movements": 0,
+            "seat": 8
+        },
+        "ToreMinas": {
+            "id": "ToreMinas",
+            "name": "ToreMinas",
+            "currentTable": "mhRh-13isfRSz3yXkvyJBNl05",
+            "movements": 0,
+            "seat": 1
+        },
+        "yongyanglee": {
+            "id": "yongyanglee",
+            "name": "yongyanglee",
+            "currentTable": "mhRh-13isfRSz3yXkvyJBNl05",
+            "movements": 0,
+            "seat": 2
+        },
+        "Veritas420": {
+            "id": "Veritas420",
+            "name": "Veritas420",
+            "currentTable": "mhRh-13isfRSz3yXkvyJBNl05",
+            "movements": 0,
+            "seat": 4
+        },
+        "JEM": {
+            "id": "JEM",
+            "name": "JEM",
+            "currentTable": "mhRh-13isfRSz3yXkvyJBNl05",
+            "movements": 0,
+            "seat": 5
+        },
+        "Peng#4103": {
+            "id": "Peng#4103",
+            "name": "Peng#4103",
+            "currentTable": "mhRh-13isfRSz3yXkvyJBNl05",
+            "movements": 0,
+            "seat": 8
+        },
+        "Swootey": {
+            "id": "Swootey",
+            "name": "Swootey",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 1
+        },
+        "King22": {
+            "id": "King22",
+            "name": "King22",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 3
+        },
+        "Rallan": {
+            "id": "Rallan",
+            "name": "Rallan",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 4
+        },
+        "dopor#0220": {
+            "id": "dopor#0220",
+            "name": "dopor#0220",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 5
+        },
+        "FancyPants": {
+            "id": "FancyPants",
+            "name": "FancyPants",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 6
+        },
+        "Єяяȏℛ()Ꮗꭿꮍ": {
+            "id": "Єяяȏℛ()Ꮗꭿꮍ",
+            "name": "Єяяȏℛ()Ꮗꭿꮍ",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 7
+        },
+        "Jonno007": {
+            "id": "Jonno007",
+            "name": "Jonno007",
+            "currentTable": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "movements": 0,
+            "seat": 8
+        },
+        "MetaGrimster": {
+            "id": "MetaGrimster",
+            "name": "MetaGrimster",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 1
+        },
+        "JSmash": {
+            "id": "JSmash",
+            "name": "JSmash",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 2
+        },
+        "Vaan21|SoulDog": {
+            "id": "Vaan21|SoulDog",
+            "name": "Vaan21|SoulDog",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 3
+        },
+        "Waldbeer": {
+            "id": "Waldbeer",
+            "name": "Waldbeer",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 4
+        },
+        "kosmoss13666": {
+            "id": "kosmoss13666",
+            "name": "kosmoss13666",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 5
+        },
+        "Joey#9908": {
+            "id": "Joey#9908",
+            "name": "Joey#9908",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 6
+        },
+        "NoBaeK": {
+            "id": "NoBaeK",
+            "name": "NoBaeK",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 7
+        },
+        "Fernando": {
+            "id": "Fernando",
+            "name": "Fernando",
+            "currentTable": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "movements": 0,
+            "seat": 8
+        },
+        "DapperDan": {
+            "id": "DapperDan",
+            "name": "DapperDan",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 1
+        },
+        "Sigrid": {
+            "id": "Sigrid",
+            "name": "Sigrid",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 2
+        },
+        "majcar": {
+            "id": "majcar",
+            "name": "majcar",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 3
+        },
+        "Parisiancrypto": {
+            "id": "Parisiancrypto",
+            "name": "Parisiancrypto",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 4
+        },
+        "kopif_tn": {
+            "id": "kopif_tn",
+            "name": "kopif_tn",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 5
+        },
+        "ChillxSoulDog": {
+            "id": "ChillxSoulDog",
+            "name": "ChillxSoulDog",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 6
+        },
+        "Luan Coelho": {
+            "id": "Luan Coelho",
+            "name": "Luan Coelho",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 7
+        },
+        "barcaboy": {
+            "id": "barcaboy",
+            "name": "barcaboy",
+            "currentTable": "bnpjkywpdDgz0KkraPfcD030j",
+            "movements": 0,
+            "seat": 8
+        },
+        "Lando#8743": {
+            "id": "Lando#8743",
+            "name": "Lando#8743",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 2
+        },
+        "HodlSchool": {
+            "id": "HodlSchool",
+            "name": "HodlSchool",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 3
+        },
+        "triplecrown333": {
+            "id": "triplecrown333",
+            "name": "triplecrown333",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 4
+        },
+        "Smarty#2593": {
+            "id": "Smarty#2593",
+            "name": "Smarty#2593",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 5
+        },
+        "Strus": {
+            "id": "Strus",
+            "name": "Strus",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 6
+        },
+        "dirtyrice": {
+            "id": "dirtyrice",
+            "name": "dirtyrice",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 7
+        },
+        "Anatolii": {
+            "id": "Anatolii",
+            "name": "Anatolii",
+            "currentTable": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "movements": 0,
+            "seat": 8
+        },
+        "unforgivin": {
+            "id": "unforgivin",
+            "name": "unforgivin",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "movements": 0,
+            "seat": 1
+        },
+        "gsus#6995": {
+            "id": "gsus#6995",
+            "name": "gsus#6995",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "movements": 0,
+            "seat": 2
+        },
+        "burki": {
+            "id": "burki",
+            "name": "burki",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "movements": 0,
+            "seat": 3
+        },
+        "KilleQueen": {
+            "id": "KilleQueen",
+            "name": "KilleQueen",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "movements": 1,
+            "seat": 4
+        },
+        "Stef Bilzerian": {
+            "id": "Stef Bilzerian",
+            "name": "Stef Bilzerian",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "movements": 1,
+            "seat": 5
+        },
+        "lellos": {
+            "id": "lellos",
+            "name": "lellos",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
             "movements": 1,
             "seat": 6
         },
-        "e-DSFgMZN_": {
-            "id": "e-DSFgMZN_",
-            "name": "Taiga",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 1,
-            "seat": 4
-        },
-        "wb7_cSNlAr": {
-            "id": "wb7_cSNlAr",
-            "name": "CoNtRiVeR#0525",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 1,
-            "seat": 3
-        },
-        "ei5gOJWdzw": {
-            "id": "ei5gOJWdzw",
-            "name": "fLabber#5066",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 1,
-            "seat": 8
-        },
-        "bxqOeMGKs5": {
-            "id": "bxqOeMGKs5",
-            "name": "PutraKinanta#6",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 0,
-            "seat": 1
-        },
-        "LRFNK91a62": {
-            "id": "LRFNK91a62",
-            "name": "Takalex",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 0,
-            "seat": 9
-        },
-        "fwWvotj6B-": {
-            "id": "fwWvotj6B-",
-            "name": "legendTEAM",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
+        "Ochelios": {
+            "id": "Ochelios",
+            "name": "Ochelios",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
             "movements": 1,
             "seat": 7
         },
-        "fSwtFV7zfS": {
-            "id": "fSwtFV7zfS",
-            "name": "jihyo#8183",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
+        "sweatyintern": {
+            "id": "sweatyintern",
+            "name": "sweatyintern",
+            "currentTable": "3TkoS3VhJUNYPvf_hVIl8UmEn",
             "movements": 1,
-            "seat": 2
-        },
-        "5LRaphLqA5": {
-            "id": "5LRaphLqA5",
-            "name": "S3XY CAT",
-            "currentTable": "hS_UUh8riJVUkl6DtzR9RFbkW",
-            "movements": 1,
-            "seat": 5
-        },
-        "2KkAH44eUr": {
-            "id": "2KkAH44eUr",
-            "name": "Ki11enmachine",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
             "seat": 8
         },
-        "h7qDCYBD_E": {
-            "id": "h7qDCYBD_E",
-            "name": "Dragskull99",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
-            "seat": 10
-        },
-        "4xVm4shzPL": {
-            "id": "4xVm4shzPL",
-            "name": "DODIT#6641",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
-            "seat": 2
-        },
-        "RcfDLxiS1P": {
-            "id": "RcfDLxiS1P",
-            "name": "hellyo#5915",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
-            "seat": 5
-        },
-        "KtHh-wuDBl": {
-            "id": "KtHh-wuDBl",
-            "name": "stathisv13",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
-            "seat": 7
-        },
-        "Ug8t1qMNoT": {
-            "id": "Ug8t1qMNoT",
-            "name": "ShadowKiruxxxx",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
-            "movements": 0,
-            "seat": 4
-        },
-        "E3NrlrEjrc": {
-            "id": "E3NrlrEjrc",
-            "name": "Kakan#8256",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
+        "Beavis1234": {
+            "id": "Beavis1234",
+            "name": "Beavis1234",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
             "seat": 1
         },
-        "v3HP5FzG34": {
-            "id": "v3HP5FzG34",
-            "name": "Dethelor",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
+        "Gigabeat#6160": {
+            "id": "Gigabeat#6160",
+            "name": "Gigabeat#6160",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
-            "seat": 3
+            "seat": 4
         },
-        "InI08UA0PL": {
-            "id": "InI08UA0PL",
-            "name": "wewemix#7816",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
+        "Berlin": {
+            "id": "Berlin",
+            "name": "Berlin",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
-            "seat": 9
+            "seat": 5
         },
-        "D8dffotRBr": {
-            "id": "D8dffotRBr",
-            "name": "Girellus#1881",
-            "currentTable": "_PbuZniUvjjG_PdliyajAKbL8",
+        "Pokerface888": {
+            "id": "Pokerface888",
+            "name": "Pokerface888",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
             "seat": 6
         },
-        "GaFFlZM97F": {
-            "id": "GaFFlZM97F",
-            "name": "plikipie#2430",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 2
-        },
-        "G25jDhSBzo": {
-            "id": "G25jDhSBzo",
-            "name": "Lepkakec",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 3
-        },
-        "p8qM32k7Sj": {
-            "id": "p8qM32k7Sj",
-            "name": "stanfurd.eth",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
+        "Nand": {
+            "id": "Nand",
+            "name": "Nand",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
             "seat": 7
         },
-        "3wuv_75xIA": {
-            "id": "3wuv_75xIA",
-            "name": "Box1991",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 5
-        },
-        "JQ29wmq9yN": {
-            "id": "JQ29wmq9yN",
-            "name": "Gašper#9055",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
+        "Aflak": {
+            "id": "Aflak",
+            "name": "Aflak",
+            "currentTable": "TryVxPI2x_TlqdYrI5Ez0HM8e",
             "movements": 0,
             "seat": 8
-        },
-        "3kKZ74VzOX": {
-            "id": "3kKZ74VzOX",
-            "name": "blackdot",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 9
-        },
-        "GC7bjUnVvy": {
-            "id": "GC7bjUnVvy",
-            "name": "Idoman#0552",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 1
-        },
-        "pOPv4VG1oX": {
-            "id": "pOPv4VG1oX",
-            "name": "Barndog",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 4
-        },
-        "74xGK4UJna": {
-            "id": "74xGK4UJna",
-            "name": "Cursed#2957",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 10
-        },
-        "JWdhH02b33": {
-            "id": "JWdhH02b33",
-            "name": "ChoboSwaggins",
-            "currentTable": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "movements": 0,
-            "seat": 6
-        },
-        "ZLjYRKmqLE": {
-            "id": "ZLjYRKmqLE",
-            "name": "ppiyang",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 9
-        },
-        "AqQRP__byh": {
-            "id": "AqQRP__byh",
-            "name": "Stainlex",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 2
-        },
-        "jE7We1RjNs": {
-            "id": "jE7We1RjNs",
-            "name": "imatemu#5069",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 7
-        },
-        "E-9zk7awIe": {
-            "id": "E-9zk7awIe",
-            "name": "Onarios",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 3
-        },
-        "s8RQegVShC": {
-            "id": "s8RQegVShC",
-            "name": "RipTyde#1765",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 8
-        },
-        "TZ9km5Ba-9": {
-            "id": "TZ9km5Ba-9",
-            "name": "Zephyr#5945",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 5
-        },
-        "QpBfZafv4K": {
-            "id": "QpBfZafv4K",
-            "name": "Ridho#5630",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 6
-        },
-        "euCpzcrsqg": {
-            "id": "euCpzcrsqg",
-            "name": "Continental",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 1
-        },
-        "zfuTxy_Xwy": {
-            "id": "zfuTxy_Xwy",
-            "name": "altaba",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 10
-        },
-        "1MCgZ1vv6a": {
-            "id": "1MCgZ1vv6a",
-            "name": "ExStealth#5445",
-            "currentTable": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "movements": 0,
-            "seat": 4
-        },
-        "g1zalEfIc3": {
-            "id": "g1zalEfIc3",
-            "name": "firegoal",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 9
-        },
-        "Ez3J_UzSUU": {
-            "id": "Ez3J_UzSUU",
-            "name": "DuskoFort",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 7
-        },
-        "QQ41-bsXYt": {
-            "id": "QQ41-bsXYt",
-            "name": "Kovancek#5192",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 4
-        },
-        "v9t0iT-WmC": {
-            "id": "v9t0iT-WmC",
-            "name": "BastianK#3019",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 2
-        },
-        "pqt6eITvei": {
-            "id": "pqt6eITvei",
-            "name": "mrnarenji#9465",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 1
-        },
-        "PTQ1tO1y_Y": {
-            "id": "PTQ1tO1y_Y",
-            "name": "Tupperware",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 6
-        },
-        "k7rianZWfk": {
-            "id": "k7rianZWfk",
-            "name": "#CaptainBee#23",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 10
-        },
-        "spPP9vFRn_": {
-            "id": "spPP9vFRn_",
-            "name": "wan7#4309",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 5
-        },
-        "yAVvofpRed": {
-            "id": "yAVvofpRed",
-            "name": "Min0",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 3
-        },
-        "jTU0AlB12S": {
-            "id": "jTU0AlB12S",
-            "name": "lenoui",
-            "currentTable": "beJVmFO_olL077qhjSzj2BjCX",
-            "movements": 0,
-            "seat": 8
-        },
-        "uUlzjf__h3": {
-            "id": "uUlzjf__h3",
-            "name": "Dissmiss#1514",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 4
-        },
-        "1D4m9zI6E0": {
-            "id": "1D4m9zI6E0",
-            "name": "uauauauaua",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 6
-        },
-        "JtkQ0lImyi": {
-            "id": "JtkQ0lImyi",
-            "name": "DTjeil#0028",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 2
-        },
-        "HXnut-en0X": {
-            "id": "HXnut-en0X",
-            "name": "Kingmena",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 5
-        },
-        "hhxngvZHYQ": {
-            "id": "hhxngvZHYQ",
-            "name": "TataMartins",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 3
-        },
-        "BnVoL9Rf1T": {
-            "id": "BnVoL9Rf1T",
-            "name": "Fishmish",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 8
-        },
-        "UOHb8_CJzi": {
-            "id": "UOHb8_CJzi",
-            "name": "Kael#4722",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 7
-        },
-        "_yi55ti6_l": {
-            "id": "_yi55ti6_l",
-            "name": "Theojr",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 10
-        },
-        "1F26sQBW2b": {
-            "id": "1F26sQBW2b",
-            "name": "銀シルバーソース#2706",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 9
-        },
-        "HdVjO2tDKV": {
-            "id": "HdVjO2tDKV",
-            "name": "Kaconk12",
-            "currentTable": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "movements": 0,
-            "seat": 1
         }
     },
     "tables": {
-        "o6QHocC6TwJhsxT0bf-PHknsG": {
-            "id": "o6QHocC6TwJhsxT0bf-PHknsG",
-            "dealerButtonLastRound": 1,
-            "seats": [
-                [
-                    1,
-                    "bKhTZxmKs9"
-                ]
-            ]
-        },
-        "YMZrDMD3ehNJPu4RaOn0-49uL": {
-            "id": "YMZrDMD3ehNJPu4RaOn0-49uL",
-            "dealerButtonLastRound": 6,
-            "seats": [
-                [
-                    5,
-                    "6T5i21QyZj"
-                ],
-                [
-                    3,
-                    "BQtVePhMDB"
-                ],
-                [
-                    2,
-                    "G5nod1pUiA"
-                ],
-                [
-                    9,
-                    "CYk5uPahZT"
-                ],
-                [
-                    8,
-                    "97AMBmJi9B"
-                ],
-                [
-                    6,
-                    "BIkPKXN7Fm"
-                ],
-                [
-                    7,
-                    "zvhEU-TCom"
-                ],
-                [
-                    10,
-                    "dzZJrleeq0"
-                ],
-                [
-                    1,
-                    "YofI_CspYO"
-                ],
-                [
-                    4,
-                    "_xdgioDqlS"
-                ]
-            ]
-        },
-        "8nk7xH3or2vT5B4boFlm0Cn4P": {
-            "id": "8nk7xH3or2vT5B4boFlm0Cn4P",
+        "H1ySczcfxEKgnVUfDDA5C2aW7": {
+            "id": "H1ySczcfxEKgnVUfDDA5C2aW7",
             "dealerButtonLastRound": 4,
             "seats": [
                 [
-                    5,
-                    "dX34SaiYwH"
-                ],
-                [
-                    6,
-                    "KFJH7So0l6"
-                ],
-                [
-                    8,
-                    "w4VSXxQsGc"
+                    1,
+                    "MINT🍫#2662"
                 ],
                 [
                     2,
-                    "KX9W-zxRzy"
-                ],
-                [
-                    9,
-                    "yojavmupYN"
-                ],
-                [
-                    10,
-                    "FcXr4QNhHY"
+                    "Solution999"
                 ],
                 [
                     3,
-                    "j_AsB-Qtwn"
-                ],
-                [
-                    7,
-                    "53JuEoaY8C"
-                ],
-                [
-                    1,
-                    "Y6ZWDPjpzD"
+                    "Luther702"
                 ],
                 [
                     4,
-                    "qXDk55SPP5"
+                    "DimK"
+                ],
+                [
+                    5,
+                    "Subaru |Rebels"
+                ],
+                [
+                    6,
+                    "Grillongle"
+                ],
+                [
+                    7,
+                    "Paixao #3890"
+                ],
+                [
+                    8,
+                    "Salpo106"
                 ]
             ]
         },
-        "hS_UUh8riJVUkl6DtzR9RFbkW": {
-            "id": "hS_UUh8riJVUkl6DtzR9RFbkW",
+        "5cTYsmFOfEN3xrV2sNifSYsUG": {
+            "id": "5cTYsmFOfEN3xrV2sNifSYsUG",
+            "dealerButtonLastRound": 6,
+            "seats": [
+                [
+                    1,
+                    "Solcrystal#964"
+                ],
+                [
+                    2,
+                    "yorong#2388"
+                ],
+                [
+                    3,
+                    "l2gs#3944"
+                ],
+                [
+                    4,
+                    "emilbochnik"
+                ],
+                [
+                    5,
+                    "Nit#3912"
+                ],
+                [
+                    6,
+                    "Neon482000"
+                ],
+                [
+                    7,
+                    "Ihave2GME"
+                ],
+                [
+                    8,
+                    "Donfckundo"
+                ]
+            ]
+        },
+        "uKQafFLfBsulSU9MPcTb5PouY": {
+            "id": "uKQafFLfBsulSU9MPcTb5PouY",
             "dealerButtonLastRound": 2,
             "seats": [
                 [
-                    10,
-                    "LzpfjoZPFr"
-                ],
-                [
-                    6,
-                    "J8tMLSeipc"
-                ],
-                [
-                    4,
-                    "e-DSFgMZN_"
-                ],
-                [
-                    3,
-                    "wb7_cSNlAr"
-                ],
-                [
-                    8,
-                    "ei5gOJWdzw"
-                ],
-                [
                     1,
-                    "bxqOeMGKs5"
-                ],
-                [
-                    9,
-                    "LRFNK91a62"
-                ],
-                [
-                    7,
-                    "fwWvotj6B-"
+                    "Ebro88"
                 ],
                 [
                     2,
-                    "fSwtFV7zfS"
+                    "Shentpup"
                 ],
                 [
-                    5,
-                    "5LRaphLqA5"
+                    3,
+                    "Pepdagoat"
+                ],
+                [
+                    4,
+                    "nft_thor#9690"
+                ],
+                [
+                    6,
+                    "Kuma#6027"
+                ],
+                [
+                    7,
+                    "Batman | BAPES"
+                ],
+                [
+                    8,
+                    "Ahno"
                 ]
             ]
         },
-        "_PbuZniUvjjG_PdliyajAKbL8": {
-            "id": "_PbuZniUvjjG_PdliyajAKbL8",
-            "dealerButtonLastRound": 10,
+        "qvzK4x94__3WWU6kMNRFjeuEJ": {
+            "id": "qvzK4x94__3WWU6kMNRFjeuEJ",
+            "dealerButtonLastRound": 7,
             "seats": [
                 [
-                    8,
-                    "2KkAH44eUr"
-                ],
-                [
-                    10,
-                    "h7qDCYBD_E"
+                    1,
+                    "CryptoJoe1313"
                 ],
                 [
                     2,
-                    "4xVm4shzPL"
-                ],
-                [
-                    5,
-                    "RcfDLxiS1P"
-                ],
-                [
-                    7,
-                    "KtHh-wuDBl"
-                ],
-                [
-                    4,
-                    "Ug8t1qMNoT"
-                ],
-                [
-                    1,
-                    "E3NrlrEjrc"
+                    "Aaron |"
                 ],
                 [
                     3,
-                    "v3HP5FzG34"
+                    "SportinG"
                 ],
                 [
-                    9,
-                    "InI08UA0PL"
+                    4,
+                    "DTX"
+                ],
+                [
+                    5,
+                    "SkyDoge | Soul"
                 ],
                 [
                     6,
-                    "D8dffotRBr"
+                    "Vjallin"
+                ],
+                [
+                    7,
+                    "Max Thomas"
+                ],
+                [
+                    8,
+                    "Kluex #8556"
                 ]
             ]
         },
-        "fyh1JigdEPXZrMVqjNucQbPYd": {
-            "id": "fyh1JigdEPXZrMVqjNucQbPYd",
-            "dealerButtonLastRound": 6,
+        "lSjx7st--lH1Qkbm9KFj4YrmS": {
+            "id": "lSjx7st--lH1Qkbm9KFj4YrmS",
+            "dealerButtonLastRound": 7,
             "seats": [
                 [
-                    2,
-                    "GaFFlZM97F"
-                ],
-                [
-                    3,
-                    "G25jDhSBzo"
-                ],
-                [
-                    7,
-                    "p8qM32k7Sj"
-                ],
-                [
-                    5,
-                    "3wuv_75xIA"
-                ],
-                [
-                    8,
-                    "JQ29wmq9yN"
-                ],
-                [
-                    9,
-                    "3kKZ74VzOX"
-                ],
-                [
                     1,
-                    "GC7bjUnVvy"
-                ],
-                [
-                    4,
-                    "pOPv4VG1oX"
-                ],
-                [
-                    10,
-                    "74xGK4UJna"
-                ],
-                [
-                    6,
-                    "JWdhH02b33"
-                ]
-            ]
-        },
-        "0J1LNwH7dRAXUXBbHZ7C3Q3T7": {
-            "id": "0J1LNwH7dRAXUXBbHZ7C3Q3T7",
-            "dealerButtonLastRound": 6,
-            "seats": [
-                [
-                    9,
-                    "ZLjYRKmqLE"
+                    "MoZaK2K"
                 ],
                 [
                     2,
-                    "AqQRP__byh"
-                ],
-                [
-                    7,
-                    "jE7We1RjNs"
+                    "jimpap"
                 ],
                 [
                     3,
-                    "E-9zk7awIe"
-                ],
-                [
-                    8,
-                    "s8RQegVShC"
-                ],
-                [
-                    5,
-                    "TZ9km5Ba-9"
-                ],
-                [
-                    6,
-                    "QpBfZafv4K"
-                ],
-                [
-                    1,
-                    "euCpzcrsqg"
-                ],
-                [
-                    10,
-                    "zfuTxy_Xwy"
+                    "Tiny fear"
                 ],
                 [
                     4,
-                    "1MCgZ1vv6a"
+                    "glee"
+                ],
+                [
+                    5,
+                    "CG88"
+                ],
+                [
+                    6,
+                    "King Sahbee"
+                ],
+                [
+                    7,
+                    "StephMoon"
+                ],
+                [
+                    8,
+                    "LostBTC"
                 ]
             ]
         },
-        "beJVmFO_olL077qhjSzj2BjCX": {
-            "id": "beJVmFO_olL077qhjSzj2BjCX",
+        "QwJPp4Rl8zBUY9Cfi9ulKS3Ky": {
+            "id": "QwJPp4Rl8zBUY9Cfi9ulKS3Ky",
             "dealerButtonLastRound": 1,
             "seats": [
                 [
-                    9,
-                    "g1zalEfIc3"
-                ],
-                [
-                    7,
-                    "Ez3J_UzSUU"
-                ],
-                [
-                    4,
-                    "QQ41-bsXYt"
+                    1,
+                    "louk04"
                 ],
                 [
                     2,
-                    "v9t0iT-WmC"
-                ],
-                [
-                    1,
-                    "pqt6eITvei"
-                ],
-                [
-                    6,
-                    "PTQ1tO1y_Y"
-                ],
-                [
-                    10,
-                    "k7rianZWfk"
-                ],
-                [
-                    5,
-                    "spPP9vFRn_"
+                    "Arthereox"
                 ],
                 [
                     3,
-                    "yAVvofpRed"
+                    "Amitco"
                 ],
                 [
-                    8,
-                    "jTU0AlB12S"
+                    5,
+                    "LuckyP!!!"
+                ],
+                [
+                    6,
+                    "Strangest"
+                ],
+                [
+                    7,
+                    "Miloute"
                 ]
             ]
         },
-        "Ze4BV5nXQRYNnKjwHl8Uvgsue": {
-            "id": "Ze4BV5nXQRYNnKjwHl8Uvgsue",
-            "dealerButtonLastRound": 9,
+        "jm2hcxBeE1iQTfmuERXeK2OpO": {
+            "id": "jm2hcxBeE1iQTfmuERXeK2OpO",
+            "dealerButtonLastRound": 6,
             "seats": [
                 [
-                    4,
-                    "uUlzjf__h3"
-                ],
-                [
-                    6,
-                    "1D4m9zI6E0"
+                    1,
+                    "theSOLhoe"
                 ],
                 [
                     2,
-                    "JtkQ0lImyi"
-                ],
-                [
-                    5,
-                    "HXnut-en0X"
+                    "HangLooseRette"
                 ],
                 [
                     3,
-                    "hhxngvZHYQ"
+                    "Kezutan"
                 ],
                 [
-                    8,
-                    "BnVoL9Rf1T"
+                    4,
+                    "BenDover99"
+                ],
+                [
+                    5,
+                    "Maruc"
+                ],
+                [
+                    6,
+                    "goldieshdash"
                 ],
                 [
                     7,
-                    "UOHb8_CJzi"
+                    "JeromieRomie02"
                 ],
                 [
-                    10,
-                    "_yi55ti6_l"
-                ],
-                [
-                    9,
-                    "1F26sQBW2b"
-                ],
+                    8,
+                    "suppercious"
+                ]
+            ]
+        },
+        "IXSuzYHsFYUwn5m1A4B7mTqgc": {
+            "id": "IXSuzYHsFYUwn5m1A4B7mTqgc",
+            "dealerButtonLastRound": 7,
+            "seats": [
                 [
                     1,
-                    "HdVjO2tDKV"
+                    "Shadowfart8136"
+                ],
+                [
+                    2,
+                    "Kuora"
+                ],
+                [
+                    3,
+                    "Shreks#8141"
+                ],
+                [
+                    4,
+                    "prodbyzander"
+                ],
+                [
+                    5,
+                    "WenRare"
+                ],
+                [
+                    6,
+                    "heretovin"
+                ],
+                [
+                    7,
+                    "upsAder"
+                ]
+            ]
+        },
+        "aAVopWN6RFYnixf1oI6ojZa9X": {
+            "id": "aAVopWN6RFYnixf1oI6ojZa9X",
+            "dealerButtonLastRound": 4,
+            "seats": [
+                [
+                    1,
+                    "TillOneMill"
+                ],
+                [
+                    2,
+                    "Cryptofunk"
+                ],
+                [
+                    3,
+                    "turlututu"
+                ],
+                [
+                    4,
+                    "Killerqueen"
+                ],
+                [
+                    5,
+                    "Beowolf"
+                ],
+                [
+                    6,
+                    "Kierk"
+                ],
+                [
+                    7,
+                    "freecss"
+                ],
+                [
+                    8,
+                    "El Vega"
+                ]
+            ]
+        },
+        "JE_DOCQhw-lj-uD33NM7aOHvu": {
+            "id": "JE_DOCQhw-lj-uD33NM7aOHvu",
+            "dealerButtonLastRound": 1,
+            "seats": [
+                [
+                    1,
+                    "MrennerBorel"
+                ],
+                [
+                    2,
+                    "Viosil"
+                ],
+                [
+                    3,
+                    "JeremyV"
+                ],
+                [
+                    4,
+                    "iamburaky"
+                ],
+                [
+                    5,
+                    "YY10_SOL"
+                ],
+                [
+                    6,
+                    "NFTtradez"
+                ],
+                [
+                    7,
+                    "Nicofrosty7"
+                ],
+                [
+                    8,
+                    "Raamiana"
+                ]
+            ]
+        },
+        "RT36wwNrF4xX_TZHPVGO1M8a_": {
+            "id": "RT36wwNrF4xX_TZHPVGO1M8a_",
+            "dealerButtonLastRound": 3,
+            "seats": [
+                [
+                    1,
+                    "RedruM"
+                ],
+                [
+                    2,
+                    "topzzz"
+                ],
+                [
+                    3,
+                    "ThePureSoulDog"
+                ],
+                [
+                    4,
+                    "Staus"
+                ],
+                [
+                    6,
+                    "Ficky Shen"
+                ]
+            ]
+        },
+        "IDQO4Fob_vuOjLNJKOlm6678s": {
+            "id": "IDQO4Fob_vuOjLNJKOlm6678s",
+            "dealerButtonLastRound": 2,
+            "seats": [
+                [
+                    1,
+                    "Puddin2010"
+                ],
+                [
+                    2,
+                    "Tripwood"
+                ],
+                [
+                    3,
+                    "Eightba11"
+                ],
+                [
+                    5,
+                    "David 1254"
+                ],
+                [
+                    6,
+                    "Tsoupoutsou"
+                ],
+                [
+                    7,
+                    "bigscott"
+                ]
+            ]
+        },
+        "P-madOjG3WSxPu33ufyLDnsh1": {
+            "id": "P-madOjG3WSxPu33ufyLDnsh1",
+            "dealerButtonLastRound": 8,
+            "seats": [
+                [
+                    1,
+                    "Popel"
+                ],
+                [
+                    2,
+                    "shooterboy"
+                ],
+                [
+                    3,
+                    "Indio_Jau"
+                ],
+                [
+                    4,
+                    "EmmaKgLy"
+                ],
+                [
+                    5,
+                    "Phaasz"
+                ],
+                [
+                    6,
+                    "Wy2K | Soul do"
+                ],
+                [
+                    7,
+                    "Skoo"
+                ],
+                [
+                    8,
+                    "VasilisK"
+                ]
+            ]
+        },
+        "WqptZCgPpS89M3dAAFFtbhDIK": {
+            "id": "WqptZCgPpS89M3dAAFFtbhDIK",
+            "dealerButtonLastRound": 6,
+            "seats": [
+                [
+                    2,
+                    "Billy Woods"
+                ],
+                [
+                    3,
+                    "Aimee#7260"
+                ],
+                [
+                    5,
+                    "FabioN"
+                ],
+                [
+                    6,
+                    "BennyX"
+                ],
+                [
+                    8,
+                    "Kaz#3017"
+                ]
+            ]
+        },
+        "WvXG7jt85Uq-O6zgByed6TvLt": {
+            "id": "WvXG7jt85Uq-O6zgByed6TvLt",
+            "dealerButtonLastRound": 2,
+            "seats": [
+                [
+                    2,
+                    "Alibaba"
+                ],
+                [
+                    4,
+                    "Wahbart"
+                ],
+                [
+                    5,
+                    "Tj22"
+                ],
+                [
+                    6,
+                    "robinomega"
+                ],
+                [
+                    8,
+                    "BlazinMitchie"
+                ]
+            ]
+        },
+        "ujTXYOvd3R2yWfjWKT1cE6v06": {
+            "id": "ujTXYOvd3R2yWfjWKT1cE6v06",
+            "dealerButtonLastRound": 6,
+            "seats": [
+                [
+                    1,
+                    "MCS7192"
+                ],
+                [
+                    2,
+                    "Coletrain"
+                ],
+                [
+                    3,
+                    "cammypacz"
+                ],
+                [
+                    4,
+                    "Prince of Keny"
+                ],
+                [
+                    5,
+                    "Lukas 12"
+                ],
+                [
+                    6,
+                    "jakep1999#5516"
+                ],
+                [
+                    7,
+                    "ztudorx"
+                ],
+                [
+                    8,
+                    "MikzNFT"
+                ]
+            ]
+        },
+        "aP3zLnqN40HIg3kHr7rxwwrXo": {
+            "id": "aP3zLnqN40HIg3kHr7rxwwrXo",
+            "dealerButtonLastRound": 2,
+            "seats": [
+                [
+                    1,
+                    "Bazzzhe"
+                ],
+                [
+                    3,
+                    "InsideGod#8698"
+                ],
+                [
+                    4,
+                    "GASTON"
+                ],
+                [
+                    5,
+                    "BOO_Teng27"
+                ],
+                [
+                    6,
+                    "JungleTosh"
+                ],
+                [
+                    7,
+                    "Nixon Jr"
+                ],
+                [
+                    8,
+                    "aka_mene | RCC"
+                ]
+            ]
+        },
+        "3Uj1emLbwqLKYlBaK1US_sFVY": {
+            "id": "3Uj1emLbwqLKYlBaK1US_sFVY",
+            "dealerButtonLastRound": 2,
+            "seats": [
+                [
+                    1,
+                    "Mr-Tii"
+                ],
+                [
+                    2,
+                    "Simdog"
+                ],
+                [
+                    3,
+                    "Gabry#8322"
+                ],
+                [
+                    5,
+                    "Sto1c"
+                ],
+                [
+                    6,
+                    "matcha_queen"
+                ],
+                [
+                    7,
+                    "Dufflebagboi"
+                ],
+                [
+                    8,
+                    "esrever"
+                ]
+            ]
+        },
+        "mhRh-13isfRSz3yXkvyJBNl05": {
+            "id": "mhRh-13isfRSz3yXkvyJBNl05",
+            "dealerButtonLastRound": 2,
+            "seats": [
+                [
+                    1,
+                    "ToreMinas"
+                ],
+                [
+                    2,
+                    "yongyanglee"
+                ],
+                [
+                    4,
+                    "Veritas420"
+                ],
+                [
+                    5,
+                    "JEM"
+                ],
+                [
+                    8,
+                    "Peng#4103"
+                ]
+            ]
+        },
+        "m2t8r8bZQWbTPBNZR0cJULRy0": {
+            "id": "m2t8r8bZQWbTPBNZR0cJULRy0",
+            "dealerButtonLastRound": 4,
+            "seats": [
+                [
+                    1,
+                    "Swootey"
+                ],
+                [
+                    3,
+                    "King22"
+                ],
+                [
+                    4,
+                    "Rallan"
+                ],
+                [
+                    5,
+                    "dopor#0220"
+                ],
+                [
+                    6,
+                    "FancyPants"
+                ],
+                [
+                    7,
+                    "Єяяȏℛ()Ꮗꭿꮍ"
+                ],
+                [
+                    8,
+                    "Jonno007"
+                ]
+            ]
+        },
+        "w0gtgTn5kWWbOaHquCtrb2Vwe": {
+            "id": "w0gtgTn5kWWbOaHquCtrb2Vwe",
+            "dealerButtonLastRound": 5,
+            "seats": [
+                [
+                    1,
+                    "MetaGrimster"
+                ],
+                [
+                    2,
+                    "JSmash"
+                ],
+                [
+                    3,
+                    "Vaan21|SoulDog"
+                ],
+                [
+                    4,
+                    "Waldbeer"
+                ],
+                [
+                    5,
+                    "kosmoss13666"
+                ],
+                [
+                    6,
+                    "Joey#9908"
+                ],
+                [
+                    7,
+                    "NoBaeK"
+                ],
+                [
+                    8,
+                    "Fernando"
+                ]
+            ]
+        },
+        "bnpjkywpdDgz0KkraPfcD030j": {
+            "id": "bnpjkywpdDgz0KkraPfcD030j",
+            "dealerButtonLastRound": 6,
+            "seats": [
+                [
+                    1,
+                    "DapperDan"
+                ],
+                [
+                    2,
+                    "Sigrid"
+                ],
+                [
+                    3,
+                    "majcar"
+                ],
+                [
+                    4,
+                    "Parisiancrypto"
+                ],
+                [
+                    5,
+                    "kopif_tn"
+                ],
+                [
+                    6,
+                    "ChillxSoulDog"
+                ],
+                [
+                    7,
+                    "Luan Coelho"
+                ],
+                [
+                    8,
+                    "barcaboy"
+                ]
+            ]
+        },
+        "40XV_yOH7kyee6ZNfiUXZIhRm": {
+            "id": "40XV_yOH7kyee6ZNfiUXZIhRm",
+            "dealerButtonLastRound": 5,
+            "seats": [
+                [
+                    2,
+                    "Lando#8743"
+                ],
+                [
+                    3,
+                    "HodlSchool"
+                ],
+                [
+                    4,
+                    "triplecrown333"
+                ],
+                [
+                    5,
+                    "Smarty#2593"
+                ],
+                [
+                    6,
+                    "Strus"
+                ],
+                [
+                    7,
+                    "dirtyrice"
+                ],
+                [
+                    8,
+                    "Anatolii"
+                ]
+            ]
+        },
+        "3TkoS3VhJUNYPvf_hVIl8UmEn": {
+            "id": "3TkoS3VhJUNYPvf_hVIl8UmEn",
+            "dealerButtonLastRound": 7,
+            "seats": [
+                [
+                    1,
+                    "unforgivin"
+                ],
+                [
+                    2,
+                    "gsus#6995"
+                ],
+                [
+                    3,
+                    "burki"
+                ],
+                [
+                    4,
+                    "KilleQueen"
+                ],
+                [
+                    5,
+                    "Stef Bilzerian"
+                ],
+                [
+                    6,
+                    "lellos"
+                ],
+                [
+                    7,
+                    "Ochelios"
+                ],
+                [
+                    8,
+                    "sweatyintern"
+                ]
+            ]
+        },
+        "TryVxPI2x_TlqdYrI5Ez0HM8e": {
+            "id": "TryVxPI2x_TlqdYrI5Ez0HM8e",
+            "dealerButtonLastRound": 4,
+            "seats": [
+                [
+                    1,
+                    "Beavis1234"
+                ],
+                [
+                    4,
+                    "Gigabeat#6160"
+                ],
+                [
+                    5,
+                    "Berlin"
+                ],
+                [
+                    6,
+                    "Pokerface888"
+                ],
+                [
+                    7,
+                    "Nand"
+                ],
+                [
+                    8,
+                    "Aflak"
                 ]
             ]
         }
     }
 };
 var config = {
-    maxPlayersPerTable: 10,
-    breakWithLessThan: 10,
+    maxPlayersPerTable: 8,
+    breakWithLessThan: 8,
     balanceMinFlexibility: 0,
     balanceMaxFlexibility: 0 // 0 = Rebalance as much as possible
 };
-var result = Balancer.getMovements(state, config, "o6QHocC6TwJhsxT0bf-PHknsG");
+var result = Balancer.getMovements(state, config, "TryVxPI2x_TlqdYrI5Ez0HM8e");
 console.log(result.movementsText);
 console.log("Total movements: " + result.movements.length);
 console.log("Total score: " + result.totalScore);

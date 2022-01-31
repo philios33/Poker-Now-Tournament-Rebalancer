@@ -508,7 +508,7 @@ exports.getRebalancingMovements = function (state) {
 };
 exports.getRebalancingPlayerMovements = function (state) {
     var startTime = (new Date()).getTime();
-    var logger = new logger_1.Logger(false, "Start");
+    var logger = new logger_1.Logger(true, "Start");
     var result = exports.getRebalancingMovements(state);
     logger.log("Got Rebalancing Movements");
     // console.log("RESULT", JSON.stringify(result, null, 4));
@@ -586,8 +586,11 @@ exports.getRebalancingPlayerMovements = function (state) {
     logger.log("Expanded Global From Seats");
     // console.log("globalFromSeats", JSON.stringify(globalFromSeats, null, 4));
     // PROCESS TARGET SEAT POSITIONS
+    // BUG FIX again, the same performance bug that was fixed before, but this time on the target seats.
+    var limitGlobalTargetSeatCombos = 9000;
     var globalTargetSeats = [];
     // Now we need to expand the target seat combinations
+    // console.log("There are " + result.targetSeats.length + " targetSeats to loop through");
     for (var _c = 0, _d = result.targetSeats; _c < _d.length; _c++) {
         var sss = _d[_c];
         var groupTargetSeats = [];
@@ -604,8 +607,15 @@ exports.getRebalancingPlayerMovements = function (state) {
                 currentTargetSeats.push(targetSeats);
             }
             // At this point, multiply every currentTargetSeats in to globalTargetSeats???
+            // console.log("Multiplying arrays", groupTargetSeats.length, currentTargetSeats.length);
             groupTargetSeats = util_1.multiplyArrays(groupTargetSeats, currentTargetSeats);
+            // To counteract the affect of exponential growth here, we shuffle and cap the length.
+            if (groupTargetSeats.length > limitGlobalTargetSeatCombos) {
+                // console.log("Capping to " + limitGlobalTargetSeatCombos);
+                groupTargetSeats = util_1.arrayShuffle(groupTargetSeats).slice(0, limitGlobalTargetSeatCombos);
+            }
         };
+        // console.log("For this seat, there are " + Object.keys(sss.selections).length + " seat selections to loop through");
         for (var tableId in sss.selections) {
             _loop_3(tableId);
         }

@@ -631,12 +631,17 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
 
     // PROCESS TARGET SEAT POSITIONS
 
+    // BUG FIX again, the same performance bug that was fixed before, but this time on the target seats.
+    const limitGlobalTargetSeatCombos = 9000;
+
     let globalTargetSeats = [];
     // Now we need to expand the target seat combinations
+    // console.log("There are " + result.targetSeats.length + " targetSeats to loop through");
     for(const sss of result.targetSeats) {
-
+        
         let groupTargetSeats = [];
 
+        // console.log("For this seat, there are " + Object.keys(sss.selections).length + " seat selections to loop through");
         for(const tableId in sss.selections) {
             const table = findTableById(state, tableId);
             const ss = sss.selections[tableId];
@@ -651,7 +656,17 @@ export const getRebalancingPlayerMovements = (state: TournamentState): Balancing
             }
 
             // At this point, multiply every currentTargetSeats in to globalTargetSeats???
+            // console.log("Multiplying arrays", groupTargetSeats.length, currentTargetSeats.length);
+
             groupTargetSeats = multiplyArrays(groupTargetSeats, currentTargetSeats);
+
+            // To counteract the affect of exponential growth here, we shuffle and cap the length.
+            if (groupTargetSeats.length > limitGlobalTargetSeatCombos) {
+                // console.log("Capping to " + limitGlobalTargetSeatCombos);
+                groupTargetSeats = arrayShuffle(groupTargetSeats).slice(0, limitGlobalTargetSeatCombos);
+            }
+            
+            // console.log("DONE");
         }
 
         // Append these combos
