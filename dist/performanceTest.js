@@ -2103,4 +2103,4 @@ console.log("Total movements: " + result.movements.length);
 console.log("Total score: " + result.totalScore);
 console.log("Stats", result.stats),
     console.log("Took", result.msTaken + " ms");
-//# sourceMappingURL=test.js.map
+//# sourceMappingURL=performanceTest.js.map

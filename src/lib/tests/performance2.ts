@@ -1,7 +1,7 @@
 import { getMovements } from "../..";
 import { PokerNowTournamentState } from "../../types/pokerNowTournamentState";
 
-test('Performance 2 - Bug fix from Jan 31st 2021', () => {
+test('Performance 2 - Bug fix from 31st Jan 2022', () => {
     const state : PokerNowTournamentState = {
     "players": {
         "MINT🍫#2662": {
@@ -2099,10 +2099,10 @@ test('Performance 2 - Bug fix from Jan 31st 2021', () => {
         breakWithLessThan: 8,  // This allows table breaking (if possible) for tables with less than 8 players.
         balanceMinFlexibility: 0, // Increase these to prevent over rebalancing.
         balanceMaxFlexibility: 0 // 0 = Rebalance as much as possible
-        
     };
     const result = getMovements(state, config, "TryVxPI2x_TlqdYrI5Ez0HM8e");
+
     expect(result.movements.length).toBe(15);
     expect(result.stats.tableIdsBeingBrokenUp.length).toBe(3);
-    expect(result.msTaken).toBeLessThan(5000);
+    expect(result.msTaken).toBeLessThan(10 * 1000);
 });

@@ -508,7 +508,7 @@ exports.getRebalancingMovements = function (state) {
 };
 exports.getRebalancingPlayerMovements = function (state) {
     var startTime = (new Date()).getTime();
-    var logger = new logger_1.Logger(true, "Start");
+    var logger = new logger_1.Logger(false, "Start");
     var result = exports.getRebalancingMovements(state);
     logger.log("Got Rebalancing Movements");
     // console.log("RESULT", JSON.stringify(result, null, 4));
